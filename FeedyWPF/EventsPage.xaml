@@ -1,0 +1,63 @@
+﻿<Page x:Class="FeedyWPF.EventsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FeedyWPF"
+      xmlns:Models="clr-namespace:FeedyWPF.Models"
+      mc:Ignorable="d"
+      Title="EventsView" Height="Auto"  Width="Auto" Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <CollectionViewSource x:Key="eventViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Event}, CreateList=True}"/>
+    </Page.Resources>
+    <Grid DataContext="{StaticResource eventViewSource}" Height="441" Width="743" >
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="199*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label x:Name="label" Content="Datenbank der Umfragen" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="597" FontSize="24" Grid.Column="1"/>
+        <Button x:Name="button" Content="Spezifische Auswertung" HorizontalAlignment="Left" Width="142" Margin="417,409,0,10" Grid.Column="1"/>
+        <Button x:Name="importDataButton" Content="Neue Umfrage importieren&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23" Grid.Column="1" Margin="564,408,0,0"/>
+        <DataGrid x:Name="eventDataGrid" AutoGenerateColumns="False" Grid.Column="1" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,61,10,38" RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="eventDataGrid_SelectionChanged_1">
+            <DataGrid.Columns>
+                <!--<DataGridTemplateColumn x:Name="dateColumn" Header="Date" Width="SizeToHeader">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding Date, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+                
+                <DataGridTextColumn x:Name="questionnaireColumn" Binding="{Binding Questionnaire.Name}" Header="Fragebogen" IsReadOnly="True" Width="Auto" Visibility="Visible"/>
+                <DataGridTextColumn x:Name="placeColumn" Binding="{Binding Place}" Header="Place" IsReadOnly="True" Width="Auto"/>
+                <DataGridTextColumn x:Name="dateColumn" Binding="{Binding DateString}" Header="Date" IsReadOnly="True" Width="Auto"/>
+                <DataGridTextColumn x:Name="participantsCountColumn" Binding="{Binding ParticipantsCount}" Header="Anzahl Teilnehmende" IsReadOnly="True" Width="Auto"/>
+                <DataGridTextColumn x:Name="eventIDColumn" Binding="{Binding EventID}" Header="Event ID" Width="Auto" IsReadOnly="True" Visibility="Hidden"/>
+                
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="EvaluateEvent">Auswerten</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="DeleteEvent">Umfrage Löschen</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Page>
+
+
+
