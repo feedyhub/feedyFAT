@@ -14,41 +14,41 @@ using System.Collections.ObjectModel;
 
 namespace FeedyWPF.Models
 {
-    public class Selector
-    {
+    //public class Selector
+    //{
 
-        public int QuestionnaireID { get; set; }
+    //    public int QuestionnaireID { get; set; }
 
-        public List<SelectableEvent> Events { get; set; }
-        public List<SelectableQuestion> Questions { get; set; }
-    }
-    public class SelectableEvent
-    {
-        //        public SelectableEvent(Event myEvent)
-        //        {
-        //            Place = myEvent.Place;
-        //            ReferencedEventID = myEvent.EventID;
-        //            IsSelected = false;
+    //    public List<SelectableEvent> Events { get; set; }
+    //    public List<SelectableQuestion> Questions { get; set; }
+    //}
+    //public class SelectableEvent
+    //{
+    //    //        public SelectableEvent(Event myEvent)
+    //    //        {
+    //    //            Place = myEvent.Place;
+    //    //            ReferencedEventID = myEvent.EventID;
+    //    //            IsSelected = false;
 
-        //        }
-        public string Place { get; set; }
-        public bool IsSelected { get; set; }
-        public int ReferencedEventID { get; set; }
-    }
+    //    //        }
+    //    public string Place { get; set; }
+    //    public bool IsSelected { get; set; }
+    //    public int ReferencedEventID { get; set; }
+    //}
 
-    public class SelectableQuestion
-    {
-        //        public SelectableQuestion(Question question)
-        //        {
-        //            Text = question.Text;
-        //            ReferencedQuestionID = question.QuestionID;
-        //            IsSelected = false;
+    //public class SelectableQuestion
+    //{
+    //    //        public SelectableQuestion(Question question)
+    //    //        {
+    //    //            Text = question.Text;
+    //    //            ReferencedQuestionID = question.QuestionID;
+    //    //            IsSelected = false;
 
-        //        }
-        public string Text { get; set; }
-        public bool IsSelected { get; set; }
-        public int ReferencedQuestionID { get; set; }
-    }
+    //    //        }
+    //    public string Text { get; set; }
+    //    public bool IsSelected { get; set; }
+    //    public int ReferencedQuestionID { get; set; }
+    //}
 
     public class Evaluation
     {

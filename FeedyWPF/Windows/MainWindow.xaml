@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FeedyWPF"
         xmlns:Models="clr-namespace:FeedyWPF.Models" x:Class="FeedyWPF.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="526" Width="800" Loaded="Window_Loaded">
-    
-    <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="476" Margin="10,10,0,0" VerticalAlignment="Top" Width="780"/>
+        Title="MainWindow" Height="800" Width="800">
+
+    <TabControl x:Name="tabControl" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,0" SelectionChanged="tabControl_SelectionChanged" VerticalAlignment="Top" Width="Auto"/>
 </Window>

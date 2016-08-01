@@ -1,0 +1,70 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FeedyWPF.Pages"
+      xmlns:Models="clr-namespace:FeedyWPF.Models" x:Class="FeedyWPF.Pages.SetEvaluationPage"
+      mc:Ignorable="d"
+      Title="SetEvaluationPage" Height="Auto" Width="Auto">
+
+    <Page.Resources>
+        <CollectionViewSource x:Key="eventViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:SelectEvent}, CreateList=True}"/>
+        <CollectionViewSource x:Key="questionViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:SelectQuestion}, CreateList=True}"/>
+    </Page.Resources>
+    
+    <Grid  Margin="0,0,10,0" Height="586" VerticalAlignment="Top">
+        <ComboBox x:Name="comboBox" 
+                  
+                  ItemsSource="{Binding Path=QuestionnaireEntries}"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="QuestionnaireID"
+                  SelectedValue="{Binding Path=QuestionnaireID}"
+                  
+                  HorizontalAlignment="Left" Margin="26,84,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="comboBox_SelectionChanged"/>
+        <Label x:Name="label" Content="Fragebogen&#xD;&#xA;" HorizontalAlignment="Left" Margin="26,52,0,0" VerticalAlignment="Top" Width="103" Height="27"/>
+
+        <DataGrid x:Name="eventDataGrid" CanUserAddRows="False" CanUserDeleteRows="False"  AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource eventViewSource}}" Margin="26,131,86,274" RowDetailsVisibilityMode="VisibleWhenSelected">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Auswählen">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox HorizontalAlignment="Center"   IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn x:Name="placeColumn" Binding="{Binding Place}" Header="Place" Width="Auto"/>
+                <DataGridTextColumn x:Name="participantsCountColumn" Binding="{Binding ParticipantsCount}" Header="Participants Count" Width="Auto"/>
+                <DataGridTextColumn x:Name="dateColumn" Binding="{Binding StringDate}" Header="Date" Width="Auto"/>
+                <DataGridTextColumn x:Name="eventIDColumn" Binding="{Binding EventID}" Header="Event ID" Width="SizeToHeader" Visibility="Hidden"/>
+                <DataGridTextColumn x:Name="questionnaireIDColumn" Binding="{Binding QuestionnaireID}" Header="Questionnaire ID" Width="SizeToHeader" Visibility="Hidden"/>
+
+                
+
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <DataGrid x:Name="questionDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource questionViewSource}}" Margin="26,334,86,70" RowDetailsVisibilityMode="VisibleWhenSelected">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Auswählen">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox HorizontalAlignment="Center" IsChecked="{Binding Path=IsSelected, Mode=TwoWay}"></CheckBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn x:Name="textColumn" Binding="{Binding Text}" Header="Frage" Width="Auto"/>
+                <DataGridTextColumn x:Name="evalModeColumn" Binding="{Binding EvalMode}" Header="Eval Mode" Width="SizeToHeader" Visibility="Hidden"/>
+                <DataGridTextColumn x:Name="questionIDColumn" Binding="{Binding QuestionID}" Header="Question ID" Width="SizeToHeader" Visibility="Hidden"/>
+                <DataGridTextColumn x:Name="questionnaireIDColumn1" Binding="{Binding QuestionnaireID}" Header="Questionnaire ID" Visibility="Hidden" Width="SizeToHeader"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="evaluateButton" Content="Auswerten&#xD;&#xA;" HorizontalAlignment="Left" Margin="440,539,0,0" VerticalAlignment="Top" Width="110" Click="evaluateButton_Click" Height="28"/>
+        <Label x:Name="label1" Content="Neue Auswertung" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="42" Width="376" FontSize="24"/>
+        <CheckBox x:Name="selectAllQuestions" Content="Alle Auswählen" HorizontalAlignment="Left" Margin="26,318,0,0" VerticalAlignment="Top" Width="156" Click="selectAllQuestions_Click"/>
+        <CheckBox x:Name="selectAllEvents" Content="Alle Auswählen&#xD;&#xA;" HorizontalAlignment="Left" Margin="26,115,0,0" VerticalAlignment="Top" Width="177"  Click="selectAllEvents_Click"/>
+
+    </Grid>
+</Page>

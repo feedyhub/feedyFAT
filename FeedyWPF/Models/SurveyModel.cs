@@ -18,7 +18,7 @@ namespace FeedyWPF.Models
         public string Place { get; set; }
 
         public int ParticipantsCount { get; set; }
-        public int dummy { get; set; }
+      
         
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? Date { get; set; }

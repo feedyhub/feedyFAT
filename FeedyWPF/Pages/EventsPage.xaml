@@ -22,7 +22,7 @@
         <Label x:Name="label" Content="Datenbank der Umfragen" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="597" FontSize="24" Grid.Column="1"/>
         <Button x:Name="button" Content="Spezifische Auswertung" HorizontalAlignment="Left" Width="142" Margin="417,409,0,10" Grid.Column="1"/>
         <Button x:Name="importDataButton" Content="Neue Umfrage importieren&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23" Grid.Column="1" Margin="564,408,0,0"/>
-        <DataGrid x:Name="eventDataGrid" AutoGenerateColumns="False" Grid.Column="1" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,61,10,38" RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="eventDataGrid_SelectionChanged_1">
+        <DataGrid x:Name="eventDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" Grid.Column="1" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,61,10,38" RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="eventDataGrid_SelectionChanged_1">
             <DataGrid.Columns>
                 <!--<DataGridTemplateColumn x:Name="dateColumn" Header="Date" Width="SizeToHeader">
                     <DataGridTemplateColumn.CellTemplate>

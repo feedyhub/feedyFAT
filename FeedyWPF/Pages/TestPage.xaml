@@ -1,0 +1,16 @@
+﻿<Page x:Class="FeedyWPF.Pages.TestPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FeedyWPF.Pages"
+      mc:Ignorable="d" d:DesignWidth="300"
+      Title="TestPage" Height="67.03">
+
+    <Grid Height="59" VerticalAlignment="Top">
+        <Label x:Name="label" Content="HERE WE GO" HorizontalAlignment="Left" Margin="24,28,0,0" VerticalAlignment="Top" Width="189"/>
+        <CheckBox x:Name="checkBox" Content="CheckBox" HorizontalAlignment="Left" Margin="69,6,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="177,28,0,0" VerticalAlignment="Top" Width="75"/>
+
+    </Grid>
+</Page>

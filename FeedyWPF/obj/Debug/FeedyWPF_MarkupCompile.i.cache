@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\ratz\Git\FeedyWPF\FeedyWPF\App.xaml
-51418243766
+8-394591396
 
-181426621946
+22-362199722
 192101346922
-EventsPage.xaml;ImportWindow.xaml;MainWindow.xaml;TabView.xaml;TabWindow.xaml;
+Pages\EvaluationPage.xaml;Pages\EventsPage.xaml;Pages\SetEvaluationPage.xaml;Pages\TestPage.xaml;Windows\ImportWindow.xaml;Windows\MainWindow.xaml;TabView.xaml;TabWindow.xaml;
 
-True
+False
 
