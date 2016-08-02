@@ -20,15 +20,16 @@ namespace FeedyWPF.Models
         public DbSet<Answer> Answers { get; set; }
         public DbSet<TextData> TextDataSet { get; set; }
         public DbSet<CountData> CountDataSet { get; set; }
-      //  public DbSet<Evaluation> Evaluations { get; set; }
+
+        public DbSet<Evaluation> Evaluations { get; set; }
 
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-
+            // Many to Many relationship
             modelBuilder.Entity<Question>()
-            .HasMany(c => c.Querys).WithMany(i => i.Questions)
+            .HasMany(c => c.Evaluations).WithMany(i => i.Questions)
             .Map(t => t.MapLeftKey("QuestionID")
             .MapRightKey("QueryID")
             .ToTable("QuestionQuery"));

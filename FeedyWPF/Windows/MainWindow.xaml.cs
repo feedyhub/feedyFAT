@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using FeedyWPF.Models;
 using System.Data.Entity;
 using FeedyWPF.Pages;
+using System.Linq;
 
 namespace FeedyWPF
 {
@@ -68,6 +69,8 @@ namespace FeedyWPF
             // add controls to tab item, this case I added just a textbox
             Frame frame = new Frame();
             SetEvaluationPage page = new SetEvaluationPage();
+            page.tabName = tab.Name;
+            page.OnEvaluationPageEvent += new SetEvaluationPage.EvaluationPageEventHandler(setEvaluationTab);
 
             frame.Content = page;
             tab.Content = frame;
@@ -101,6 +104,18 @@ namespace FeedyWPF
                 }
 
             }
+        }
+
+        private void setEvaluationTab(object sender, EvaluationPageEventArgs e)
+        {
+            var setEvaluationPage = sender as SetEvaluationPage;
+            TabItem tab = Tabs.Single(t => t.Name == setEvaluationPage.tabName);
+
+            Frame frame = new Frame();
+            EvaluationPage evaluationPage = new EvaluationPage(e.Evaluation);
+
+            frame.Content = evaluationPage;
+            tab.Content = frame;
         }
     }
 }

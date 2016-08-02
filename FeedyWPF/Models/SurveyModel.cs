@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace FeedyWPF.Models
     {
@@ -64,13 +65,15 @@ namespace FeedyWPF.Models
 
         public class Question
         {
-        //Constructors
+            //Constructors
             public Question() { }
             public Question(string QuestionText) { this.Text = QuestionText; }
             //Primary Key
             public int QuestionID { get; set; }
 
             public string Text { get; set; }
+
+        
             public EvaluationMode EvalMode { get; set; }
 
             //Foreign Key
@@ -80,10 +83,10 @@ namespace FeedyWPF.Models
             //Navigation Property
             public virtual Questionnaire Questionnaire { get; set; }
             public virtual ObservableCollection<Answer> Answers { get; set; }
-            public virtual ObservableCollection<Evaluation> Querys { get; set; }
+            public virtual ObservableCollection<Evaluation> Evaluations { get; set; }
 
 
-    }
+        }
 
         public class Answer
         {

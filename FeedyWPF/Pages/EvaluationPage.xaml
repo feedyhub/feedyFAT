@@ -4,11 +4,88 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FeedyWPF.Pages"
+      xmlns:models="clr-namespace:FeedyWPF.Models"
       mc:Ignorable="d"
       Title="EvaluationPage" Height="532.153" Width="560.763">
+   
+    <Page.Resources>
+        
+        <!--Absolute Evaluation DataTemplate-->
+        <DataTemplate x:Key="AbsoluteEvaluation">
+            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="300">
+                <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
+                <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn x:Name="answerColumn" Binding="{Binding AnswerText}" Header="Antwort" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn x:Name="resultColumn" Binding="{Binding Value}" Header="Anzahl" IsReadOnly="True" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </DataTemplate>
+        
+        <!--PercentageEvaluation DataTemplate-->
+            <DataTemplate x:Key="PercentageEvaluation">
+                <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="300">
+                    <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+
+                    <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="answerColumn" Binding="{Binding AnswerText}" Header="Antwort" IsReadOnly="True" Width="Auto"/>
+                            <DataGridTextColumn x:Name="resultColumn" Binding="{Binding Value}" Header="Anzahl" IsReadOnly="True" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </DataTemplate>
+
+        <!--PercentageEvaluation DataTemplate-->
+        <DataTemplate x:Key="MeanValueEvaluation">
+            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="310">
+                <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+
+                <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn x:Name="FirstAnswerColumn" Binding="{Binding FirstAnswerValue}" Header="{Binding FirstAnswer}" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn x:Name="meanValColumn" Binding="{Binding Value}" Header="{Binding EvaluationLabel}" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn x:Name="LastAnswerColumn" Binding="{Binding LastAnswerValue}" Header="{Binding LastAnswer}" IsReadOnly="True" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </DataTemplate>
+
+        <models:EvaluationTemplateSelector x:Key="templateSelector"
+              AbsoluteEvaluation="{StaticResource AbsoluteEvaluation}"
+             />
+        <models:EnumBooleanConverter x:Key="enumBooleanConverter" />
+    </Page.Resources>
+    
+    <!--Definition of View-->
     <Grid>
-        <ScrollViewer x:Name="scrollViewer" HorizontalAlignment="Left" Height="100" Margin="-87,259,0,0" VerticalAlignment="Top" Width="100"/>
-      
+
+        <ListView ItemsSource="{Binding QuestionEvaluations}"  Width="560.763">
+            <ListView.View>
+                <GridView>
+                    <!--DataTemplate for Evaluation-->
+                    <GridViewColumn Width="300" CellTemplateSelector="{StaticResource templateSelector}" Header="Auswertung"/>
+
+                    <!--RadioBullets for choosing Evaluation Mode-->
+                    <GridViewColumn Header="Optionen">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <StackPanel>
+                                        <RadioButton IsChecked="{Binding Path=EvalMode, Converter={StaticResource enumBooleanConverter}, ConverterParameter=ABSOLUTE}">Absolute Values</RadioButton>
+                                        <RadioButton IsChecked="{Binding Path=EvalMode, Converter={StaticResource enumBooleanConverter}, ConverterParameter=PERCENTAGE}">Percentage</RadioButton>
+                                        <RadioButton IsChecked="{Binding Path=EvalMode, Converter={StaticResource enumBooleanConverter}, ConverterParameter=MEAN_VALUE}">Meanvalue</RadioButton>
+                                        <RadioButton IsChecked="{Binding Path=EvalMode, Converter={StaticResource enumBooleanConverter}, ConverterParameter=TEXT}">Text</RadioButton>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+      <Button Content="Finished" Name="endButton" Click="endButton_Click" Margin="220,502,269,0"  />
     </Grid>
 </Page>

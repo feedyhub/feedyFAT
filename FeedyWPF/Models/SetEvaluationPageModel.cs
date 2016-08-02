@@ -48,6 +48,7 @@ namespace FeedyWPF.Models
         public SelectQuestion(Question baseQuestion)
         {
             this.QuestionID = baseQuestion.QuestionID;
+            this.EvalMode = baseQuestion.EvalMode;
             this.Text = baseQuestion.Text;
             this.Questionnaire = baseQuestion.Questionnaire;
             this.QuestionnaireID = baseQuestion.QuestionnaireID;

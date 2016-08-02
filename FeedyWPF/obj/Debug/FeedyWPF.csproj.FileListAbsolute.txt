@@ -27,4 +27,9 @@ C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\FeedyWPF.Properties.Resources.reso
 C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\FeedyWPF.csproj.GenerateResource.Cache
 C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\FeedyWPF.exe
 C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\FeedyWPF.pdb
+C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\Pages\EvaluationPage.g.cs
+C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\Pages\TestPage.g.cs
+C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\Pages\TestPage.baml
+C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\Pages\EvaluationPage.baml
 C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\FeedyWPF.csprojResolveAssemblyReference.cache

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FeedyWPF.Models;
 
 namespace FeedyWPF.Pages
 {
@@ -24,6 +25,21 @@ namespace FeedyWPF.Pages
         {
             InitializeComponent();
            
+        }
+
+        public EvaluationPage(Evaluation evaluation)
+        {
+            InitializeComponent();
+            Evaluation = evaluation;
+
+            DataContext = Evaluation;
+        }
+
+        public Evaluation Evaluation { get; set; }
+
+        private void endButton_Click(object sender, RoutedEventArgs e)
+        {
+            int a = 0;
         }
     }
 }

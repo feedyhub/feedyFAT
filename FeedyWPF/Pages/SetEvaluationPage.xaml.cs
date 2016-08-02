@@ -1,5 +1,6 @@
 ﻿using FeedyWPF.Models;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity;
 using System.Linq;
@@ -22,14 +23,26 @@ namespace FeedyWPF.Pages
             SetEvaluationPageModel vm = new SetEvaluationPageModel();
             DataContext = vm;
         }
+        public string tabName { get; set; }
         private FeedyDbContext db = new FeedyDbContext();
 
         private CollectionViewSource questionViewSource { get; set; }
-        private CollectionViewSource eventViewSource { get; set; }
+       
+        private BindingList<SelectEvent> SelectEvents { get; set; }
+        private BindingList<SelectQuestion> SelectQuestions { get; set; }
+
+        public delegate void EvaluationPageEventHandler(object sender, EvaluationPageEventArgs e);
+        public event EvaluationPageEventHandler OnEvaluationPageEvent;
 
         private void evaluateButton_Click(object sender, RoutedEventArgs e)
         {
-           //New Evaluation
+
+            Evaluation Evaluation = new Evaluation(new ObservableCollection<Event>(SelectEvents), new ObservableCollection<Question>(SelectQuestions));
+
+            EvaluationPageEventArgs args = new EvaluationPageEventArgs();
+            args.Evaluation = Evaluation;
+            OnEvaluationPageEvent(this, args);
+
         }
 
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -38,13 +51,13 @@ namespace FeedyWPF.Pages
 
             SetEvaluationPageModel dataContext = DataContext as SetEvaluationPageModel;
 
-            eventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
+            var eventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
 
             db.Events
                 .Where(ev => ev.QuestionnaireID==dataContext.QuestionnaireID)
                 .Load();
 
-            BindingList<SelectEvent> SelectEvents = new BindingList<SelectEvent>();
+            SelectEvents = new BindingList<SelectEvent>();
 
             foreach (var element in db.Events.Local)
             {
@@ -53,13 +66,13 @@ namespace FeedyWPF.Pages
 
             eventViewSource.Source = SelectEvents;
 
-            questionViewSource = ((CollectionViewSource)(FindResource("questionViewSource")));
+            var questionViewSource = ((CollectionViewSource)(FindResource("questionViewSource")));
 
             db.Questions
                 .Where(q => q.QuestionnaireID == dataContext.QuestionnaireID)
                 .Load();
 
-            var SelectQuestions = new BindingList<SelectQuestion>();
+            SelectQuestions = new BindingList<SelectQuestion>();
 
             foreach (var element in db.Questions.Local)
             {
@@ -75,7 +88,7 @@ namespace FeedyWPF.Pages
         {
             // If »check all« is checked, check all, otherwise uncheck all.
 
-            var SelectEvents = eventViewSource.Source as BindingList<SelectEvent>;
+            //var SelectEvents = eventViewSource.Source as BindingList<SelectEvent>;
 
             if (selectAllEvents.IsChecked == true)
             {
@@ -101,7 +114,7 @@ namespace FeedyWPF.Pages
         {
             // If »check all« is checked, check all, otherwise uncheck all.
 
-            var SelectQuestions = questionViewSource.Source as BindingList<SelectQuestion>;
+            //var SelectQuestions = questionViewSource.Source as BindingList<SelectQuestion>;
 
             if (selectAllQuestions.IsChecked == true)
             {

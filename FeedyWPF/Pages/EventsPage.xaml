@@ -24,14 +24,7 @@
         <Button x:Name="importDataButton" Content="Neue Umfrage importieren&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23" Grid.Column="1" Margin="564,408,0,0"/>
         <DataGrid x:Name="eventDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" Grid.Column="1" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,61,10,38" RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="eventDataGrid_SelectionChanged_1">
             <DataGrid.Columns>
-                <!--<DataGridTemplateColumn x:Name="dateColumn" Header="Date" Width="SizeToHeader">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <DatePicker SelectedDate="{Binding Date, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
-                
+
                 <DataGridTextColumn x:Name="questionnaireColumn" Binding="{Binding Questionnaire.Name}" Header="Fragebogen" IsReadOnly="True" Width="Auto" Visibility="Visible"/>
                 <DataGridTextColumn x:Name="placeColumn" Binding="{Binding Place}" Header="Place" IsReadOnly="True" Width="Auto"/>
                 <DataGridTextColumn x:Name="dateColumn" Binding="{Binding DateString}" Header="Date" IsReadOnly="True" Width="Auto"/>

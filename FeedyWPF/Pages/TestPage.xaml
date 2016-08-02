@@ -6,11 +6,16 @@
       xmlns:local="clr-namespace:FeedyWPF.Pages"
       mc:Ignorable="d" d:DesignWidth="300"
       Title="TestPage" Height="67.03">
+    <DockPanel HorizontalAlignment="Left" Height="Auto" LastChildFill="False" VerticalAlignment="Top" Width="Auto">
+        <Label Content="{Binding Question.Text}" Name="labelTitl" DockPanel.Dock="Top"></Label>
+        <DataGrid DockPanel.Dock="Bottom">
+            <DataGrid.Columns>
 
-    <Grid Height="59" VerticalAlignment="Top">
-        <Label x:Name="label" Content="HERE WE GO" HorizontalAlignment="Left" Margin="24,28,0,0" VerticalAlignment="Top" Width="189"/>
-        <CheckBox x:Name="checkBox" Content="CheckBox" HorizontalAlignment="Left" Margin="69,6,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="177,28,0,0" VerticalAlignment="Top" Width="75"/>
+            <DataGridTextColumn x:Name="answerColumn" Binding="{Binding Answer.Text}" Header="Antwort" IsReadOnly="True" Width="Auto" Visibility="Visible"/>
+            <DataGridTextColumn x:Name="resultColumn" Binding="{Binding Result}" Header="Anzahl" IsReadOnly="True" Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
-    </Grid>
+    </DockPanel>
+
 </Page>

@@ -26,9 +26,6 @@ namespace FeedyWPF
         public EventsPage()
         {
             InitializeComponent();
-
-            
-            
         }
 
         private void RefreshTable(object sender, EventsContentChangedEventArgs e)
