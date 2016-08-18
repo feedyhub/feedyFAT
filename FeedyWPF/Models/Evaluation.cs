@@ -30,16 +30,6 @@ namespace FeedyWPF.Models
             this.Questions = questionSelection;
 
             this.QuestionEvaluations = ExecuteQuery();
-            foreach(var question in QuestionEvaluations)
-            {
-                question.PropertyChanged += Question_PropertyChanged;
-            }
-        }
-
-        private void Question_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            ExecuteQuery();
-            MessageBox.Show("PROPERTY CHANGED SHOOOOOT");
         }
 
 
@@ -120,30 +110,46 @@ namespace FeedyWPF.Models
             Question = question;
             ParticipantsCount = participantsCount;
 
+            PropertyChanged += Question_PropertyChanged;
             EvaluateQuestion();
         }
 
         public string QuestionName { get; set; }
         public Question Question { get; set; }
         public int ParticipantsCount { get; set; }
-        public List<AnswerEvaluation> AnswerEvaluations { get; set; }
+        public ObservableCollection<AnswerEvaluation> AnswerEvaluations { get; set; }
+    
+        
 
         private EvaluationMode _evalMode;
         public EvaluationMode EvalMode
         { get { return _evalMode; } set { _evalMode = value; OnPropertyChanged("EvalMode"); } }
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
-    
-
         private void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void EvaluateQuestion()
+                   
+                
+           
+
+
+        private void Question_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            AnswerEvaluations = new List<AnswerEvaluation>();
+            if(e.PropertyName == "EvalMode")
+            {
+                EvaluateQuestion();
+            }
+
+        }
+
+        public void EvaluateQuestion()
+                {
+
+            AnswerEvaluations = new ObservableCollection<AnswerEvaluation>();
 
             foreach (var answer in Question.Answers)
             {
@@ -151,6 +157,7 @@ namespace FeedyWPF.Models
                 {
                     AnswerEvaluations.Add(new MeanValueEvaluation(Question, ParticipantsCount));
                 }
+
                 else
                 {
                     switch (Question.EvalMode)
@@ -163,7 +170,11 @@ namespace FeedyWPF.Models
                             break;
 
                         case EvaluationMode.TEXT:
-                            AnswerEvaluations.Add(new TextEvaluation(answer));
+                            foreach(var textData in answer.TextDataSet)
+                            {
+                                AnswerEvaluations.Add(new TextEvaluation(textData.Text));
+                            }
+                            
 
                             break;
                         default:
@@ -184,12 +195,13 @@ namespace FeedyWPF.Models
 
     public class TextEvaluation : AnswerEvaluation
     {
-        public TextEvaluation(Answer answer)
+        public TextEvaluation(string text)
         {
-            TextAnswers = answer.TextDataSet.Select(t => t.Text).ToList();
+
+            TextAnswer = text;
         }
 
-        public List<string> TextAnswers { get; set; }
+        public string TextAnswer { get; set; }
     }
 
     public class AbsoluteEvaluation : AnswerEvaluation

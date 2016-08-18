@@ -9,9 +9,11 @@
       Title="EvaluationPage" Height="532.153" Width="560.763">
    
     <Page.Resources>
-        
+        <DataTemplate x:Key="Default" DataType="{x:Type models:QuestionEvaluation}">
+            <TextBlock>JUHUUI</TextBlock>
+        </DataTemplate>
         <!--Absolute Evaluation DataTemplate-->
-        <DataTemplate x:Key="AbsoluteEvaluation">
+        <DataTemplate x:Key="AbsoluteEvaluation" DataType="{x:Type models:QuestionEvaluation}">
             <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="300">
                 <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
@@ -25,7 +27,7 @@
         </DataTemplate>
         
         <!--PercentageEvaluation DataTemplate-->
-            <DataTemplate x:Key="PercentageEvaluation">
+        <DataTemplate x:Key="PercentageEvaluation" DataType="{x:Type models:QuestionEvaluation}">
                 <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="300">
                     <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
@@ -38,8 +40,8 @@
                 </DockPanel>
             </DataTemplate>
 
-        <!--PercentageEvaluation DataTemplate-->
-        <DataTemplate x:Key="MeanValueEvaluation">
+        <!--MeanValueEvaluation DataTemplate-->
+        <DataTemplate x:Key="MeanValueEvaluation" DataType="{x:Type models:QuestionEvaluation}">
             <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="310">
                 <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
@@ -53,10 +55,23 @@
             </DockPanel>
         </DataTemplate>
 
-        <models:EvaluationTemplateSelector x:Key="templateSelector"
-              AbsoluteEvaluation="{StaticResource AbsoluteEvaluation}"
-             />
+        <!--TextEvaluation DataTemplate-->
+        <DataTemplate x:Key="TextEvaluation" DataType="{x:Type models:QuestionEvaluation}">
+            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="310">
+                <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+                <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn x:Name="textAnswerColumn" Binding="{Binding TextAnswer}" Header="Antworten" IsReadOnly="True" Width="Auto"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </DataTemplate>
+
+
+
         <models:EnumBooleanConverter x:Key="enumBooleanConverter" />
+
+       
     </Page.Resources>
     
     <!--Definition of View-->
@@ -66,7 +81,37 @@
             <ListView.View>
                 <GridView>
                     <!--DataTemplate for Evaluation-->
-                    <GridViewColumn Width="300" CellTemplateSelector="{StaticResource templateSelector}" Header="Auswertung"/>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type models:QuestionEvaluation}">
+                                <ContentControl Content="{Binding }">
+                                    <ContentControl.Style>
+                                        <Style TargetType="{x:Type ContentControl}">
+
+                                            <!-- Default Template -->
+                                            <Setter Property="ContentTemplate" Value="{StaticResource Default}" />
+
+                                            <!-- Triggers to change Template -->
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding EvalMode}" Value="ABSOLUTE">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource AbsoluteEvaluation}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding EvalMode}" Value="PERCENTAGE">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource PercentageEvaluation}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding EvalMode}" Value="MEAV_VALUE">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource MeanValueEvaluation}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding EvalMode}" Value="TEXT">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource TextEvaluation}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
                     <!--RadioBullets for choosing Evaluation Mode-->
                     <GridViewColumn Header="Optionen">
