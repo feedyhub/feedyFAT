@@ -6,14 +6,14 @@
       xmlns:local="clr-namespace:FeedyWPF.Pages"
       xmlns:Models="clr-namespace:FeedyWPF.Models" x:Class="FeedyWPF.Pages.SetEvaluationPage"
       mc:Ignorable="d"
-      Title="SetEvaluationPage" Height="Auto" Width="Auto">
+      Title="SetEvaluationPage" >
 
     <Page.Resources>
         <CollectionViewSource x:Key="eventViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:SelectEvent}, CreateList=True}"/>
         <CollectionViewSource x:Key="questionViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:SelectQuestion}, CreateList=True}"/>
     </Page.Resources>
     
-    <Grid  Margin="0,0,10,0" Height="586" VerticalAlignment="Top">
+    <Grid  Margin="0,0,10,0"  VerticalAlignment="Top">
         <ComboBox x:Name="comboBox" 
                   
                   ItemsSource="{Binding Path=QuestionnaireEntries}"

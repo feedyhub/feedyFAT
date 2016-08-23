@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:FeedyWPF.Pages"
       xmlns:models="clr-namespace:FeedyWPF.Models"
       mc:Ignorable="d"
-      Title="EvaluationPage" Height="532.153" Width="560.763">
+      Title="EvaluationPage" Height="800" Width="1240">
    
     <Page.Resources>
         <DataTemplate x:Key="Default" DataType="{x:Type models:QuestionEvaluation}">
