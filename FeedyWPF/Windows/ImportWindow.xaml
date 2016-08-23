@@ -5,35 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FeedyWPF"
         mc:Ignorable="d"
-        Title="ImportWindow" Height="371.934" Width="467.575">
-    <Grid Margin="0,0,0,3">
-        <Label x:Name="pageTitle" Content="Eine neue Umfrage zur Datenbank hinzufügen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="43" Width="440" FontSize="20"/>
-        <Button x:Name="directoryButton" Content="Durchsuchen" HorizontalAlignment="Left" Margin="10,84,0,0" VerticalAlignment="Top" Width="82" Click="directoryButton_Click"/>
-        <Label x:Name="filenameLabel" Content="Datei auswählen" HorizontalAlignment="Left" Margin="97,82,0,0" VerticalAlignment="Top" Width="166"/>
-        <Label x:Name="label1" Content="Umfragedaten als .CSV Datei auswählen&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top" Width="264" Height="26"/>
-        <Label x:Name="label2" Content="Ort" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" Width="45"/>
+        Title="ImportWindow" Height="330" Width="400">
+    <DockPanel Margin="0,0,0,3">
+        <Label x:Name="pageTitle" Content="Eine neue Umfrage zur Datenbank hinzufügen" DockPanel.Dock="Top"  HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="35" Width="440" FontSize="18"/>
+        <Label x:Name="label1" Content="Umfragedaten als .CSV Datei auswählen" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="264" Height="26"/>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <Button x:Name="directoryButton" Content="Durchsuchen"  Margin="10,0,0,0" VerticalAlignment="Top" Width="82" Click="directoryButton_Click"/>
+            <Label x:Name="filenameLabel" Content="Datei auswählen" HorizontalAlignment="Left" Margin="10,0,0,0" Width="Auto" VerticalAlignment="Top" />
 
-        <TextBox x:Name="placeTextBox"  Text="{Binding Path=Event.Place, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Left" Height="23" Margin="10,137,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        
-        <Label x:Name="label3" Content="Datum" HorizontalAlignment="Left" Margin="10,172,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label4" Content="Fragebogen&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,235,0,0" VerticalAlignment="Top" Width="120" Height="27"/>
-        
-        <ComboBox x:Name="questionnaireComboBox"
+        </StackPanel >
+        <StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,15,0,0">
+            <Label x:Name="label2" Content="Ort" HorizontalAlignment="Left"  Margin="10,0,0,0" VerticalAlignment="Top" Width="45"/>
+
+            <TextBox x:Name="placeTextBox"  Text="{Binding Path=Event.Place, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Left" Height="23" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
+        </StackPanel>
+        <StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,15,0,0">
+            <Label x:Name="label3" Content="Datum" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+            <DatePicker x:Name="datePicker" SelectedDate="{Binding Path=Event.Date}" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" FirstDayOfWeek="Monday" Width="120"/>
+
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,15,0,0" >
+            <StackPanel >
+                <Label x:Name="label4" Content="Fragebogen" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="120" Height="27"/>
+
+                <ComboBox x:Name="questionnaireComboBox" 
                  
                   ItemsSource="{Binding Path=QuestionnaireEntries}"
                   DisplayMemberPath="Name"
                   SelectedValuePath="QuestionnaireID"
                   SelectedValue="{Binding Path=QuestionnaireID}"
-                  HorizontalAlignment="Left" Margin="10,262,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="questionnaireComboBox_SelectionChanged"/>
-     
-           
-        <Label x:Name="label5" Content="Oder: Neuer Fragebogen&#xD;&#xA;" HorizontalAlignment="Left" Margin="173,235,0,0" VerticalAlignment="Top" Width="153" Height="27"/>
+                  HorizontalAlignment="Left" Margin="10,0,0,0"
+                   VerticalAlignment="Top" Width="120" SelectionChanged="questionnaireComboBox_SelectionChanged"/>
 
-        <TextBox x:Name="newQuestionnaireTextBox" Text="{Binding Path=NewQuestionnaire.Name, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="23" Margin="173,262,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153"/>
-        
-        <Button x:Name="importButton" Content="Los!" HorizontalAlignment="Left" Margin="10,302,0,0" VerticalAlignment="Top" Width="75" Click="importButton_Click"/>
-       
-        <DatePicker x:Name="datePicker" SelectedDate="{Binding Path=Event.Date}" HorizontalAlignment="Left" Margin="10,198,0,0" VerticalAlignment="Top" FirstDayOfWeek="Monday"/>
 
-    </Grid>
+            </StackPanel>
+            <StackPanel>
+                <Label x:Name="label5" Content="Oder: Neuer Fragebogen" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="153" Height="27"/>
+
+                <TextBox x:Name="newQuestionnaireTextBox" Text="{Binding Path=NewQuestionnaire.Name, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="23" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153"/>
+
+            </StackPanel>
+        </StackPanel>
+
+
+
+        <Button x:Name="importButton" Content="Los!" DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="10,10,10,0" Width="75" Height="20
+                " Click="importButton_Click"/>
+
+
+    </DockPanel>
 </Window>

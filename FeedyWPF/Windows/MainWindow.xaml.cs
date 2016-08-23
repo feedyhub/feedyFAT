@@ -16,7 +16,7 @@ using FeedyWPF.Models;
 using System.Data.Entity;
 using FeedyWPF.Pages;
 using System.Linq;
-
+using System.Collections.ObjectModel;
 
 namespace FeedyWPF
 {
@@ -32,7 +32,7 @@ namespace FeedyWPF
             InitializeComponent();
 
             //Set TabView DataContext
-            Tabs = new List<TabItem>();
+            Tabs = new ObservableCollection<TabItem>();
             tabControl.DataContext = Tabs;
 
             // Set EventsPage as first Tab
@@ -57,7 +57,7 @@ namespace FeedyWPF
             tabControl.SelectedIndex = 0;
         }
 
-        private List<TabItem> Tabs { get; set; }
+        private ObservableCollection<TabItem> Tabs { get; set; }
         private TabItem AddTab { get; set; }
         private TabItem PlusTab { get; set; }
         private int tabsCount { get { return Tabs.Count; } }
@@ -72,11 +72,12 @@ namespace FeedyWPF
             tab.Name = string.Format("tab{0}", tabsCount - 1);
 
 
-            // add controls to tab item, this case I added just a textbox
+            // add controls to tab item
             Frame frame = new Frame();
             SetEvaluationPage page = new SetEvaluationPage();
             page.tabName = tab.Name;
             page.OnEvaluationPageEvent += new SetEvaluationPage.EvaluationPageEventHandler(setEvaluationTab);
+            
            
 
             frame.Content = page;
@@ -97,17 +98,8 @@ namespace FeedyWPF
             {
                 if (tab.Equals(PlusTab))
                 {
-                    // clear tab control binding
-                    tabControl.DataContext = null;
-
                     // add new tab
                     NewTab();
-
-                    // bind tab control
-                    tabControl.DataContext = Tabs;
-
-                    // select newly added tab item
-
                 }
 
             }
@@ -116,9 +108,12 @@ namespace FeedyWPF
         private void setEvaluationTab(object sender, EvaluationPageEventArgs e)
         {
             TabItem tab = new TabItem();
-            Frame frame = new Frame();
+            
+            //Add Controls to Page
             EvaluationPage evaluationPage = new EvaluationPage(e.Evaluation);
+            evaluationPage.OnCloseTabEvent += new EvaluationPage.CloseTabEventHandler(CloseTab);
 
+            Frame frame = new Frame();
             frame.Content = evaluationPage;
 
             if (sender is SetEvaluationPage)
@@ -136,12 +131,17 @@ namespace FeedyWPF
 
                 Tabs.Insert(tabsCount - 1, tab);
                 tabControl.SelectedItem = tab;
-
-            }
-
-           
-           
+            } 
         }
+
+        private void CloseTab(object sender, CloseTabEventArgs e)
+        {
+
+
+            throw new NotImplementedException();
+            
+        }
+       
     }
 
 }

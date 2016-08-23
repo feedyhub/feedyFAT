@@ -20,4 +20,9 @@ namespace FeedyWPF.Models
         public Evaluation Evaluation { get; set; }
     }
 
+    public class CloseTabEventArgs : EventArgs
+    {
+
+    }
+
 }

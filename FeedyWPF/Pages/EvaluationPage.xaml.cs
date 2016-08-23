@@ -31,6 +31,9 @@ namespace FeedyWPF.Pages
            
         }
 
+        public delegate void CloseTabEventHandler(object sender, CloseTabEventArgs e);
+        public event CloseTabEventHandler OnCloseTabEvent;
+
         public EvaluationPage(Evaluation evaluation)
         {
             InitializeComponent();
@@ -44,6 +47,11 @@ namespace FeedyWPF.Pages
         private void endButton_Click(object sender, RoutedEventArgs e)
         {
             int a = 0;
+        }
+
+        private void CloseTabButton_Click(object sender, RoutedEventArgs e)
+        {
+            OnCloseTabEvent(this, new CloseTabEventArgs());
         }
     }
 }

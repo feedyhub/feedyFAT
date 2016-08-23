@@ -6,24 +6,33 @@
       xmlns:local="clr-namespace:FeedyWPF"
       xmlns:Models="clr-namespace:FeedyWPF.Models"
       mc:Ignorable="d"
-      Title="EventsView" Height="Auto"  Width="Auto" Loaded="Page_Loaded">
+      Title="EventsView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Loaded="Page_Loaded">
 
     <Page.Resources>
         <CollectionViewSource x:Key="eventViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Event}, CreateList=True}"/>
     </Page.Resources>
-    <StackPanel DataContext="{StaticResource eventViewSource}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <DockPanel DataContext="{StaticResource eventViewSource}"  LastChildFill="False">
 
       
 
-        <Label x:Name="label" Content="Datenbank der Umfragen" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="597" FontSize="24"/>
-        <DataGrid x:Name="eventDataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False"  EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,5,10,0
-                  " RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="eventDataGrid_SelectionChanged_1">
+        <Label x:Name="label" Content="Datenbank der Umfragen" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="300" FontSize="24"/>
+       
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+            <Button x:Name="button" Content="Spezifische Auswertung" HorizontalAlignment="Right" Width="142" Margin="3,10,3
+                    ,10" />
+            <Button x:Name="importDataButton" Content="Neue Umfrage importieren" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23"  
+                    Margin="3,10,10,5"/>
+                    
+        </StackPanel>
+
+        <DataGrid x:Name="eventDataGrid" HorizontalAlignment="Stretch" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False"  EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,5,10,0"
+                   RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="eventDataGrid_SelectionChanged_1" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
 
                 <DataGridTextColumn x:Name="questionnaireColumn" Binding="{Binding Questionnaire.Name}" Header="Fragebogen" IsReadOnly="True" Width="Auto" Visibility="Visible"/>
                 <DataGridTextColumn x:Name="placeColumn" Binding="{Binding Place}" Header="Place" IsReadOnly="True" Width="Auto"/>
                 <DataGridTextColumn x:Name="dateColumn" Binding="{Binding DateString}" Header="Date" IsReadOnly="True" Width="Auto"/>
-                <DataGridTextColumn x:Name="participantsCountColumn" Binding="{Binding ParticipantsCount}" Header="Anzahl Teilnehmende" IsReadOnly="True" Width="Auto"/>
+                <DataGridTextColumn x:Name="participantsCountColumn" Binding="{Binding ParticipantsCount}" Header="Anzahl Teilnehmende" IsReadOnly="True" Width="*"/>
                 <DataGridTextColumn x:Name="eventIDColumn" Binding="{Binding EventID}" Header="Event ID" Width="Auto" IsReadOnly="True" Visibility="Hidden"/>
 
                 <DataGridTemplateColumn>
@@ -43,15 +52,8 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="button" Content="Spezifische Auswertung" HorizontalAlignment="Right" Width="142" Margin="3,10,3
-                    ,10" />
-            <Button x:Name="importDataButton" Content="Neue Umfrage importieren&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23"  Margin="3
-                    ,10,10,5"/>
-        </StackPanel>
-        
 
-    </StackPanel>
+    </DockPanel>
 </Page>
 
 

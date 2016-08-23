@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:FeedyWPF.Pages"
       xmlns:models="clr-namespace:FeedyWPF.Models"
       mc:Ignorable="d"
-      Title="EvaluationPage" Height="800" Width="1240">
+      Title="EvaluationPage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
    
     <Page.Resources>
         <DataTemplate x:Key="Default" DataType="{x:Type models:QuestionEvaluation}">
@@ -75,9 +75,15 @@
     </Page.Resources>
     
     <!--Definition of View-->
-    <Grid>
-
-        <ListView ItemsSource="{Binding QuestionEvaluations}"  Width="560.763">
+    <DockPanel ScrollViewer.CanContentScroll="False" LastChildFill="True" Margin="10,10,10,10" >
+        
+        <Label Content="Auswertung" DockPanel.Dock="Top"/>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
+            <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click"/>
+            <Button Content="Als .txt Exportieren" Margin="5,10,10,0" />
+        </StackPanel>
+        
+        <ListView ItemsSource="{Binding QuestionEvaluations}"   Margin="10,10,10,0" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" >
             <ListView.View>
                 <GridView>
                     <!--DataTemplate for Evaluation-->
@@ -131,6 +137,8 @@
                 </GridView>
             </ListView.View>
         </ListView>
-      <Button Content="Finished" Name="endButton" Click="endButton_Click" Margin="220,502,269,0"  />
-    </Grid>
+       
+        
+    </DockPanel>
+    
 </Page>
