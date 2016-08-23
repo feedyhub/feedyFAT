@@ -17,6 +17,7 @@ using System.Data.Entity;
 using FeedyWPF.Pages;
 using System.Linq;
 
+
 namespace FeedyWPF
 {
     /// <summary>
@@ -26,6 +27,7 @@ namespace FeedyWPF
     {
         public MainWindow()
         {
+         
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
             InitializeComponent();
 
@@ -36,8 +38,11 @@ namespace FeedyWPF
             // Set EventsPage as first Tab
             TabItem tabitem = new TabItem();
             tabitem.Header = "Umfragen";
+
             Frame eventsFrame = new Frame();
             EventsPage eventsPage = new EventsPage();
+
+            eventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(setEvaluationTab);
 
             eventsFrame.Content = eventsPage;
             tabitem.Content = eventsFrame;
@@ -55,15 +60,16 @@ namespace FeedyWPF
         private List<TabItem> Tabs { get; set; }
         private TabItem AddTab { get; set; }
         private TabItem PlusTab { get; set; }
+        private int tabsCount { get { return Tabs.Count; } }
 
         private void NewTab()
         {
-            int count = Tabs.Count;
+          
 
             // create new tab item
             TabItem tab = new TabItem();
-            tab.Header = string.Format("Neue Umfrage {0}", count - 1);
-            tab.Name = string.Format("tab{0}", count - 1);
+            tab.Header = string.Format("Neue Auswertung {0}", tabsCount - 1);
+            tab.Name = string.Format("tab{0}", tabsCount - 1);
 
 
             // add controls to tab item, this case I added just a textbox
@@ -71,12 +77,13 @@ namespace FeedyWPF
             SetEvaluationPage page = new SetEvaluationPage();
             page.tabName = tab.Name;
             page.OnEvaluationPageEvent += new SetEvaluationPage.EvaluationPageEventHandler(setEvaluationTab);
+           
 
             frame.Content = page;
             tab.Content = frame;
 
             // insert tab item right before the last (+) tab item
-            Tabs.Insert(count - 1, tab);
+            Tabs.Insert(tabsCount - 1, tab);
 
             tabControl.SelectedItem = tab;
         }
@@ -108,14 +115,33 @@ namespace FeedyWPF
 
         private void setEvaluationTab(object sender, EvaluationPageEventArgs e)
         {
-            var setEvaluationPage = sender as SetEvaluationPage;
-            TabItem tab = Tabs.Single(t => t.Name == setEvaluationPage.tabName);
-
+            TabItem tab = new TabItem();
             Frame frame = new Frame();
             EvaluationPage evaluationPage = new EvaluationPage(e.Evaluation);
 
             frame.Content = evaluationPage;
-            tab.Content = frame;
+
+            if (sender is SetEvaluationPage)
+            {
+                var setEvaluationPage = sender as SetEvaluationPage;
+                tab = Tabs.Single(t => t.Name == setEvaluationPage.tabName);
+                tab.Content = frame;
+            }
+           
+            if (sender is EventsPage)
+            {
+                tab.Content = frame;
+                ((TabItem)tab).Header = string.Format("Neue Auswertung {0}", tabsCount - 1);
+                tab.Name = string.Format("tab{0}", tabsCount - 1);
+
+                Tabs.Insert(tabsCount - 1, tab);
+                tabControl.SelectedItem = tab;
+
+            }
+
+           
+           
         }
     }
+
 }

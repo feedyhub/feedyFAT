@@ -16,11 +16,15 @@ using FeedyWPF.Models;
 
 namespace FeedyWPF.Pages
 {
+    
+
     /// <summary>
     /// Interaction logic for EvaluationPage.xaml
     /// </summary>
     public partial class EvaluationPage : Page
     {
+        public Evaluation Evaluation { get; set; }
+
         public EvaluationPage()
         {
             InitializeComponent();
@@ -35,7 +39,7 @@ namespace FeedyWPF.Pages
             DataContext = Evaluation;
         }
 
-        public Evaluation Evaluation { get; set; }
+        
 
         private void endButton_Click(object sender, RoutedEventArgs e)
         {

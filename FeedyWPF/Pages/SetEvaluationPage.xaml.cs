@@ -36,8 +36,24 @@ namespace FeedyWPF.Pages
 
         private void evaluateButton_Click(object sender, RoutedEventArgs e)
         {
+            var SelectedEvents = new List<Event>();
+            
+            foreach( var item in SelectEvents)
+            {
+                if (item.IsSelected)
+                    SelectedEvents.Add(item);
+            }
 
-            Evaluation Evaluation = new Evaluation(new ObservableCollection<Event>(SelectEvents), new ObservableCollection<Question>(SelectQuestions));
+            var SelectedQuestions = new List<Question>();
+
+            foreach (var item in SelectQuestions)
+            {
+                if (item.IsSelected)
+                    SelectedQuestions.Add(item);
+            }
+
+
+            Evaluation Evaluation = new Evaluation(new ObservableCollection<Event>(SelectedEvents), new ObservableCollection<Question>(SelectedQuestions));
 
             EvaluationPageEventArgs args = new EvaluationPageEventArgs();
             args.Evaluation = Evaluation;

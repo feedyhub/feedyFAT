@@ -90,7 +90,7 @@ namespace FeedyWPF.Models
 
         public class Answer
         {
-            public int? dummy { get; set; }
+
             public Answer() { }
             public Answer(string AnswerText) { this.Text = AnswerText; }
             //Primary Key

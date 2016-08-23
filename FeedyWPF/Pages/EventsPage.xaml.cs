@@ -28,6 +28,10 @@ namespace FeedyWPF
             InitializeComponent();
         }
 
+        public delegate void EvaluationPageEventHandler(object sender, EvaluationPageEventArgs e);
+        public event EvaluationPageEventHandler OnEvaluationPageEvent;
+
+
         private void RefreshTable(object sender, EventsContentChangedEventArgs e)
         {
             CollectionViewSource eventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
@@ -88,7 +92,11 @@ namespace FeedyWPF
                     var row = (DataGridRow)vis;
                     Event SelectedEvent = row.DataContext as Event;
 
-                    throw new NotImplementedException();
+                    Evaluation Evaluation = new Evaluation(SelectedEvent);
+
+                    var args = new EvaluationPageEventArgs();
+                    args.Evaluation = Evaluation;
+                    OnEvaluationPageEvent(this, args);
 
                     break;
                 }

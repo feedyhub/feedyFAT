@@ -31,6 +31,15 @@ namespace FeedyWPF.Models
 
             this.QuestionEvaluations = ExecuteQuery();
         }
+        public Evaluation(Event Event)
+        {
+            // Evaluate full event
+            this.Events = new ObservableCollection<Event>();
+            Events.Add(Event);
+
+            this.Questions = Event.Questionnaire.Questions;
+            this.QuestionEvaluations = ExecuteQuery();
+        }
 
 
 
@@ -118,13 +127,13 @@ namespace FeedyWPF.Models
         public Question Question { get; set; }
         public int ParticipantsCount { get; set; }
         public ObservableCollection<AnswerEvaluation> AnswerEvaluations { get; set; }
-    
-        
+
+
 
         private EvaluationMode _evalMode;
         public EvaluationMode EvalMode
         { get { return _evalMode; } set { _evalMode = value; OnPropertyChanged("EvalMode"); } }
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
@@ -132,60 +141,58 @@ namespace FeedyWPF.Models
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-                   
-                
-           
+
+
+
 
 
         private void Question_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "EvalMode")
+            if (e.PropertyName == "EvalMode")
             {
+                //Update Question and Re-Evaluate Question
+                Question.EvalMode = EvalMode;
                 EvaluateQuestion();
             }
 
         }
 
         public void EvaluateQuestion()
-                {
+        {
 
             AnswerEvaluations = new ObservableCollection<AnswerEvaluation>();
 
-            foreach (var answer in Question.Answers)
+            if (Question.EvalMode == EvaluationMode.MEAN_VALUE)
             {
-                if (Question.EvalMode == EvaluationMode.MEAN_VALUE)
-                {
-                    AnswerEvaluations.Add(new MeanValueEvaluation(Question, ParticipantsCount));
-                }
-
-                else
+                AnswerEvaluations.Add(new MeanValueEvaluation(Question, ParticipantsCount));
+            }
+            else
+            {
+                foreach (var answer in Question.Answers)
                 {
                     switch (Question.EvalMode)
                     {
-                        case EvaluationMode.ABSOLUTE:
-                            AnswerEvaluations.Add(new AbsoluteEvaluation(answer));
-                            break;
-                        case EvaluationMode.PERCENTAGE:
-                            AnswerEvaluations.Add(new PercentageEvaluation(answer, ParticipantsCount));
-                            break;
+                    case EvaluationMode.ABSOLUTE:
+                        AnswerEvaluations.Add(new AbsoluteEvaluation(answer));
+                        break;
+                    case EvaluationMode.PERCENTAGE:
+                        AnswerEvaluations.Add(new PercentageEvaluation(answer, ParticipantsCount));
+                        break;
 
-                        case EvaluationMode.TEXT:
-                            foreach(var textData in answer.TextDataSet)
-                            {
-                                AnswerEvaluations.Add(new TextEvaluation(textData.Text));
-                            }
-                            
+                    case EvaluationMode.TEXT:
+                        foreach (var textData in answer.TextDataSet)
+                        {
+                            AnswerEvaluations.Add(new TextEvaluation(textData.Text));
+                        }
+                        break;
 
-                            break;
-                        default:
-                            AnswerEvaluations.Add(new AbsoluteEvaluation(answer));
-                            break;
+                    default:
+                        AnswerEvaluations.Add(new AbsoluteEvaluation(answer));
+                        break;
                     }
                 }
             }
-        }
-
-      
+        }   
     }
 
     public class AnswerEvaluation
@@ -222,45 +229,48 @@ namespace FeedyWPF.Models
         public PercentageEvaluation(Answer answer, int participantsCount)
         {
             Value = (double)answer.CountDataSet.Select(c => c.Count).Sum() / participantsCount;
+            DisplayValue = (Math.Round(Value, 3) * 100).ToString() + " %";
             AnswerText = answer.Text;
         }
 
         public double Value { get; set; }
+        public string DisplayValue { get; set; }
         public string AnswerText { get; set; }
     }
 
     public class MeanValueEvaluation : AnswerEvaluation
+    {
+        public MeanValueEvaluation(Question Question, int participantsCount)
         {
-            public MeanValueEvaluation(Question Question, int participantsCount)
+            
+            int AnswerCount = Question.Answers.Count;
+            List<Answer> Answers = Question.Answers.ToList();
+
+            // calc Value
+            Value = 0;
+            for (int i = 0; i < AnswerCount; ++i)
             {
-                EvaluationLabel = "Mittelwert:";
-                int AnswerCount = Question.Answers.Count;
-                List<Answer> Answers = Question.Answers.ToList();
+                Value += (i + 1) * Answers[i].CountDataSet.Select(c => c.Count).Sum();
+            }
 
-                // calc Value
-                Value = 0;
-                for (int i = 0; i < AnswerCount; ++i)
-                {
-                    Value += (i + 1) * Answers[i].CountDataSet.Select(c => c.Count).Sum();
-                }
+            Value = Math.Round(Value / participantsCount,2);
 
-                Value = Value / participantsCount;
+            FirstAnswer = Answers.First().Text;
+            LastAnswer = Answers.Last().Text;
 
-                FirstAnswer = Answers.First().Text;
-                LastAnswer = Answers.Last().Text;
-
-                FirstAnswerValue = 1;
-                LastAnswerValue = AnswerCount;
+            FirstAnswerValue = 1;
+            LastAnswerValue = AnswerCount;
         }
 
-            public string EvaluationLabel { get; set; }
-            public double Value { get; set; }
+        public string EvaluationLabel { get; set; }
+        public double Value { get; set; }
 
-            public string FirstAnswer { get; set; }
-            public int FirstAnswerValue;
+        public string FirstAnswer { get; set; }
+        public int FirstAnswerValue { get; set; }
 
-            public string LastAnswer { get; set; }
-            public int LastAnswerValue;
+        public string LastAnswer { get; set; }
+        public int LastAnswerValue { get; set; }
+
         }
 
         public enum EvaluationMode

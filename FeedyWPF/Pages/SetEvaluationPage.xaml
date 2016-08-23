@@ -50,7 +50,7 @@
                 <DataGridTemplateColumn Header="Auswählen">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox HorizontalAlignment="Center" IsChecked="{Binding Path=IsSelected, Mode=TwoWay}"></CheckBox>
+                            <CheckBox HorizontalAlignment="Center"   IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

@@ -242,12 +242,7 @@ namespace FeedyWPF
 
             byte[] binData = b.ReadBytes(checked((int)fileStream.Length));
 
-            string result = Encoding.Default.GetString(binData);
-
-            string FileContent = result;
-
-
-            MemoryStream Strm = new MemoryStream(Encoding.Default.GetBytes(FileContent));
+            MemoryStream Strm = new MemoryStream(binData);
             TextFieldParser Parser = new TextFieldParser(Strm);
 
             string[] Delimiters = { ";" };
@@ -263,8 +258,6 @@ namespace FeedyWPF
 
                 Data.Add(RowElements);
             }
-
-            
 
             return Data;
 
@@ -293,12 +286,14 @@ namespace FeedyWPF
                 for (int row = 0; row < Data.Count; ++row)
                 {
                     string Element = Data[row][column];
+                   
 
                     if (row == 0)
                     {
+                       
                         if (!string.IsNullOrEmpty(Element))
                         {
-                            Question Question = new Question(Element);
+                             var Question = new Question(Element);
 
                             // Default EvalMode is Absolute Mode
                             Question.EvalMode = EvaluationMode.ABSOLUTE;
@@ -325,19 +320,24 @@ namespace FeedyWPF
                             /*ignore. We don't want to save or count emtpy Elements. */
                         }
 
-                        //chec if Element is a number, and if it is roughly small enough to fit into an int. Relevant numbers will be much smaller than 10^5. Count them. Don't save.
+                        //check if Element is a number, and if it is roughly small enough to fit into an int. Relevant numbers will be much smaller than 10^5. Count them. Don't save.
                         else if (Element.All(c => char.IsDigit(c)) && Element.Count<char>() <= 5)
                         {
                             ++DataCounter;
                         }
 
-                        //else its a TextAnswer, save it.
+                        //else its a TextAnswer or contains a useless large number, save it.
                         else
                         {
-                            ++DataCounter;
-                            TextDataElement = new TextData(Element);
-                            TextDataElement.Event = myEvent;
-                            Questions.Last().Answers.Last().TextDataSet.Add(TextDataElement);
+                            // if its one of the useless large numbers or numbers separated by dots, ignore, else save textanswer
+                            if (!Element.All(c => char.IsDigit(c) || c.Equals(".") ))
+                            {
+                                ++DataCounter;
+                                TextDataElement = new TextData(Element);
+                                TextDataElement.Event = myEvent;
+                                Questions.Last().Answers.Last().TextDataSet.Add(TextDataElement);
+                                Questions.Last().EvalMode = EvaluationMode.TEXT;
+                            }
                         }
                     }
                 }

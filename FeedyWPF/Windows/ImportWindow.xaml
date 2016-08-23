@@ -9,7 +9,7 @@
     <Grid Margin="0,0,0,3">
         <Label x:Name="pageTitle" Content="Eine neue Umfrage zur Datenbank hinzufügen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="43" Width="440" FontSize="20"/>
         <Button x:Name="directoryButton" Content="Durchsuchen" HorizontalAlignment="Left" Margin="10,84,0,0" VerticalAlignment="Top" Width="82" Click="directoryButton_Click"/>
-        <Label x:Name="filenameLabel" Content="Label" HorizontalAlignment="Left" Margin="97,82,0,0" VerticalAlignment="Top" Width="166"/>
+        <Label x:Name="filenameLabel" Content="Datei auswählen" HorizontalAlignment="Left" Margin="97,82,0,0" VerticalAlignment="Top" Width="166"/>
         <Label x:Name="label1" Content="Umfragedaten als .CSV Datei auswählen&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top" Width="264" Height="26"/>
         <Label x:Name="label2" Content="Ort" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" Width="45"/>
 

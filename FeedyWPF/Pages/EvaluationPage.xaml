@@ -10,7 +10,7 @@
    
     <Page.Resources>
         <DataTemplate x:Key="Default" DataType="{x:Type models:QuestionEvaluation}">
-            <TextBlock>JUHUUI</TextBlock>
+            <TextBlock>Fehler: Datatemplate konnte nicht gefunden werden.</TextBlock>
         </DataTemplate>
         <!--Absolute Evaluation DataTemplate-->
         <DataTemplate x:Key="AbsoluteEvaluation" DataType="{x:Type models:QuestionEvaluation}">
@@ -34,7 +34,7 @@
                     <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="answerColumn" Binding="{Binding AnswerText}" Header="Antwort" IsReadOnly="True" Width="Auto"/>
-                            <DataGridTextColumn x:Name="resultColumn" Binding="{Binding Value}" Header="Anzahl" IsReadOnly="True" Width="*"/>
+                            <DataGridTextColumn x:Name="resultColumn" Binding="{Binding DisplayValue}" Header="Anzahl" IsReadOnly="True" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>
@@ -48,7 +48,7 @@
                 <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="FirstAnswerColumn" Binding="{Binding FirstAnswerValue}" Header="{Binding FirstAnswer}" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn x:Name="meanValColumn" Binding="{Binding Value}" Header="{Binding EvaluationLabel}" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn x:Name="meanValColumn" Binding="{Binding Value}" Header="Mittelwert" IsReadOnly="True" Width="Auto"/>
                         <DataGridTextColumn x:Name="LastAnswerColumn" Binding="{Binding LastAnswerValue}" Header="{Binding LastAnswer}" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -99,7 +99,7 @@
                                                 <DataTrigger Binding="{Binding EvalMode}" Value="PERCENTAGE">
                                                     <Setter Property="ContentTemplate" Value="{StaticResource PercentageEvaluation}" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding EvalMode}" Value="MEAV_VALUE">
+                                                <DataTrigger Binding="{Binding EvalMode}" Value="MEAN_VALUE">
                                                     <Setter Property="ContentTemplate" Value="{StaticResource MeanValueEvaluation}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding EvalMode}" Value="TEXT">
