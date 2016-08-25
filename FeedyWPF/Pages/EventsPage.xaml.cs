@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using FeedyWPF.Models;
+using System.Collections.ObjectModel;
 
 namespace FeedyWPF
 {
@@ -26,21 +27,59 @@ namespace FeedyWPF
         public EventsPage()
         {
             InitializeComponent();
+
+            ViewModel = new EventsPageViewModel();
+            DataContext = ViewModel;
+
+            EventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
+
+            db.Events.Load();
+            EventViewSource.Source = db.Events.Local;
+            EventViewSource.Filter += new FilterEventHandler(FilterDatabase);
+            
+            
         }
 
+
+        CollectionViewSource EventViewSource;
+        public EventsPageViewModel ViewModel;
         public delegate void EvaluationPageEventHandler(object sender, EvaluationPageEventArgs e);
         public event EvaluationPageEventHandler OnEvaluationPageEvent;
 
+         private void FilterDatabase(object sender, FilterEventArgs e)
+        {
+
+            Event MyEvent = e.Item as Event;
+            string SearchString = FilterTextBox.Text;
+           
+            if (MyEvent !=null)
+            {
+                // Filter out Events that don't match the searched string
+                if ((StaticMethods.Contains(MyEvent.Place,SearchString,StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(SearchString)))
+                {
+                    //filter out events that don't match the questionnaire type
+                    if (MyEvent.QuestionnaireID == ViewModel.QuestionnaireID || ViewModel.QuestionnaireID == 0)
+                        e.Accepted = true;
+
+                    else
+                        e.Accepted = false;
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
+            }
+        }
 
         private void RefreshTable(object sender, EventsContentChangedEventArgs e)
         {
-            CollectionViewSource eventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
+            
 
             db.Events.Load();
-            eventViewSource.Source = db.Events.Local;
+            EventViewSource.Source = db.Events.Local;
             this.eventDataGrid.Items.Refresh();
+            this.eventDataGrid.UpdateLayout();
 
-            
         }
 
         
@@ -53,10 +92,7 @@ namespace FeedyWPF
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
 
-            CollectionViewSource eventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
-
-            db.Events.Load();
-            eventViewSource.Source = db.Events.Local;
+            
             
         }
 
@@ -105,9 +141,18 @@ namespace FeedyWPF
 
         }
 
-        private void eventDataGrid_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
-        {
+        
 
+       
+
+        private void FilterComoBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EventViewSource.View.Refresh();
+        }
+
+        private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EventViewSource.View.Refresh();
         }
     }
 }

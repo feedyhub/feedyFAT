@@ -11,11 +11,33 @@
     <Page.Resources>
         <CollectionViewSource x:Key="eventViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Event}, CreateList=True}"/>
     </Page.Resources>
-    <DockPanel DataContext="{StaticResource eventViewSource}"  LastChildFill="False">
+    <DockPanel   LastChildFill="False">
 
       
 
         <Label x:Name="label" Content="Datenbank der Umfragen" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="300" FontSize="24"/>
+        
+        
+
+        <StackPanel DockPanel.Dock="Right" Margin="0,0,10,0">
+            <Label Content="Datenbank Inhalte Filtern" HorizontalAlignment="Left" Width="Auto" Margin="10,10,10,0" FontSize="15"/>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <Label Content="Orte durchsuchen:" Width="130" Margin="10,10,10,0"/>
+                <TextBox x:Name="FilterTextBox" Width="150" Margin="10,10,0,0" TextChanged="FilterTextBox_TextChanged"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <Label Content="Fragebogen anzeigen:" Width="130" Margin="10,10,10,0"/>
+                
+                <ComboBox x:Name="FilterComoBox" Width="150"
+                  ItemsSource="{Binding Path=QuestionnaireEntries}"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="QuestionnaireID"
+                  SelectedValue="{Binding Path=QuestionnaireID}"
+                  HorizontalAlignment="Left" Margin="10,10,0,0"
+                  VerticalAlignment="Top" SelectionChanged="FilterComoBox_SelectionChanged" />
+            </StackPanel>
+            
+        </StackPanel>
        
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
             <Button x:Name="button" Content="Spezifische Auswertung" HorizontalAlignment="Right" Width="142" Margin="3,10,3
@@ -25,28 +47,28 @@
                     
         </StackPanel>
 
-        <DataGrid x:Name="eventDataGrid" HorizontalAlignment="Stretch" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False"  EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,5,10,0"
-                   RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="eventDataGrid_SelectionChanged_1" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <DataGrid x:Name="eventDataGrid" DataContext="{StaticResource eventViewSource}" HorizontalAlignment="Stretch" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False"  EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,10,10,0"
+                   RowDetailsVisibilityMode="VisibleWhenSelected"  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
 
                 <DataGridTextColumn x:Name="questionnaireColumn" Binding="{Binding Questionnaire.Name}" Header="Fragebogen" IsReadOnly="True" Width="Auto" Visibility="Visible"/>
-                <DataGridTextColumn x:Name="placeColumn" Binding="{Binding Place}" Header="Place" IsReadOnly="True" Width="Auto"/>
-                <DataGridTextColumn x:Name="dateColumn" Binding="{Binding DateString}" Header="Date" IsReadOnly="True" Width="Auto"/>
+                <DataGridTextColumn x:Name="placeColumn" Binding="{Binding Place}" Header="Ort" IsReadOnly="True" Width="Auto"/>
+                <DataGridTextColumn x:Name="dateColumn" Binding="{Binding DateString}" Header="Datum" IsReadOnly="True" Width="Auto"/>
                 <DataGridTextColumn x:Name="participantsCountColumn" Binding="{Binding ParticipantsCount}" Header="Anzahl Teilnehmende" IsReadOnly="True" Width="*"/>
                 <DataGridTextColumn x:Name="eventIDColumn" Binding="{Binding EventID}" Header="Event ID" Width="Auto" IsReadOnly="True" Visibility="Hidden"/>
 
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Click="EvaluateEvent">Auswerten</Button>
+                            <Button Click="EvaluateEvent" Content="Auswerten"/> 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Click="DeleteEvent">Umfrage Löschen</Button>
+                            <Button Click="DeleteEvent" Content="Löschen"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

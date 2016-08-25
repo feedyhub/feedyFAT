@@ -12,6 +12,7 @@ namespace FeedyWPF.Models
     {
        public class Event
     {
+        
         // Primary Key
         public int EventID { get; set; }
         
@@ -50,8 +51,7 @@ namespace FeedyWPF.Models
         {
             //Primary key
             public int QuestionnaireID { get; set; }
-
-         
+            public int dummy { get; set; }
             public string Name { get; set; }
 
             

@@ -27,6 +27,7 @@ namespace FeedyWPF
     {
         private FeedyDbContext db = new FeedyDbContext();
         public Stream fileStream;
+        ImportWindowViewModel ViewModel;
 
         public delegate void ContentUpdateHandler(object sender, EventsContentChangedEventArgs e);
         public event ContentUpdateHandler OnEventsContentChange;
@@ -35,8 +36,8 @@ namespace FeedyWPF
         {
            
             InitializeComponent();
-            ImportWindowViewModel vm = new ImportWindowViewModel();
-            DataContext = vm;
+            ViewModel = new ImportWindowViewModel();
+            DataContext = ViewModel;
           
         }
 
@@ -59,9 +60,17 @@ namespace FeedyWPF
             // Process input if the user clicked OK.
             if (userClickedOK == true)
             {
-                // Open the selected file to read and set label in view.
-                fileStream = openFileDialog1.OpenFile();
-                filenameLabel.Content = openFileDialog1.FileName;
+                try
+                {
+                    // Open the selected file to read and set label in view.
+                    fileStream = openFileDialog1.OpenFile();
+                    filenameLabel.Content = openFileDialog1.FileName;
+                }
+               catch(IOException ex)
+                {
+                    MessageBox.Show("Datei konnte nicht geöffnet werden. Ist die .CSV / Excel bereits Datei geöffnet?");
+                    return;
+                }
             }
         }
 
@@ -71,26 +80,36 @@ namespace FeedyWPF
         {
             bool userInputIsValid = false;
 
-            Event Event = ((ImportWindowViewModel)DataContext).Event;
+            Event Event = ViewModel.Event;
             Questionnaire Questionnaire;
 
             //Select Questionnaire
-            if(((ImportWindowViewModel)DataContext).NewQuestionnaire.Name != null)
-            {
-                MessageBox.Show("New Questionnaire Created");      
-                Questionnaire = ((ImportWindowViewModel)DataContext).NewQuestionnaire;
-                db.Questionnaires.Add(Questionnaire);
-                db.SaveChanges();
+            if(!string.IsNullOrEmpty(ViewModel.NewQuestionnaire.Name))
+            { 
+                Questionnaire = ViewModel.NewQuestionnaire;
 
-                // TODO: avoid duplicates
+                // make sure no Questionnaire with same name is existing already
+                if(!db.Questionnaires.Any(q => q.Name == Questionnaire.Name))
+                {
+                    db.Questionnaires.Add(Questionnaire);
+                    db.SaveChanges();
+                }
+
+                else
+                {
+                    MessageBox.Show("Ein Fragebogen mit diesem Namen existiert bereits!");
+                    return;
+                }
+               
+                
             }
 
-            else if (((ImportWindowViewModel)DataContext).QuestionnaireID != 0)
+            else if (ViewModel.QuestionnaireID != 0)
             {
                 Questionnaire = db.Questionnaires
                     .Include(t => t.Questions.Select(a => a.Answers.Select(d => d.CountDataSet)))
                     .Include(t => t.Questions.Select(a => a.Answers.Select(d => d.TextDataSet)))
-                    .Single(q => q.QuestionnaireID == ((ImportWindowViewModel)DataContext).QuestionnaireID);
+                    .Single(q => q.QuestionnaireID == ViewModel.QuestionnaireID);
             }
 
             else
@@ -121,7 +140,8 @@ namespace FeedyWPF
                 // If Questionnaire has questions saved yet, take the ones provided.
                 if (Event.Questionnaire.Questions != null)
                 {        
-                    AppendDataToQuestionnaire(Event);
+                    if(AppendDataToQuestionnaire(Event))
+                        db.Events.Add(Event);
                 }
 
                 //Otherwise create model for this new questionnaire
@@ -129,16 +149,17 @@ namespace FeedyWPF
                 {
                     Event.Questionnaire.Questions = ConvertFileToModel(Event);
                     db.Entry(Event.Questionnaire).State = EntityState.Modified;
+                    db.Events.Add(Event);
                 }
 
-                db.Events.Add(Event);
+                
                 db.SaveChanges();
 
             }
 
             else
             {
-                MessageBox.Show("Invalid user Input");
+                MessageBox.Show("Bitte Ort angeben!");
                 return;
             }
 
@@ -149,28 +170,27 @@ namespace FeedyWPF
 
         }
 
-        private void AppendDataToQuestionnaire(Event myEvent)
+        private bool AppendDataToQuestionnaire(Event myEvent)
         {
-
+            bool Success = false;
             List<string[]> Data = ParseFileContent(fileStream);
 
             //first two rows are question and answer texts.
             myEvent.ParticipantsCount = Data.Count - 2;
 
-            try
+            
+            // check if number of questions and number of answers are compatible
+            if (!(Data[0].Length == myEvent.Questionnaire.Questions.Count 
+                && Data[1].Length == myEvent.Questionnaire.Questions.SelectMany(q => q.Answers).ToList().Count()))
             {
-                //CheckDataForCompatibility();
+                MessageBox.Show("Die .CSV / Excel Datei stimmt nicht mit der Fragebogenvorlage überein. Die Anzahl Spalten muss dieselbe sein!");
+                return Success;
             }
 
-            catch (Exception e)
-            {
-                throw new NotImplementedException("Uploading wrong files is not yet handled.");
-            }
-
-
-            IEnumerable<Answer> RefAnswer;
+            Answer RefAnswer = new Answer();
             TextData TextDataElement;
             CountData CountDataElement;
+            Question RefQuestion = new Question();
 
             int DataCounter = 0;
             //go through columns and create corresponding objects
@@ -179,19 +199,19 @@ namespace FeedyWPF
             {
                 DataCounter = 0;
 
-
+                //find out if new question starts in this column
+                if (!string.IsNullOrEmpty(Data[0][column]))
+                {
+                    RefQuestion = myEvent.Questionnaire.Questions.Single(q => q.Text == Data[0][column]);
+                    
+                }
                 //find corresponding questions and answers in model.
 
-                RefAnswer =
-                    from question in myEvent.Questionnaire.Questions
-                    where question.Text == Data[0][column]
-                    let answers = question.Answers
-                    from answer in answers
-                    where answer.Text == Data[1][column]
-                    select answer;
+                
+                RefAnswer = RefQuestion.Answers.Single(a => a.Text == Data[1][column]);
 
 
-                if (RefAnswer.Any())
+                if (RefAnswer != null)
                 {
                     for (int row = 2; row < Data.Count; ++row)
                     {
@@ -205,7 +225,7 @@ namespace FeedyWPF
                             {
                                 TextDataElement = new TextData(Data[row][column]);
                                 TextDataElement.Event = myEvent;
-                                RefAnswer.FirstOrDefault().TextDataSet.Add(TextDataElement);
+                                RefAnswer.TextDataSet.Add(TextDataElement);
 
                             }
                             ++DataCounter;
@@ -213,39 +233,43 @@ namespace FeedyWPF
                     }
                     CountDataElement = new CountData(DataCounter);
                     CountDataElement.Event = myEvent;
-                    RefAnswer.FirstOrDefault().CountDataSet.Add(CountDataElement);
+                    RefAnswer.CountDataSet.Add(CountDataElement);
                 }
 
-                else
-                {
-                    // This is executed when no corresponding answer is found. For example names in »Mit welchem Teamer*in...«
-                    RefAnswer =
-                        from question in myEvent.Questionnaire.Questions
-                        where question.Text == Data[0][column]
-                        let answers = question.Answers
-                        from answer in answers
-                        select answer;
+                //else
+                //{
+                //    // This is executed when no corresponding answer is found. For example names in »Mit welchem Teamer*in...« in Deine Anne Trainingsseminar Questionnaire
+                //    RefAnswer =
+                //        from question in myEvent.Questionnaire.Questions
+                //        where question.Text == Data[0][column]
+                //        let answers = question.Answers
+                //        from answer in answers
+                //        select answer;
 
-                    foreach (var answer in RefAnswer)
-                    {
-                        CountDataElement = new CountData(0);
-                        CountDataElement.Event = myEvent;
-                        RefAnswer.FirstOrDefault().CountDataSet.Add(CountDataElement);
-                    }
-                }
+                //    foreach (var answer in RefAnswer)
+                //    {
+                //        CountDataElement = new CountData(0);
+                //        CountDataElement.Event = myEvent;
+                //        RefAnswer.FirstOrDefault().CountDataSet.Add(CountDataElement);
+                //    }
+                //}
             }
+            Success = true;
+            return Success;
         }
 
         public List<string[]> ParseFileContent(Stream fileStream)
         {
+            // fileStream to MemoryStream
             BinaryReader b = new BinaryReader(fileStream, Encoding.Default);
 
             byte[] binData = b.ReadBytes(checked((int)fileStream.Length));
-
             MemoryStream Strm = new MemoryStream(binData);
+
+            //Parse
             TextFieldParser Parser = new TextFieldParser(Strm);
 
-            string[] Delimiters = { ";" };
+            string[] Delimiters = { "," };
             Parser.Delimiters = Delimiters;
 
             List<string[]> Data = new List<string[]>();

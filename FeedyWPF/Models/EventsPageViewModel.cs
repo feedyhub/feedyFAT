@@ -1,28 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace FeedyWPF.Models
 {
-    class ImportWindowViewModel : INotifyPropertyChanged
+    public class EventsPageViewModel : INotifyPropertyChanged
     {
-        
-        public ImportWindowViewModel()
+        public EventsPageViewModel()
         {
-            // List to Populate ComboBox
             IList<Questionnaire> list = db.Questionnaires.ToList();
-            Event = new Event();
-            NewQuestionnaire = new Questionnaire();
-
+            Questionnaire NullQuest = new Questionnaire();
+            NullQuest.Name = string.Empty;
+            list.Add(NullQuest);
             _questionnaireEntries = new CollectionView(list);
         }
-        public Event Event { get; set; }
-        public Questionnaire NewQuestionnaire { get; set; }
-        private FeedyDbContext db = new FeedyDbContext();
+        FeedyDbContext db = new FeedyDbContext();
 
         private readonly CollectionView _questionnaireEntries;
         private int _questionnaireID;
@@ -43,14 +41,16 @@ namespace FeedyWPF.Models
             }
         }
 
-        
-
         private void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
         public event PropertyChangedEventHandler PropertyChanged;
-    
+
     }
+
+
+
+
 }
