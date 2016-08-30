@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:FeedyWPF.Pages"
       xmlns:models="clr-namespace:FeedyWPF.Models"
       mc:Ignorable="d"
-      Title="EvaluationPage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      Title="EvaluationPage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Unloaded="Page_Unloaded">
    
     <Page.Resources>
         <DataTemplate x:Key="Default" DataType="{x:Type models:QuestionEvaluation}">
@@ -80,7 +80,7 @@
         <Label Content="Auswertung" DockPanel.Dock="Top"/>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
             <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click"/>
-            <Button x:Name="ExportButton" Content="Seite als PDF Speichern" Margin="5,10,10,0" Click="ExportButton_Click" />
+            <Button x:Name="ExportButton" Content="Seite als .txt Datei speichern" Margin="5,10,10,0" Click="ExportButton_Click" />
         </StackPanel>
         
         <ListView ItemsSource="{Binding QuestionEvaluations}"   Margin="10,10,10,0" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" >

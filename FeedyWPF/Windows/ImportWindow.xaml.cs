@@ -139,9 +139,12 @@ namespace FeedyWPF
 
                 // If Questionnaire has questions saved yet, take the ones provided.
                 if (Event.Questionnaire.Questions != null)
-                {        
-                    if(AppendDataToQuestionnaire(Event))
+                {
+                    if (AppendDataToQuestionnaire(Event))
+                    {
                         db.Events.Add(Event);
+                    }
+                       
                 }
 
                 //Otherwise create model for this new questionnaire
@@ -178,14 +181,6 @@ namespace FeedyWPF
             //first two rows are question and answer texts.
             myEvent.ParticipantsCount = Data.Count - 2;
 
-            
-            // check if number of questions and number of answers are compatible
-            if (!(Data[0].Length == myEvent.Questionnaire.Questions.Count 
-                && Data[1].Length == myEvent.Questionnaire.Questions.SelectMany(q => q.Answers).ToList().Count()))
-            {
-                MessageBox.Show("Die .CSV / Excel Datei stimmt nicht mit der Fragebogenvorlage überein. Die Anzahl Spalten muss dieselbe sein!");
-                return Success;
-            }
 
             Answer RefAnswer = new Answer();
             TextData TextDataElement;
@@ -311,24 +306,24 @@ namespace FeedyWPF
                 {
                     string Element = Data[row][column];
                    
-
+                    //First row is where the Question Texts are.
                     if (row == 0)
                     {
                        
                         if (!string.IsNullOrEmpty(Element))
                         {
-                             var Question = new Question(Element);
+                                var Question = new Question(Element);
 
-                            // Default EvalMode is Absolute Mode
-                            Question.EvalMode = EvaluationMode.ABSOLUTE;
+                                // Default EvalMode is Absolute Mode
+                                Question.EvalMode = EvaluationMode.ABSOLUTE;
 
-                            Questions.Add(Question);
-                            Questions.Last<Question>().Answers = new ObservableCollection<Answer>();
-
+                                Questions.Add(Question);
+                                Questions.Last<Question>().Answers = new ObservableCollection<Answer>();
                         }
 
                     }
 
+                    //Second row is where Answer Texts are
                     else if (row == 1)
                     {
                         Questions.Last<Question>().Answers.Add(new Answer(Element));
@@ -372,6 +367,7 @@ namespace FeedyWPF
                 Questions.Last().Answers.Last().CountDataSet.Add(CountDataElement);
             }
 
+            
             return Questions;
 
         }

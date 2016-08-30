@@ -13,36 +13,40 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FeedyWPF.Models;
+using System.Windows.Forms;
 
 namespace FeedyWPF.Pages
 {
-    
+
 
     /// <summary>
     /// Interaction logic for EvaluationPage.xaml
     /// </summary>
     public partial class EvaluationPage : Page
     {
-        public Evaluation Evaluation { get; set; }
 
-        public EvaluationPage()
+        public EvaluationPage(FeedyDbContext database)
         {
             InitializeComponent();
-           
+            db = database;
         }
 
-        public delegate void CloseTabEventHandler(object sender, CloseTabEventArgs e);
-        public event CloseTabEventHandler OnCloseTabEvent;
 
-        public EvaluationPage(Evaluation evaluation)
+
+        public EvaluationPage(Evaluation evaluation, FeedyDbContext database)
         {
+
             InitializeComponent();
+            db = database;
             Evaluation = evaluation;
 
             DataContext = Evaluation;
         }
 
-        
+        public delegate void CloseTabEventHandler(object sender, CloseTabEventArgs e);
+        public event CloseTabEventHandler OnCloseTabEvent;
+        private FeedyDbContext db { get; set; }
+        public Evaluation Evaluation { get; set; }
 
         private void endButton_Click(object sender, RoutedEventArgs e)
         {
@@ -56,9 +60,21 @@ namespace FeedyWPF.Pages
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            ExportPage exportPage = new ExportPage(Evaluation);
+            TextExport export = new TextExport(Evaluation);
 
-            PdfExport export = new PdfExport(exportPage);
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Text file(*.txt) | *.txt";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                export.Write(dialog.FileName);
+            }
+
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            db.SaveChanges();
         }
     }
 }

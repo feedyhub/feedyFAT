@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace FeedyWPF.Models
 {
-    class FeedyDbContext : DbContext
+    public class FeedyDbContext : DbContext
     {
         public FeedyDbContext() : base("FeedyDbContext")
         {

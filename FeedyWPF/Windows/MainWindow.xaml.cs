@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using FeedyWPF.Models;
 using System.Data.Entity;
 using FeedyWPF.Pages;
-using System.Linq;
+
 using System.Collections.ObjectModel;
 
 namespace FeedyWPF
@@ -29,6 +19,7 @@ namespace FeedyWPF
         {
          
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
+            db = new FeedyDbContext();
             InitializeComponent();
 
             //Set TabView DataContext
@@ -40,7 +31,7 @@ namespace FeedyWPF
             tabitem.Header = "Umfragen";
 
             Frame eventsFrame = new Frame();
-            EventsPage eventsPage = new EventsPage();
+            EventsPage eventsPage = new EventsPage(db);
 
             eventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(setEvaluationTab);
 
@@ -56,7 +47,7 @@ namespace FeedyWPF
 
             tabControl.SelectedIndex = 0;
         }
-
+        private FeedyDbContext db { get; set; }
         private ObservableCollection<TabItem> Tabs { get; set; }
         private TabItem AddTab { get; set; }
         private TabItem PlusTab { get; set; }
@@ -74,8 +65,10 @@ namespace FeedyWPF
 
             // add controls to tab item
             Frame frame = new Frame();
-            SetEvaluationPage page = new SetEvaluationPage();
+            SetEvaluationPage page = new SetEvaluationPage(db);
             page.tabName = tab.Name;
+
+            //to get from setevaluationpage to evaluationpage
             page.OnEvaluationPageEvent += new SetEvaluationPage.EvaluationPageEventHandler(setEvaluationTab);
             
            
@@ -110,7 +103,7 @@ namespace FeedyWPF
             TabItem tab = new TabItem();
             
             //Add Controls to Page
-            EvaluationPage evaluationPage = new EvaluationPage(e.Evaluation);
+            EvaluationPage evaluationPage = new EvaluationPage(e.Evaluation, db);
             evaluationPage.OnCloseTabEvent += new EvaluationPage.CloseTabEventHandler(CloseTab);
 
             Frame frame = new Frame();

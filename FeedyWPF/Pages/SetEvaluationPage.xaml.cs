@@ -15,16 +15,16 @@ namespace FeedyWPF.Pages
     /// </summary>
     public partial class SetEvaluationPage : Page
     {
-        public SetEvaluationPage()
+        public SetEvaluationPage(FeedyDbContext database)
         {
 
             InitializeComponent();
-
+            db = database;
             SetEvaluationPageModel vm = new SetEvaluationPageModel();
             DataContext = vm;
         }
         public string tabName { get; set; }
-        private FeedyDbContext db = new FeedyDbContext();
+        private FeedyDbContext db { get; set; }
 
         private CollectionViewSource questionViewSource { get; set; }
        
@@ -53,7 +53,7 @@ namespace FeedyWPF.Pages
             }
 
 
-            Evaluation Evaluation = new Evaluation(new ObservableCollection<Event>(SelectedEvents), new ObservableCollection<Question>(SelectedQuestions));
+            Evaluation Evaluation = new Evaluation(new ObservableCollection<Event>(SelectedEvents), new ObservableCollection<Question>(SelectedQuestions), db);
 
             EvaluationPageEventArgs args = new EvaluationPageEventArgs();
             args.Evaluation = Evaluation;

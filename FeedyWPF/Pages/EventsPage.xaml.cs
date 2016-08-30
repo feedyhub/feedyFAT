@@ -24,10 +24,10 @@ namespace FeedyWPF
     /// </summary>
     public partial class EventsPage : Page
     {
-        public EventsPage()
+        public EventsPage(FeedyDbContext database)
         {
             InitializeComponent();
-
+            db = database;
             ViewModel = new EventsPageViewModel();
             DataContext = ViewModel;
 
@@ -40,7 +40,7 @@ namespace FeedyWPF
             
         }
 
-
+        private FeedyDbContext db { get; set; }
         CollectionViewSource EventViewSource;
         public EventsPageViewModel ViewModel;
         public delegate void EvaluationPageEventHandler(object sender, EvaluationPageEventArgs e);
@@ -96,7 +96,7 @@ namespace FeedyWPF
             
         }
 
-        private FeedyDbContext db = new FeedyDbContext();
+        
 
         private void importDataButton_Click(object sender, RoutedEventArgs e)
         {
@@ -128,7 +128,7 @@ namespace FeedyWPF
                     var row = (DataGridRow)vis;
                     Event SelectedEvent = row.DataContext as Event;
 
-                    Evaluation Evaluation = new Evaluation(SelectedEvent);
+                    Evaluation Evaluation = new Evaluation(SelectedEvent, db);
 
                     var args = new EvaluationPageEventArgs();
                     args.Evaluation = Evaluation;

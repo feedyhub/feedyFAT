@@ -24,15 +24,16 @@ namespace FeedyWPF.Models
     {
         //Constructors
         public Evaluation() { }
-        public Evaluation(ObservableCollection<Event> events, ObservableCollection<Question> questionSelection)
+        public Evaluation(ObservableCollection<Event> events, ObservableCollection<Question> questionSelection, FeedyDbContext database)
         {
             this.Events = events;
             this.Questions = questionSelection;
 
             this.QuestionEvaluations = ExecuteQuery();
         }
-        public Evaluation(Event Event)
+        public Evaluation(Event Event, FeedyDbContext database)
         {
+            db = database;
             // Evaluate full event
             this.Events = new ObservableCollection<Event>();
             Events.Add(Event);
@@ -48,7 +49,7 @@ namespace FeedyWPF.Models
 
         //Properties
         [NotMapped]
-        private FeedyDbContext db = new FeedyDbContext();
+        private FeedyDbContext db { get; set; }
         [NotMapped]
         public ObservableCollection<QuestionEvaluation> QuestionEvaluations { get; set; }
 
@@ -101,7 +102,7 @@ namespace FeedyWPF.Models
 
                 }
 
-                Evaluations.Add(new QuestionEvaluation(question, ParticipantsCount));
+                Evaluations.Add(new QuestionEvaluation(question, ParticipantsCount, db));
             }
             return Evaluations;
         }
@@ -111,8 +112,10 @@ namespace FeedyWPF.Models
 
     public class QuestionEvaluation : INotifyPropertyChanged
     {
-        public QuestionEvaluation(Question question, int participantsCount)
+        private FeedyDbContext db { get; set; }
+        public QuestionEvaluation(Question question, int participantsCount, FeedyDbContext database)
         {
+            db = database;
             // for each answer in question create corresponding evaluations.
             QuestionName = question.Text;
             _evalMode = question.EvalMode;
@@ -121,6 +124,8 @@ namespace FeedyWPF.Models
 
             PropertyChanged += Question_PropertyChanged;
             EvaluateQuestion();
+
+ 
         }
 
         public string QuestionName { get; set; }
@@ -152,6 +157,7 @@ namespace FeedyWPF.Models
             {
                 //Update Question and Re-Evaluate Question
                 Question.EvalMode = EvalMode;
+                db.Entry(Question).State = System.Data.Entity.EntityState.Modified;
                 EvaluateQuestion();
             }
 
