@@ -53,5 +53,12 @@ namespace FeedyWPF.Pages
         {
             OnCloseTabEvent(this, new CloseTabEventArgs());
         }
+
+        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+            ExportPage exportPage = new ExportPage(Evaluation);
+
+            PdfExport export = new PdfExport(exportPage);
+        }
     }
 }

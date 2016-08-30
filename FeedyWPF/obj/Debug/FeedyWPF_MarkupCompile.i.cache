@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\ratz\Git\FeedyWPF\FeedyWPF\obj\Debug\
+C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\
 FeedyWPF
 none
 false
 DEBUG;TRACE
-C:\Users\ratz\Git\FeedyWPF\FeedyWPF\App.xaml
-8-394591396
+C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\App.xaml
+9-809361706
 
-26-1509546118
-192101346922
-Pages\EvaluationPage.xaml;Pages\EventsPage.xaml;Pages\SetEvaluationPage.xaml;Pages\TestPage.xaml;Windows\ImportWindow.xaml;Windows\MainWindow.xaml;TabView.xaml;TabWindow.xaml;
+291413080655
+30-1998179658
+Pages\EvaluationPage.xaml;Pages\EventsPage.xaml;Pages\ExportPage.xaml;Pages\SetEvaluationPage.xaml;Pages\TestPage.xaml;Windows\ImportWindow.xaml;Windows\MainWindow.xaml;TabView.xaml;TabWindow.xaml;
 
 False
 
