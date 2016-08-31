@@ -16,6 +16,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System;
 using System.Windows;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity;
 
 namespace FeedyWPF.Models
 {
@@ -24,11 +26,18 @@ namespace FeedyWPF.Models
     {
         //Constructors
         public Evaluation() { }
-        public Evaluation(ObservableCollection<Event> events, ObservableCollection<Question> questionSelection, FeedyDbContext database)
+        public Evaluation(ObservableCollection<Event> eventSelection, ObservableCollection<Question> questionSelection, FeedyDbContext database)
         {
-            db = database;
-            this.Events = events;
-            this.Questions = questionSelection;
+            db = new FeedyDbContext();
+
+           
+            // get new copies from database.
+            db.Events.Load();
+            this.Events = new ObservableCollection<Event> (db.Events.Local.Where(ev => eventSelection.Select(eve => eve.EventID).Contains(ev.EventID)));
+
+            
+            db.Questions.Load();
+            this.Questions = new ObservableCollection<Question>( db.Questions.Local.Where(q => questionSelection.Select(qu => qu.QuestionID).Contains(q.QuestionID)));
             
             this.QuestionEvaluations = ExecuteQuery();
 
@@ -36,14 +45,15 @@ namespace FeedyWPF.Models
         }
         public Evaluation(Event Event, FeedyDbContext database)
         {
-            db = database;
+            db = new FeedyDbContext();
+
             // Evaluate full event
-            this.Events = new ObservableCollection<Event>();
-            Events.Add(Event);
+            db.Events.Load();
+            this.Events = new ObservableCollection<Event>(db.Events.Local.Where(ev => ev.EventID == Event.EventID));
 
-            this.Questions = Event.Questionnaire.Questions;
+            //Events contains only one event
+            this.Questions = Events.FirstOrDefault().Questionnaire.Questions;
             this.QuestionEvaluations = ExecuteQuery();
-
         }
 
 
@@ -88,6 +98,7 @@ namespace FeedyWPF.Models
                                                where Events.Select(e => e.EventID).Contains(countdata.EventID)
                                                select countdata;
 
+                        // this deletes all other data, that is not needed right now. Entity is untracked, therefore possible.
                         question.Answers.Single(a => a.AnswerID == answer.AnswerID).CountDataSet = new ObservableCollection<CountData>(CountDataSet);
                     }
 
@@ -105,6 +116,8 @@ namespace FeedyWPF.Models
                         answer.Question.EvalMode = EvaluationMode.ABSOLUTE;
 
                 }
+
+                
 
                 Evaluations.Add(new QuestionEvaluation(question, ParticipantsCount, db));
             }
@@ -162,8 +175,7 @@ namespace FeedyWPF.Models
             {
                 //Update Question and Re-Evaluate Question
                 Question.EvalMode = EvalMode;
-                db.Entry(Question).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
+
                 EvaluateQuestion();
             }
 

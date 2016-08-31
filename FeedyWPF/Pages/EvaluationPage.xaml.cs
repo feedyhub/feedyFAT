@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FeedyWPF.Models;
 using System.Windows.Forms;
+using System.Data.Entity;
+using System.Collections.ObjectModel;
 
 namespace FeedyWPF.Pages
 {
@@ -26,12 +28,11 @@ namespace FeedyWPF.Pages
     {
 
       
-        public EvaluationPage(Evaluation evaluation, FeedyDbContext database)
+        public EvaluationPage(Evaluation evaluation)
         {
             
             InitializeComponent();
-            db = database;
-            
+           
             Evaluation = evaluation;
 
             DataContext = Evaluation;
@@ -49,7 +50,7 @@ namespace FeedyWPF.Pages
 
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
         {
-            OnCloseTabEvent(this, new CloseTabEventArgs());
+            SaveEvalModeChanges();
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
@@ -66,9 +67,26 @@ namespace FeedyWPF.Pages
 
         }
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        private void SaveEvalModeChanges()
         {
-            db.SaveChanges();
+            using (FeedyDbContext context = new FeedyDbContext())
+            {
+                context.Questions.Load();
+                ObservableCollection<Question> ChangedQuestions = new ObservableCollection<Question>(context.Questions.Local.Where(q => Evaluation.Questions.Select(qu => qu.QuestionID).Contains(q.QuestionID)));
+
+                Question RefQuestion;
+
+                foreach (var question in ChangedQuestions)
+                {
+                    RefQuestion = Evaluation.Questions.Single(q => q.QuestionID == question.QuestionID);
+                    question.EvalMode = RefQuestion.EvalMode;
+                    context.Entry(question).State = EntityState.Modified;
+                }
+
+                context.SaveChanges();
+            }
         }
+
+       
     }
 }

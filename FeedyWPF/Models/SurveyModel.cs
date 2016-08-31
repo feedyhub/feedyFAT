@@ -67,8 +67,8 @@ namespace FeedyWPF.Models
         {
             //Constructors
             public Question() { }
-            
-            public Question(string QuestionText) { this.Text = QuestionText; }
+       
+        public Question(string QuestionText) { this.Text = QuestionText; }
             //Primary Key
             public int QuestionID { get; set; }
 

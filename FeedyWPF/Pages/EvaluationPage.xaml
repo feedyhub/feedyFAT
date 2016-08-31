@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:FeedyWPF.Pages"
       xmlns:models="clr-namespace:FeedyWPF.Models"
       mc:Ignorable="d"
-      Title="EvaluationPage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Unloaded="Page_Unloaded">
+      Title="EvaluationPage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
    
     <Page.Resources>
         <DataTemplate x:Key="Default" DataType="{x:Type models:QuestionEvaluation}">

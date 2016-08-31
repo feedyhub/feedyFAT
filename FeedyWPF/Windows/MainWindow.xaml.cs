@@ -103,7 +103,7 @@ namespace FeedyWPF
             TabItem tab = new TabItem();
             
             //Add Controls to Page
-            EvaluationPage evaluationPage = new EvaluationPage(e.Evaluation, db);
+            EvaluationPage evaluationPage = new EvaluationPage(e.Evaluation);
             evaluationPage.OnCloseTabEvent += new EvaluationPage.CloseTabEventHandler(CloseTab);
 
             Frame frame = new Frame();
