@@ -26,6 +26,7 @@ namespace FeedyWPF.Models
         public Evaluation() { }
         public Evaluation(ObservableCollection<Event> events, ObservableCollection<Question> questionSelection, FeedyDbContext database)
         {
+            db = database;
             this.Events = events;
             this.Questions = questionSelection;
 

@@ -82,8 +82,11 @@ namespace FeedyWPF
 
             Event Event = ViewModel.Event;
             Questionnaire Questionnaire;
+            var Data = new List<List<string> >();
 
-            //Select Questionnaire
+            #region Set Questionnaire variable
+            
+            //New Questionnaire
             if(!string.IsNullOrEmpty(ViewModel.NewQuestionnaire.Name))
             { 
                 Questionnaire = ViewModel.NewQuestionnaire;
@@ -99,11 +102,10 @@ namespace FeedyWPF
                 {
                     MessageBox.Show("Ein Fragebogen mit diesem Namen existiert bereits!");
                     return;
-                }
-               
-                
+                } 
             }
 
+            // Existing Questionnaire, only if ViewModel.NewQuestionnaire.Name field is empty.
             else if (ViewModel.QuestionnaireID != 0)
             {
                 Questionnaire = db.Questionnaires
@@ -117,8 +119,10 @@ namespace FeedyWPF
                 MessageBox.Show("Es muss entweder ein Fragebogen ausgewählt werden, oder einer erstellt werden.");
                 return;
             }
+            #endregion
 
-            // Validate Textbox and File Input.
+            #region Validate Textbox and File Input.
+            //fields must be filled out
             if (fileStream != null)
             {
                 if (Event.Place != string.Empty)
@@ -131,16 +135,63 @@ namespace FeedyWPF
                 }
                 
             }
-           
+            #endregion
+
             if (userInputIsValid)
             {
                 
                 Event.Questionnaire = Questionnaire;
 
-                // If Questionnaire has questions saved yet, take the ones provided.
+                //read data from .csv file
+                Data = ParseFileContent(fileStream);
+
+                #region cut off useless columns
+
+                int ColumnCount = Data[0].Count;
+                int RowCount = Data.Count;
+
+                for(int column =ColumnCount-1; column>=0; --column)
+                {
+                    if(Data[1][column] == "\0")
+                    {
+                        for(int row=0; row<RowCount; ++row)
+                        {
+                            Data[row].Remove(Data[row][column]);
+                        }
+                    }
+                   
+                }
+
+                #endregion
+
+                // If Questionnaire has questions saved, take the ones provided.
                 if (Event.Questionnaire.Questions != null)
                 {
-                    if (AppendDataToQuestionnaire(Event))
+
+                    //Check if format of content is valid
+
+                    //Count number of answers
+                    int counter = 0;
+
+                    foreach (var element in Data[1])
+                    {
+                        if (element != string.Empty && element != null && element != "\0")
+                        {
+                            ++counter;
+                        }
+                    }
+
+                    
+
+
+                    int CountDB = Event.Questionnaire.Questions.SelectMany(q => q.Answers).Count();
+                    if (Event.Questionnaire.Questions.SelectMany(q => q.Answers).Count() != counter)
+                    {
+                        MessageBox.Show("Falscher Fragebogen ausgewählt. Die Anzahl der Spalten der .CSV Datei stimmt nicht mit der gespeicherten Vorlage überein.");
+                        return;
+                    }
+
+                    else if (AppendDataToQuestionnaire(Event, Data))
                     {
                         db.Events.Add(Event);
                     }
@@ -150,7 +201,8 @@ namespace FeedyWPF
                 //Otherwise create model for this new questionnaire
                 else
                 {
-                    Event.Questionnaire.Questions = ConvertFileToModel(Event);
+                   
+                    Event.Questionnaire.Questions = ConvertFileToModel(Event, Data);
                     db.Entry(Event.Questionnaire).State = EntityState.Modified;
                     db.Events.Add(Event);
                 }
@@ -162,7 +214,7 @@ namespace FeedyWPF
 
             else
             {
-                MessageBox.Show("Bitte Ort angeben!");
+                MessageBox.Show("Bitte Ort angeben und Datei auswählen!");
                 return;
             }
 
@@ -173,13 +225,12 @@ namespace FeedyWPF
 
         }
 
-        private bool AppendDataToQuestionnaire(Event myEvent)
+        private bool AppendDataToQuestionnaire(Event myEvent, List<List<string> > data)
         {
             bool Success = false;
-            List<string[]> Data = ParseFileContent(fileStream);
 
             //first two rows are question and answer texts.
-            myEvent.ParticipantsCount = Data.Count - 2;
+            myEvent.ParticipantsCount = data.Count - 2;
 
 
             Answer RefAnswer = new Answer();
@@ -190,35 +241,34 @@ namespace FeedyWPF
             int DataCounter = 0;
             //go through columns and create corresponding objects
             //First row of Data contains the QuestionTexts. Second Row AnswerTexts. Remaining rows contain data, either text or int.
-            for (int column = 0; column < Data[0].Length; ++column)
+            for (int column = 0; column < data[0].Count; ++column)
             {
                 DataCounter = 0;
 
-                //find out if new question starts in this column
-                if (!string.IsNullOrEmpty(Data[0][column]))
+                //find matching question
+                if (!string.IsNullOrEmpty(data[0][column]))
                 {
-                    RefQuestion = myEvent.Questionnaire.Questions.Single(q => q.Text == Data[0][column]);
-                    
+                    RefQuestion = myEvent.Questionnaire.Questions.Single(q => q.Text == data[0][column]);      
                 }
                 //find corresponding questions and answers in model.
 
                 
-                RefAnswer = RefQuestion.Answers.Single(a => a.Text == Data[1][column]);
+                RefAnswer = RefQuestion.Answers.Single(a => a.Text == data[1][column]);
 
 
                 if (RefAnswer != null)
                 {
-                    for (int row = 2; row < Data.Count; ++row)
+                    for (int row = 2; row < data.Count; ++row)
                     {
-                        string Element = Data[row][column];
+                        string Element = data[row][column];
 
                         // ignore if empty
-                        if (!string.IsNullOrWhiteSpace(Data[row][column]))
+                        if (!string.IsNullOrWhiteSpace(data[row][column]))
                         {
                             //store if textanswer and count not null elements
                             if (!Element.All(c => char.IsDigit(c)))
                             {
-                                TextDataElement = new TextData(Data[row][column]);
+                                TextDataElement = new TextData(data[row][column]);
                                 TextDataElement.Event = myEvent;
                                 RefAnswer.TextDataSet.Add(TextDataElement);
 
@@ -231,29 +281,13 @@ namespace FeedyWPF
                     RefAnswer.CountDataSet.Add(CountDataElement);
                 }
 
-                //else
-                //{
-                //    // This is executed when no corresponding answer is found. For example names in »Mit welchem Teamer*in...« in Deine Anne Trainingsseminar Questionnaire
-                //    RefAnswer =
-                //        from question in myEvent.Questionnaire.Questions
-                //        where question.Text == Data[0][column]
-                //        let answers = question.Answers
-                //        from answer in answers
-                //        select answer;
-
-                //    foreach (var answer in RefAnswer)
-                //    {
-                //        CountDataElement = new CountData(0);
-                //        CountDataElement.Event = myEvent;
-                //        RefAnswer.FirstOrDefault().CountDataSet.Add(CountDataElement);
-                //    }
-                //}
+               
             }
             Success = true;
             return Success;
         }
 
-        public List<string[]> ParseFileContent(Stream fileStream)
+        public List<List<string> > ParseFileContent(Stream fileStream)
         {
             // fileStream to MemoryStream
             BinaryReader b = new BinaryReader(fileStream, Encoding.Default);
@@ -278,16 +312,20 @@ namespace FeedyWPF
                 Data.Add(RowElements);
             }
 
-            return Data;
+            List<List<string>> ListData = new List<List<string>>();
+
+            foreach (var array in Data)
+            {
+                ListData.Add(new List<string>(array));
+            }
+            return ListData;
 
         }
 
-        private ObservableCollection<Question> ConvertFileToModel(Event myEvent)
+        private ObservableCollection<Question> ConvertFileToModel(Event myEvent, List<List<string>> data)
         {
-            List<string[]> Data = ParseFileContent(fileStream);
-
             //first two rows are question and answer texts.
-            myEvent.ParticipantsCount = Data.Count - 2;
+            myEvent.ParticipantsCount = data.Count - 2;
 
             ObservableCollection<Question> Questions = new ObservableCollection<Question>();
             ObservableCollection<Answer> Answers = new ObservableCollection<Answer>();
@@ -298,13 +336,13 @@ namespace FeedyWPF
             int DataCounter = 0;
             //go through columns and create corresponding objects
             //First row of Data contains the QuestionTexts. Second Row AnswerTexts. Remaining rows contain data, either text or int.
-            for (int column = 0; column < Data[0].Length; ++column)
+            for (int column = 0; column < data[0].Count; ++column)
             {
                 DataCounter = 0;
 
-                for (int row = 0; row < Data.Count; ++row)
+                for (int row = 0; row < data.Count; ++row)
                 {
-                    string Element = Data[row][column];
+                    string Element = data[row][column];
                    
                     //First row is where the Question Texts are.
                     if (row == 0)
@@ -367,6 +405,19 @@ namespace FeedyWPF
                 Questions.Last().Answers.Last().CountDataSet.Add(CountDataElement);
             }
 
+            var QuestionsToRemove = new List<Question>();
+            foreach( var question in Questions)
+            {
+                if (question.Answers.Select(a => a.Text).All(t => t==string.Empty || t == "\0" || t== null))
+                {
+                    QuestionsToRemove.Add(question);
+                }
+            }
+
+            foreach(var question in QuestionsToRemove)
+            {
+                Questions.Remove(question);
+            }
             
             return Questions;
 
