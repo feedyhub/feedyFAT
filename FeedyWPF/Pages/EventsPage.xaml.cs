@@ -34,6 +34,8 @@ namespace FeedyWPF
             EventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
 
             db.Events.Load();
+            db.Questions.Load();
+
             EventViewSource.Source = db.Events.Local;
             EventViewSource.Filter += new FilterEventHandler(FilterDatabase);
             

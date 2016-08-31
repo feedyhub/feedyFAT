@@ -20,14 +20,24 @@ namespace FeedyWPF.Pages
 
             InitializeComponent();
             db = database;
-            SetEvaluationPageModel vm = new SetEvaluationPageModel();
-            DataContext = vm;
+            
+            ViewModel = new SetEvaluationPageModel();
+            DataContext = ViewModel;
+
+            eventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
+            questionViewSource = ((CollectionViewSource)(FindResource("questionViewSource")));
+
+            
+            
         }
         public string tabName { get; set; }
         private FeedyDbContext db { get; set; }
 
+        private SetEvaluationPageModel ViewModel { get; set; }
         private CollectionViewSource questionViewSource { get; set; }
-       
+        private CollectionViewSource eventViewSource { get; set; }
+
+
         private BindingList<SelectEvent> SelectEvents { get; set; }
         private BindingList<SelectQuestion> SelectQuestions { get; set; }
 
@@ -52,12 +62,14 @@ namespace FeedyWPF.Pages
                     SelectedQuestions.Add(item);
             }
 
-
+            
             Evaluation Evaluation = new Evaluation(new ObservableCollection<Event>(SelectedEvents), new ObservableCollection<Question>(SelectedQuestions), db);
 
             EvaluationPageEventArgs args = new EvaluationPageEventArgs();
             args.Evaluation = Evaluation;
             OnEvaluationPageEvent(this, args);
+
+            
 
         }
 
@@ -65,32 +77,19 @@ namespace FeedyWPF.Pages
         {
             // Fills eventDataGrid and questionDataGrid corresponding to Selected Questionnaire
 
-            SetEvaluationPageModel dataContext = DataContext as SetEvaluationPageModel;
-
-            var eventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
-
-            db.Events
-                .Where(ev => ev.QuestionnaireID==dataContext.QuestionnaireID)
-                .Load();
-
             SelectEvents = new BindingList<SelectEvent>();
 
-            foreach (var element in db.Events.Local)
+            foreach (var element in db.Events.Local.Where(ev => ev.QuestionnaireID == ViewModel.QuestionnaireID))
             {
                 SelectEvents.Add(new SelectEvent(element));
             }
 
             eventViewSource.Source = SelectEvents;
 
-            var questionViewSource = ((CollectionViewSource)(FindResource("questionViewSource")));
-
-            db.Questions
-                .Where(q => q.QuestionnaireID == dataContext.QuestionnaireID)
-                .Load();
 
             SelectQuestions = new BindingList<SelectQuestion>();
 
-            foreach (var element in db.Questions.Local)
+            foreach (var element in db.Questions.Local.Where(q => q.QuestionnaireID == ViewModel.QuestionnaireID))
             {
                 SelectQuestions.Add(new SelectQuestion(element));
             }

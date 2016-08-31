@@ -25,19 +25,13 @@ namespace FeedyWPF.Pages
     public partial class EvaluationPage : Page
     {
 
-        public EvaluationPage(FeedyDbContext database)
-        {
-            InitializeComponent();
-            db = database;
-        }
-
-
-
+      
         public EvaluationPage(Evaluation evaluation, FeedyDbContext database)
         {
-
+            
             InitializeComponent();
             db = database;
+            
             Evaluation = evaluation;
 
             DataContext = Evaluation;

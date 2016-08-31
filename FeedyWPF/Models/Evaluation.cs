@@ -29,8 +29,10 @@ namespace FeedyWPF.Models
             db = database;
             this.Events = events;
             this.Questions = questionSelection;
-
+            
             this.QuestionEvaluations = ExecuteQuery();
+
+           
         }
         public Evaluation(Event Event, FeedyDbContext database)
         {
@@ -41,6 +43,7 @@ namespace FeedyWPF.Models
 
             this.Questions = Event.Questionnaire.Questions;
             this.QuestionEvaluations = ExecuteQuery();
+
         }
 
 
@@ -133,6 +136,7 @@ namespace FeedyWPF.Models
         public Question Question { get; set; }
         public int ParticipantsCount { get; set; }
         public ObservableCollection<AnswerEvaluation> AnswerEvaluations { get; set; }
+        
 
 
 
@@ -159,6 +163,7 @@ namespace FeedyWPF.Models
                 //Update Question and Re-Evaluate Question
                 Question.EvalMode = EvalMode;
                 db.Entry(Question).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
                 EvaluateQuestion();
             }
 
