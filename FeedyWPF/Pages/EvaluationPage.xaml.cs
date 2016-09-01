@@ -53,7 +53,7 @@ namespace FeedyWPF.Pages
             SaveEvalModeChanges();
         }
 
-        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        private void TextExportButton_Click(object sender, RoutedEventArgs e)
         {
             TextExport export = new TextExport(Evaluation);
 
@@ -65,6 +65,18 @@ namespace FeedyWPF.Pages
                 export.Write(dialog.FileName);
             }
 
+        }
+        private void CsvExportButton_Click(object sender, RoutedEventArgs e)
+        {
+            var export = new CsvExport(Evaluation,",");
+
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "CSV file(*.csv) | *.csv";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                export.Write(dialog.FileName);
+            }
         }
 
         private void SaveEvalModeChanges()

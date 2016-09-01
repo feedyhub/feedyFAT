@@ -34,17 +34,18 @@ namespace FeedyWPF.Models
                 string EventList = "Orte: ";
                 foreach (var Event in evaluation.Events)
                 {
-                    EventList += Event.Place + " ";
+                    EventList += Event.Place + ", ";
                 }
                
 
                 Lines.Add(HeaderMultiple);
                 Lines.Add("");
                 Lines.Add(EventList);
+                Lines.Add("");
             }
             else
             {
-                var HeaderSingle = string.Format("Auswertung der Umfrage {0} in {1}", evaluation.Questions.FirstOrDefault().Questionnaire.Name, evaluation.Events.FirstOrDefault());
+                var HeaderSingle = string.Format("Auswertung der Umfrage {0} in {1}", evaluation.Questions.FirstOrDefault().Questionnaire.Name, evaluation.Events.FirstOrDefault().Place);
                 Lines.Add(HeaderSingle);
                 Lines.Add("");
             }
@@ -54,32 +55,37 @@ namespace FeedyWPF.Models
             {
                 Lines.Add(question.Question.Text);
 
-
-                foreach ( var answer in question.AnswerEvaluations)
+                if (question.EvalMode == EvaluationMode.MEAN_VALUE)
                 {
-                    if(question.EvalMode == EvaluationMode.MEAN_VALUE)
-                    {
-                        
-                        Lines.Add(((MeanValueEvaluation)answer).Value.ToString());
-                    }
-                    else
-                    {
-
-                        switch (question.EvalMode)
-                        {
-                            case EvaluationMode.ABSOLUTE:
-                                Lines.Add(((AbsoluteEvaluation)answer).Value.ToString() + "   " + ((AbsoluteEvaluation)answer).AnswerText);
-                                break;
-                            case EvaluationMode.PERCENTAGE:
-                                Lines.Add(((PercentageEvaluation)answer).DisplayValue + "   " + ((PercentageEvaluation)answer).AnswerText);
-                                break;
-
-                            case EvaluationMode.TEXT:
-                                Lines.Add(string.Format("- {0}",((TextEvaluation)answer).TextAnswer));
-                                break;
-                        }
-                    }                    
+                    Lines.Add(question.MeanValueEvaluations.FirstOrDefault().Value.ToString());
                 }
+
+                else if(question.EvalMode == EvaluationMode.TEXT)
+                {
+                    foreach(var textAnswer in question.TextEvaluations)
+                    {
+                        Lines.Add(string.Format("- {0}", (textAnswer.TextAnswer)));
+                    }
+
+                }
+                else
+                {
+                    foreach (var answer in question.AnswerEvaluations)
+                    {
+
+                            switch (question.EvalMode)
+                            {
+                                case EvaluationMode.ABSOLUTE:
+                                    Lines.Add((answer.AbsoluteEvaluation.Value.ToString() + "   " + (answer.AbsoluteEvaluation.AnswerText)));
+                                    break;
+                                case EvaluationMode.PERCENTAGE:
+                                    Lines.Add((answer.PercentageEvaluation.DisplayValue + "   " + (answer.PercentageEvaluation.AnswerText)));
+                                    break;
+
+                        }
+                    }
+                }
+               
 
                 Lines.Add("");
                 

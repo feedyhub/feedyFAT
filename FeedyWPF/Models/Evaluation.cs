@@ -148,10 +148,10 @@ namespace FeedyWPF.Models
         public string Text { get; set; }
         public Question Question { get; set; }
         public int ParticipantsCount { get; set; }
-        public ObservableCollection<AnswerEvaluation> AnswerEvaluations { get; set; }
-        
 
-
+        public ObservableCollection<NumericEvaluation> AnswerEvaluations { get; set; }
+        public ObservableCollection<MeanValueEvaluation> MeanValueEvaluations { get; set; }
+        public ObservableCollection<TextEvaluation> TextEvaluations { get; set; }
 
         private EvaluationMode _evalMode;
         public EvaluationMode EvalMode
@@ -184,58 +184,61 @@ namespace FeedyWPF.Models
         public void EvaluateQuestion()
         {
 
-            AnswerEvaluations = new ObservableCollection<AnswerEvaluation>();
+             MeanValueEvaluations = new ObservableCollection<MeanValueEvaluation>();
+             AnswerEvaluations = new ObservableCollection<NumericEvaluation>();
+            TextEvaluations = new ObservableCollection<TextEvaluation>();
 
-            if (Question.EvalMode == EvaluationMode.MEAN_VALUE)
+            MeanValueEvaluations.Add(new MeanValueEvaluation(Question, ParticipantsCount));
+
+            foreach (var answer in Question.Answers)
             {
-                AnswerEvaluations.Add(new MeanValueEvaluation(Question, ParticipantsCount));
-            }
-            else
-            {
-                foreach (var answer in Question.Answers)
+                AnswerEvaluations.Add(new NumericEvaluation(this.Question, answer, ParticipantsCount));
+
+                if(answer.TextDataSet != null)
                 {
-                    switch (Question.EvalMode)
+                    foreach (var textData in answer.TextDataSet)
                     {
-                    case EvaluationMode.ABSOLUTE:
-                        AnswerEvaluations.Add(new AbsoluteEvaluation(answer));
-                        break;
-                    case EvaluationMode.PERCENTAGE:
-                        AnswerEvaluations.Add(new PercentageEvaluation(answer, ParticipantsCount));
-                        break;
-
-                    case EvaluationMode.TEXT:
-                        foreach (var textData in answer.TextDataSet)
-                        {
-                            AnswerEvaluations.Add(new TextEvaluation(textData.Text));
-                        }
-                        break;
-
-                    default:
-                        AnswerEvaluations.Add(new AbsoluteEvaluation(answer));
-                        break;
+                        TextEvaluations.Add(new TextEvaluation(textData.Text));
                     }
                 }
+                
+ 
             }
-        }   
+     
+        }
     }
+       
+    
 
-    public class AnswerEvaluation
+
+   
+    public class NumericEvaluation
     {
-
-    }
-
-    public class TextEvaluation : AnswerEvaluation
-    {
-        public TextEvaluation(string text)
+        public NumericEvaluation(Question question, Answer answer, int participantsCount)
         {
+            Text = answer.Text;
+            AbsoluteEvaluation = new AbsoluteEvaluation(answer);
+            PercentageEvaluation = new PercentageEvaluation(answer, participantsCount);
+        }
 
+        public string Text { get; set; }
+        public AbsoluteEvaluation AbsoluteEvaluation { get; set; }
+        public PercentageEvaluation PercentageEvaluation { get; set; }
+        
+    }
+
+    public class TextEvaluation
+    {
+
+        public TextEvaluation(string text)
+        { 
             TextAnswer = text;
         }
 
         public string TextAnswer { get; set; }
     }
 
-    public class AbsoluteEvaluation : AnswerEvaluation
+    public class AbsoluteEvaluation
     {
         public AbsoluteEvaluation(Answer answer)
         {
@@ -247,7 +250,7 @@ namespace FeedyWPF.Models
         public string AnswerText { get; set; }
     }
 
-    public class PercentageEvaluation : AnswerEvaluation
+    public class PercentageEvaluation
     {
 
         public PercentageEvaluation(Answer answer, int participantsCount)
@@ -262,7 +265,7 @@ namespace FeedyWPF.Models
         public string AnswerText { get; set; }
     }
 
-    public class MeanValueEvaluation : AnswerEvaluation
+    public class MeanValueEvaluation
     {
         public MeanValueEvaluation(Question Question, int participantsCount)
         {
@@ -279,20 +282,22 @@ namespace FeedyWPF.Models
 
             Value = Math.Round(Value / participantsCount,2);
 
-            FirstAnswer = Answers.First().Text;
-            LastAnswer = Answers.Last().Text;
-
             FirstAnswerValue = 1;
             LastAnswerValue = AnswerCount;
+
+            FirstAnswerDisplay = FirstAnswerValue +" "+ Answers.First().Text ;
+            LastAnswerDisplay = LastAnswerValue + " " + Answers.Last().Text;
+
+            
         }
 
         public string EvaluationLabel { get; set; }
         public double Value { get; set; }
 
-        public string FirstAnswer { get; set; }
+        public string FirstAnswerDisplay { get; set; }
         public int FirstAnswerValue { get; set; }
 
-        public string LastAnswer { get; set; }
+        public string LastAnswerDisplay { get; set; }
         public int LastAnswerValue { get; set; }
 
         }

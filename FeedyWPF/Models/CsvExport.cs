@@ -11,8 +11,14 @@ namespace FeedyWPF.Models
 
         public CsvExport(Evaluation evaluation, string delimiter)
         {
-            Output = Convert(evaluation);
             Delimiter = delimiter;
+            if (Delimiter != null)
+            {
+                Output = Convert(evaluation);
+
+            }
+            
+            
         }
 
         private string[] Output { get; set; }
@@ -29,42 +35,6 @@ namespace FeedyWPF.Models
         {
             var Result = new List<string>();
 
-            //#region Line one of CSV File: Questions
-            //StringBuilder LineOneBuilder = new StringBuilder();
-
-            //foreach(var question in evaluation.Questions)
-            //{
-            //    LineOneBuilder.Append(question.Text);
-            //    LineOneBuilder.Append(Delimiter);
-
-            //    if(question.Answers.Count > 0)
-            //    {
-            //        for (int i = 0; i < question.Answers.Count - 1; ++i)
-            //        {
-            //            LineOneBuilder.Append(Delimiter);
-            //        }
-            //    }
-            //}
-            ////remove last Delimiter. Lines end without Delimiter
-            //LineOneBuilder.Remove(LineOneBuilder.Length - 1, 1);
-
-            //Result.Add(LineOneBuilder.ToString());
-            //#endregion
-
-            //#region Line Two: Answers
-            //StringBuilder LineTwoBuilder = new StringBuilder();
-
-            //foreach(var answer in evaluation.Questions.SelectMany(q => q.Answers))
-            //{
-            //    LineTwoBuilder.Append(answer.Text);
-            //    LineTwoBuilder.Append(Delimiter);
-            //}
-
-            ////remove last Delimiter. Lines end without Delimiter
-            //LineOneBuilder.Remove(LineTwoBuilder.Length - 1, 1);
-
-            //Result.Add(LineTwoBuilder.ToString());
-            //#endregion
 
             StringBuilder Line;
 
@@ -72,13 +42,27 @@ namespace FeedyWPF.Models
             {
                 Result.Add(qEval.Text);
 
+
+
+                //AnswerTexts
                 Line = new StringBuilder();
-                foreach(var aEval in qEval.AnswerEvaluations)
+                foreach (var aEval in qEval.AnswerEvaluations)
                 {
-                    Line.Append(aEval);
-
+                    Line.Append(aEval.Text + Delimiter);      
                 }
+                Line.Remove(Line.Length - 1, 1);
+                Result.Add(Line.ToString());
 
+                //AnswerData
+                Line = new StringBuilder();
+                foreach (var aEval in qEval.AnswerEvaluations)
+                {
+                    Line.Append(aEval.AbsoluteEvaluation.Value + Delimiter);
+                }
+                Line.Remove(Line.Length - 1, 1);
+                Result.Add(Line.ToString());
+
+                Result.Add("");
             }
 
 

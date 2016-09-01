@@ -44,7 +44,6 @@ C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\bin\Debug\MySql.Data.dll
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\bin\Debug\MySql.Data.Entity.EF6.dll
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\bin\Debug\EntityFramework.xml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\bin\Debug\EntityFramework.SqlServer.xml
-C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.csprojResolveAssemblyReference.cache
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\EvaluationPage.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\EventsPage.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\SetEvaluationPage.g.cs

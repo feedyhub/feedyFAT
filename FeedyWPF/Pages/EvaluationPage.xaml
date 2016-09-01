@@ -14,13 +14,13 @@
         </DataTemplate>
         <!--Absolute Evaluation DataTemplate-->
         <DataTemplate x:Key="AbsoluteEvaluation" DataType="{x:Type models:QuestionEvaluation}">
-            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="300">
-                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="Auto">
+                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="Auto" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
-                <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
+                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="answerColumn" Binding="{Binding AnswerText}" Header="Antwort" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn x:Name="resultColumn" Binding="{Binding Value}" Header="Anzahl" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn x:Name="answerColumn" Binding="{Binding AbsoluteEvaluation.AnswerText}" Header="Antwort" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn x:Name="resultColumn" Binding="{Binding AbsoluteEvaluation.Value}" Header="Anzahl" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
@@ -28,28 +28,27 @@
         
         <!--PercentageEvaluation DataTemplate-->
         <DataTemplate x:Key="PercentageEvaluation" DataType="{x:Type models:QuestionEvaluation}">
-                <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="300">
-                    <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
-
-                    <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="answerColumn" Binding="{Binding AnswerText}" Header="Antwort" IsReadOnly="True" Width="Auto"/>
-                            <DataGridTextColumn x:Name="resultColumn" Binding="{Binding DisplayValue}" Header="Anzahl" IsReadOnly="True" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </DockPanel>
+                <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="Auto">
+                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="Auto" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn x:Name="answerColumn" Binding="{Binding PercentageEvaluation.AnswerText}" Header="Antwort" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn x:Name="resultColumn" Binding="{Binding PercentageEvaluation.DisplayValue}" Header="Anzahl" IsReadOnly="True" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
             </DataTemplate>
 
         <!--MeanValueEvaluation DataTemplate-->
         <DataTemplate x:Key="MeanValueEvaluation" DataType="{x:Type models:QuestionEvaluation}">
-            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="310">
-                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="Auto">
+                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="Auto" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
-                <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
+                <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=MeanValueEvaluations}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="FirstAnswerColumn" Binding="{Binding FirstAnswerValue}" Header="{Binding FirstAnswer}" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn x:Name="meanValColumn" Binding="{Binding Value}" Header="Mittelwert" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn x:Name="LastAnswerColumn" Binding="{Binding LastAnswerValue}" Header="{Binding LastAnswer}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn  Binding="{Binding FirstAnswerDisplay}" Header="Niedrigste Antwort" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn  Binding="{Binding Value}" Header="Mittelwert" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn Binding="{Binding LastAnswerDisplay}" Header="Höchste Antwort" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
@@ -57,11 +56,18 @@
 
         <!--TextEvaluation DataTemplate-->
         <DataTemplate x:Key="TextEvaluation" DataType="{x:Type models:QuestionEvaluation}">
-            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="310">
-                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
-                <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
+            <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="Auto">
+                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="Auto" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+                <DataGrid AutoGenerateColumns="False"  CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=TextEvaluations}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="textAnswerColumn" Binding="{Binding TextAnswer}" Header="Antworten" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTemplateColumn Header="Antworten" IsReadOnly="True" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TextAnswer}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <!--<DataGridTextColumn x:Name="textAnswerColumn" Binding="{Binding TextAnswer}" Header="Antworten" IsReadOnly="True" Width="Auto"/>-->
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
@@ -79,15 +85,16 @@
         
         <Label Content="Auswertung" DockPanel.Dock="Top"/>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
-            <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click"/>
-            <Button x:Name="ExportButton" Content="Seite als .txt Datei speichern" Margin="5,10,10,0" Click="ExportButton_Click" />
+            <Button x:Name="CloseTabButton" Content="Speichern" Margin="10,10,5,0" Click="CloseTabButton_Click"/>
+            <Button x:Name="CsvExportButton" Content="Seite als .CSV Datei speichern" Margin="5,10,10,0" Click="CsvExportButton_Click" />
+            <Button x:Name="TextExportButton" Content="Seite als .txt Datei speichern" Margin="5,10,10,0" Click="TextExportButton_Click" />
         </StackPanel>
         
         <ListView ItemsSource="{Binding QuestionEvaluations}"   Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
             <ListView.View>
                 <GridView>
                     <!--DataTemplate for Evaluation-->
-                    <GridViewColumn>
+                    <GridViewColumn Width="350">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:QuestionEvaluation}">
                                 <ContentControl Content="{Binding }">
