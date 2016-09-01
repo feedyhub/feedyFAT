@@ -15,7 +15,7 @@
         <!--Absolute Evaluation DataTemplate-->
         <DataTemplate x:Key="AbsoluteEvaluation" DataType="{x:Type models:QuestionEvaluation}">
             <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="300">
-                <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
                 <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
                     <DataGrid.Columns>
@@ -29,7 +29,7 @@
         <!--PercentageEvaluation DataTemplate-->
         <DataTemplate x:Key="PercentageEvaluation" DataType="{x:Type models:QuestionEvaluation}">
                 <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="300">
-                    <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
                     <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
                         <DataGrid.Columns>
@@ -43,7 +43,7 @@
         <!--MeanValueEvaluation DataTemplate-->
         <DataTemplate x:Key="MeanValueEvaluation" DataType="{x:Type models:QuestionEvaluation}">
             <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="310">
-                <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
 
                 <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
                     <DataGrid.Columns>
@@ -58,7 +58,7 @@
         <!--TextEvaluation DataTemplate-->
         <DataTemplate x:Key="TextEvaluation" DataType="{x:Type models:QuestionEvaluation}">
             <DockPanel Margin="0,0,0,10" HorizontalAlignment="Left" Height="Auto" LastChildFill="false" VerticalAlignment="Top" Width="310">
-                <TextBlock Text="{Binding QuestionName}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Text}" Margin="0,0,0,3" HorizontalAlignment="Left" Width ="300" DockPanel.Dock="Top" TextWrapping="Wrap"/>
                 <DataGrid CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="textAnswerColumn" Binding="{Binding TextAnswer}" Header="Antworten" IsReadOnly="True" Width="Auto"/>
@@ -83,7 +83,7 @@
             <Button x:Name="ExportButton" Content="Seite als .txt Datei speichern" Margin="5,10,10,0" Click="ExportButton_Click" />
         </StackPanel>
         
-        <ListView ItemsSource="{Binding QuestionEvaluations}"   Margin="10,10,10,0" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+        <ListView ItemsSource="{Binding QuestionEvaluations}"   Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
             <ListView.View>
                 <GridView>
                     <!--DataTemplate for Evaluation-->

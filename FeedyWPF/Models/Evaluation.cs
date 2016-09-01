@@ -134,7 +134,7 @@ namespace FeedyWPF.Models
         {
             db = database;
             // for each answer in question create corresponding evaluations.
-            QuestionName = question.Text;
+            Text = question.Text;
             _evalMode = question.EvalMode;
             Question = question;
             ParticipantsCount = participantsCount;
@@ -145,7 +145,7 @@ namespace FeedyWPF.Models
  
         }
 
-        public string QuestionName { get; set; }
+        public string Text { get; set; }
         public Question Question { get; set; }
         public int ParticipantsCount { get; set; }
         public ObservableCollection<AnswerEvaluation> AnswerEvaluations { get; set; }
