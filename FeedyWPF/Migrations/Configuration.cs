@@ -10,6 +10,7 @@ namespace FeedyWPF.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            ContextKey = "FeedyWPF.Models.FeedyDbContext";
         }
 
         protected override void Seed(FeedyWPF.Models.FeedyDbContext context)
