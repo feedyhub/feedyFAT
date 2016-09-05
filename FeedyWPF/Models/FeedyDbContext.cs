@@ -10,7 +10,7 @@ namespace FeedyWPF.Models
 {
     public class FeedyDbContext : DbContext
     {
-        public FeedyDbContext() : base("FeedyDbContext")
+        public FeedyDbContext() : base("FLORA FILL IN HERE")
         {
         }
 
