@@ -36,7 +36,7 @@ namespace FeedyWPF.Models
                 {
                     EventList += Event.Place + ", ";
                 }
-               
+                EventList.Remove(EventList.Length - 1, 1);
 
                 Lines.Add(HeaderMultiple);
                 Lines.Add("");
@@ -49,9 +49,58 @@ namespace FeedyWPF.Models
                 Lines.Add(HeaderSingle);
                 Lines.Add("");
             }
-            
+
+            #region find maximum char length of displayvalues
+            int MaxLengthAbsolute = 0;
+            int MaxLengthPercentage = 0;
+            foreach (var question in evaluation.QuestionEvaluations)
+            {
+                if (question.EvalMode == EvaluationMode.ABSOLUTE)
+                {
+                    
+                    foreach (var answer in question.AnswerEvaluations)
+                    {
+                        if(answer.AbsoluteEvaluation.Value.ToString().Length > MaxLengthAbsolute)
+                        {
+                            MaxLengthAbsolute = answer.AbsoluteEvaluation.Value.ToString().Length;
+                        }
+                    }
+                }
+
+                if (question.EvalMode == EvaluationMode.PERCENTAGE)
+                {
+
+                    foreach (var answer in question.AnswerEvaluations)
+                    {
+                        if (answer.PercentageEvaluation.DisplayValue.Length > MaxLengthPercentage)
+                        {
+                            MaxLengthPercentage = answer.PercentageEvaluation.DisplayValue.Length;
+                        }
+                    }
+                }
+
+
+            }
+            #endregion
+
+            #region adapt gap size and write result lines
+            //set gapsize between answertext and value corresponding to length of value in order to write nice columns
+            string GapAbsolute ="";
+            string GapPercentage="";
+            int ExtraSpaces = 2;
+
+            for(int i=0; i<MaxLengthAbsolute+ExtraSpaces; ++i)
+            {
+                GapAbsolute += " ";
+            }
+
+            for (int i = 0; i < MaxLengthPercentage + ExtraSpaces; ++i)
+            {
+                GapPercentage += " ";
+            }
+
             //Print evaluations
-            foreach(var question in evaluation.QuestionEvaluations)
+            foreach (var question in evaluation.QuestionEvaluations)
             {
                 Lines.Add(question.Question.Text);
 
@@ -70,22 +119,28 @@ namespace FeedyWPF.Models
                 }
                 else
                 {
+                 
+
                     foreach (var answer in question.AnswerEvaluations)
                     {
 
-                            switch (question.EvalMode)
-                            {
-                                case EvaluationMode.ABSOLUTE:
-                                    Lines.Add((answer.AbsoluteEvaluation.Value.ToString() + "   " + (answer.AbsoluteEvaluation.AnswerText)));
-                                    break;
-                                case EvaluationMode.PERCENTAGE:
-                                    Lines.Add((answer.PercentageEvaluation.DisplayValue + "   " + (answer.PercentageEvaluation.AnswerText)));
-                                    break;
+                        if( question.EvalMode== EvaluationMode.ABSOLUTE)
+                        {
+                            string value = answer.AbsoluteEvaluation.Value.ToString();
+                            string Gap = GapAbsolute.Remove(0, value.Length);
+                            Lines.Add((value + Gap + (answer.AbsoluteEvaluation.AnswerText)));
+                        }
 
+                        if(question.EvalMode == EvaluationMode.PERCENTAGE)
+                        {
+                            string value2 = answer.PercentageEvaluation.DisplayValue;
+                            string Gap2 = GapPercentage.Remove(0, value2.Length);
+                            Lines.Add((value2 + Gap2 + (answer.PercentageEvaluation.AnswerText)));
                         }
                     }
                 }
-               
+
+                #endregion
 
                 Lines.Add("");
                 

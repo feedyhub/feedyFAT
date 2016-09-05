@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\App.xaml
-8-394591396
+92006925449
 
-282014809402
+291750084477
 22-864253275
-Pages\EvaluationPage.xaml;Pages\EventsPage.xaml;Pages\SetEvaluationPage.xaml;Pages\TestPage.xaml;Windows\ImportWindow.xaml;Windows\MainWindow.xaml;TabView.xaml;TabWindow.xaml;
+Pages\EvaluationPage.xaml;Pages\EventsPage.xaml;Pages\SetEvaluationPage.xaml;Pages\TestPage.xaml;Windows\CopyableMessageBox.xaml;Windows\ImportWindow.xaml;Windows\MainWindow.xaml;TabView.xaml;TabWindow.xaml;
 
-True
+False
 

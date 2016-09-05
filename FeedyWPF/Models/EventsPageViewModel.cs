@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -14,11 +15,14 @@ namespace FeedyWPF.Models
     {
         public EventsPageViewModel()
         {
-            IList<Questionnaire> list = db.Questionnaires.ToList();
-            Questionnaire NullQuest = new Questionnaire();
-            NullQuest.Name = string.Empty;
-            list.Add(NullQuest);
-            _questionnaireEntries = new CollectionView(list);
+            
+                IList<Questionnaire> list = db.Questionnaires.ToList();
+                Questionnaire NullQuest = new Questionnaire();
+                NullQuest.Name = string.Empty;
+                list.Add(NullQuest);
+                _questionnaireEntries = new CollectionView(list);
+            
+           
         }
         FeedyDbContext db = new FeedyDbContext();
 

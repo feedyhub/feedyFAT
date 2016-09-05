@@ -17,9 +17,18 @@ namespace FeedyWPF
     {
         public MainWindow()
         {
-         
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
-            db = new FeedyDbContext();
+
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
+
+            try{
+                db = new FeedyDbContext();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
+            }
+           
             InitializeComponent();
 
             //Set TabView DataContext

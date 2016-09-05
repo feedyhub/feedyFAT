@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using FeedyWPF.Windows;
+
 using FeedyWPF.Models;
 using System.Collections.ObjectModel;
 
@@ -27,18 +29,19 @@ namespace FeedyWPF
         public EventsPage(FeedyDbContext database)
         {
             InitializeComponent();
+
             db = database;
             ViewModel = new EventsPageViewModel();
             DataContext = ViewModel;
 
             EventViewSource = ((CollectionViewSource)(FindResource("eventViewSource")));
 
-            db.Events.Load();
-            db.Questions.Load();
-
-            EventViewSource.Source = db.Events.Local;
-            EventViewSource.Filter += new FilterEventHandler(FilterDatabase);
             
+                db.Events.Load();
+                db.Questions.Load();
+
+                EventViewSource.Source = db.Events.Local;
+                EventViewSource.Filter += new FilterEventHandler(FilterDatabase);
             
         }
 
