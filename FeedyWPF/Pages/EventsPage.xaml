@@ -40,8 +40,6 @@
         </StackPanel>
        
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-            <Button x:Name="button" Content="Spezifische Auswertung" HorizontalAlignment="Right" Width="142" Margin="3,10,3
-                    ,10" />
             <Button x:Name="importDataButton" Content="Neue Umfrage importieren" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23"  
                     Margin="3,10,10,5"/>
                     

@@ -116,6 +116,7 @@
     <Compile Include="Models\SetEvaluationPageModel.cs" />
     <Compile Include="Models\StaticClasses.cs" />
     <Compile Include="Models\TextExport.cs" />
+    <Compile Include="Pages\BasePage.cs" />
     <Compile Include="Pages\EvaluationPage.xaml.cs">
       <DependentUpon>EvaluationPage.xaml</DependentUpon>
     </Compile>

@@ -13,12 +13,13 @@ namespace FeedyWPF.Pages
     /// <summary>
     /// Interaction logic for SetEvaluationPage.xaml
     /// </summary>
-    public partial class SetEvaluationPage : Page
+    public partial class SetEvaluationPage : BasePage
     {
-        public SetEvaluationPage(FeedyDbContext database)
+        public SetEvaluationPage(FeedyDbContext database, string tabName)
         {
 
             InitializeComponent();
+            TabUid = tabName;
             db = database;
             
             ViewModel = new SetEvaluationPageModel();
@@ -30,7 +31,7 @@ namespace FeedyWPF.Pages
             
             
         }
-        public string tabName { get; set; }
+        
         private FeedyDbContext db { get; set; }
 
         private SetEvaluationPageModel ViewModel { get; set; }
@@ -147,6 +148,11 @@ namespace FeedyWPF.Pages
                     item.IsSelected = false;
                 }
             }
+        }
+
+        private void CloseTabButton_Click(object sender, RoutedEventArgs e)
+        {
+            OnCloseTabEvent(this, new CloseTabEventArgs());
         }
     }
 }

@@ -24,22 +24,22 @@ namespace FeedyWPF.Pages
     /// <summary>
     /// Interaction logic for EvaluationPage.xaml
     /// </summary>
-    public partial class EvaluationPage : Page
+    public partial class EvaluationPage : BasePage
     {
 
       
-        public EvaluationPage(Evaluation evaluation)
+        public EvaluationPage(Evaluation evaluation, string tabId)
         {
-            
-            InitializeComponent();
-           
-            Evaluation = evaluation;
 
+            InitializeComponent();
+
+            TabUid = tabId;
+
+            Evaluation = evaluation;
             DataContext = Evaluation;
         }
 
-        public delegate void CloseTabEventHandler(object sender, CloseTabEventArgs e);
-        public event CloseTabEventHandler OnCloseTabEvent;
+        
         private FeedyDbContext db { get; set; }
         public Evaluation Evaluation { get; set; }
 
@@ -51,7 +51,10 @@ namespace FeedyWPF.Pages
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
         {
             SaveEvalModeChanges();
+            OnCloseTabEvent(this, new CloseTabEventArgs());
         }
+
+       
 
         private void TextExportButton_Click(object sender, RoutedEventArgs e)
         {
@@ -99,6 +102,14 @@ namespace FeedyWPF.Pages
             }
         }
 
-       
+        public override void OnCloseTabEvent(object sender, CloseTabEventArgs e)
+        {
+            // Do any circle-specific processing here.
+
+            // Call the base class event invocation method.
+            base.OnCloseTabEvent(sender, e);
+        }
+
+
     }
 }
