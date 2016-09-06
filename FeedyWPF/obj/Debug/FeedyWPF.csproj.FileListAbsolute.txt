@@ -74,3 +74,4 @@ C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.pdb
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.csprojResolveAssemblyReference.cache
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\CopyableMessageBox.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\CopyableMessageBox.baml
+C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.Migrations.InitialCreate.resources
