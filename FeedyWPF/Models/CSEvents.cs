@@ -13,9 +13,12 @@ namespace FeedyWPF.Models
     }
 
 
+    public class SetCreateQuestionsPageEventArgs : EventArgs
+    {
 
+    }
 
-    public class EvaluationPageEventArgs : EventArgs
+    public class SetEvaluationPageEventArgs : EventArgs
     {
         public Evaluation Evaluation { get; set; }
     }

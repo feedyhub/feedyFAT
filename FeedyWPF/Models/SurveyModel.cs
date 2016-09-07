@@ -51,7 +51,7 @@ namespace FeedyWPF.Models
         {
             //Primary key
             public int QuestionnaireID { get; set; }
-            public int dummy { get; set; }
+            
             public string Name { get; set; }
 
             
@@ -68,13 +68,12 @@ namespace FeedyWPF.Models
             //Constructors
             public Question() { }
        
-        public Question(string QuestionText) { this.Text = QuestionText; }
+            public Question(string QuestionText) { this.Text = QuestionText; }
             //Primary Key
             public int QuestionID { get; set; }
 
             public string Text { get; set; }
-
-        
+            public virtual QuestionType QuestionType { get; set; }
             public EvaluationMode EvalMode { get; set; }
 
             //Foreign Key
@@ -149,7 +148,10 @@ namespace FeedyWPF.Models
 
     }
 
-        
+    public enum QuestionType
+    {
+        MULTIPLE_CHOICE, SINGLE_CHOICE, TEXT
+    }
 
        
 

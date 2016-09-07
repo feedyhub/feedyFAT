@@ -12,6 +12,7 @@ namespace FeedyWPF.Models
     {
         public FeedyDbContext() : base("FeedyDbContext")
         {
+         
         }
 
         public DbSet<Event> Events { get; set; }

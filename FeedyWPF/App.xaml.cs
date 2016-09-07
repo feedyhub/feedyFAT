@@ -34,7 +34,7 @@ namespace FeedyWPF
           
 
             CopyableMessageBox MsgBox = new CopyableMessageBox(ErrorMessage);
-            MsgBox.ShowDialog();
+            //MsgBox.ShowDialog();
 
         }
 

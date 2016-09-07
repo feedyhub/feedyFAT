@@ -18,7 +18,7 @@ namespace FeedyWPF
         public MainWindow()
         {
 
-            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
 
             try{
                 db = new FeedyDbContext();
@@ -51,6 +51,7 @@ namespace FeedyWPF
             EventsPage eventsPage = new EventsPage(db);
 
             eventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(setEvaluationTab);
+            eventsPage.OnSetCreateQuestionsPageEvent += new EventsPage.SetCreateQuestionsPageEventHandler(setCreateQuestionsTab);
 
             eventsFrame.Content = eventsPage;
             tabitem.Content = eventsFrame;
@@ -64,6 +65,9 @@ namespace FeedyWPF
 
             tabControl.SelectedIndex = 0;
         }
+
+       
+
         private int _tabIdCounter { get; set; }
         private int TabIdCounter
         {
@@ -126,7 +130,7 @@ namespace FeedyWPF
             }
         }
 
-        private void setEvaluationTab(object sender, EvaluationPageEventArgs e)
+        private void setEvaluationTab(object sender, SetEvaluationPageEventArgs e)
         {
             TabItem tab;
 
@@ -173,6 +177,30 @@ namespace FeedyWPF
                 Tabs.Insert(tabsCount - 1, tab);
                 tabControl.SelectedItem = tab;
             } 
+        }
+
+        private void setCreateQuestionsTab(object sender, SetCreateQuestionsPageEventArgs e)
+        {
+            TabItem Tab;
+
+            Tab = new TabItem();
+            Tab.Uid = TabIdCounter.ToString();
+            Tab.Header = string.Format("Neuer Fragebogen {0}", tabsCount - 1);
+
+
+            var CreateQuestionsPage = new CreateQuestionsPage(Tab.Uid);
+
+            //Add Controls to Page
+            CreateQuestionsPage.CloseTabEvent += CloseTab;
+
+
+            Frame frame = new Frame();
+            frame.Content = CreateQuestionsPage;
+
+            CreateQuestionsPage.TabUid = Tab.Uid;
+            Tab.Content = frame;
+            Tabs.Insert(tabsCount - 1, Tab);
+            tabControl.SelectedItem = Tab;
         }
 
         private void CloseTab(object sender, CloseTabEventArgs e)

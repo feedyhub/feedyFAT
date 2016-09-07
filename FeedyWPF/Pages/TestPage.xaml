@@ -6,35 +6,105 @@
       xmlns:models="clr-namespace:FeedyWPF.Models"
       xmlns:local="clr-namespace:FeedyWPF.Pages"
       mc:Ignorable="d" d:DesignWidth="300"
-      Title="TestPage" Height="120
-      
-      ">
+      Title="TestPage" Height="120">
 
     <Page.Resources>
         <models:EnumBooleanConverter x:Key="enumBooleanConverter" />
-    </Page.Resources>
-    <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-            <StackPanel DockPanel.Dock="Left">
-                <Label x:Name="label" Content="Fragetyp festlegen" Margin="10,5,0,0" VerticalAlignment="Top"/>
-                <StackPanel Orientation="Vertical" Margin="10,0,0, 0" DockPanel.Dock="Left">
-                    <RadioButton IsChecked="{Binding Path=Questiontype, Converter={StaticResource enumBooleanConverter}, ConverterParameter=MULTIPLE_CHOICE}">Multiple Choice</RadioButton>
-                    <RadioButton IsChecked="{Binding Path=Questiontype, Converter={StaticResource enumBooleanConverter}, ConverterParameter=SINGLECHOICE}">Single Choice</RadioButton>
-                    <RadioButton IsChecked="{Binding Path=Questiontype, Converter={StaticResource enumBooleanConverter}, ConverterParameter=TEXT}">Text</RadioButton>
-                </StackPanel>
+
+        <DataTemplate x:Key="Default" DataType="{x:Type models:CreateQuestion}">
+            <TextBlock>Fehler: Datatemplate konnte nicht gefunden werden.</TextBlock>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="MultipleChoiceAnswers" DataType="{x:Type models:Answer}">
+            <StackPanel>
+                <TextBox Text="{Binding Text}"/>
+                <RadioButton HorizontalAlignment="Center">A</RadioButton>
             </StackPanel>
-            <StackPanel DockPanel.Dock="Right">
-                <Label x:Name="label2" Content="Anzahl Antwortmöglichkeiten" Margin="10,5,0,0"  VerticalAlignment="Top" />
-                <ComboBox x:Name="comboBox" Height="23" Width="50"/>
-            </StackPanel  >
-        </StackPanel>
-
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,0,10,10" HorizontalAlignment="Right">
-            <Button x:Name="NextButton" Content="Weiter"  Width="80" />
-        </StackPanel>
+            
+        </DataTemplate>
 
 
+    </Page.Resources>
+
+   
+        <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
+        <TextBox x:Name="QuestionText" Text="Was möchtest du wissen? Hier die Frage eingeben." Margin="10,10,10,0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap"  />
+
+        <ListView ItemsSource="{Binding AnswerRows}"   Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+            <ListView.View>
+                <GridView>
+                    <!--DataTemplate for Evaluation-->
+                    <GridViewColumn Width="350" DisplayMemberBinding="{Binding ColumnOne}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type models:Answer}">
+                                <StackPanel>
+                                    <TextBox Text="{Binding Text}"/>
+                                    <RadioButton HorizontalAlignment="Center">A</RadioButton>
+                                </StackPanel>
+                                <!--<ContentControl Content="{Binding }">
+                                    <ContentControl.Style>
+                                        <Style TargetType="{x:Type ContentControl}">
+
+                                             Default Template 
+                                            <Setter Property="ContentTemplate" Value="{StaticResource Default}" />
+
+                                             Triggers to change Template 
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding QuestionType}" Value="MULTIPLE_CHOICE">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource MultipleChoiceAnswers}" />
+                                                </DataTrigger>
+                                               
+                                            </Style.Triggers>
+                                           
+                                              
+                                           
+                                           
+                                            
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>-->
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <!--RadioBullets for choosing Evaluation Mode-->
+                    <GridViewColumn Width="350" DisplayMemberBinding="{Binding ColumnTwo}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type models:Answer}">
+                                <StackPanel>
+                                    <TextBox Text="{Binding Text}"/>
+                                    <RadioButton HorizontalAlignment="Center">A</RadioButton>
+                                </StackPanel>
+                                <!--<ContentControl Content="{Binding }">
+                                    <ContentControl.Style>
+                                        <Style TargetType="{x:Type ContentControl}">
+
+                                             Default Template 
+                                            <Setter Property="ContentTemplate" Value="{StaticResource Default}" />
+
+                                             Triggers to change Template 
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding QuestionType}" Value="MULTIPLE_CHOICE">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource MultipleChoiceAnswers}" />
+                                                </DataTrigger>
+                                               
+                                            </Style.Triggers>
+                                           
+                                              
+                                           
+                                           
+                                            
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>-->
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </DockPanel>
+    
 
 </Page>
 

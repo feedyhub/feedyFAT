@@ -42,7 +42,8 @@
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
             <Button x:Name="importDataButton" Content="Neue Umfrage importieren" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23"  
                     Margin="3,10,10,5"/>
-                    
+            <Button x:Name="NewQuestionnaireButton" Content="Neuen Fragebogen erstellen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158"  Height="23"  
+                    Margin="3,10,10,5" Click="NewQuestionnaireButton_Click"/>
         </StackPanel>
 
         <DataGrid x:Name="eventDataGrid" DataContext="{StaticResource eventViewSource}" HorizontalAlignment="Stretch" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False"  EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="10,10,10,0"

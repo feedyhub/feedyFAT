@@ -104,11 +104,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Migrations\201608291506034_InitialCreate.cs" />
-    <Compile Include="Migrations\201608291506034_InitialCreate.Designer.cs">
-      <DependentUpon>201608291506034_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CreateQuestionViewModel.cs" />
     <Compile Include="Models\CsvExport.cs" />
     <Compile Include="Models\EnumBooleanConverter.cs" />
     <Compile Include="Models\EvaluationTemplateSelector.cs" />
@@ -117,6 +113,9 @@
     <Compile Include="Models\StaticClasses.cs" />
     <Compile Include="Models\TextExport.cs" />
     <Compile Include="Pages\BasePage.cs" />
+    <Compile Include="Pages\CreateQuestionsPage.xaml.cs">
+      <DependentUpon>CreateQuestionsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\EvaluationPage.xaml.cs">
       <DependentUpon>EvaluationPage.xaml</DependentUpon>
     </Compile>
@@ -136,6 +135,10 @@
     <Compile Include="TabWindow.xaml.cs">
       <DependentUpon>TabWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Pages\CreateQuestionsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\EvaluationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -205,9 +208,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\201608291506034_InitialCreate.resx">
-      <DependentUpon>201608291506034_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

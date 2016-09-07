@@ -42,7 +42,7 @@ namespace FeedyWPF.Pages
         private BindingList<SelectEvent> SelectEvents { get; set; }
         private BindingList<SelectQuestion> SelectQuestions { get; set; }
 
-        public delegate void EvaluationPageEventHandler(object sender, EvaluationPageEventArgs e);
+        public delegate void EvaluationPageEventHandler(object sender, SetEvaluationPageEventArgs e);
         public event EvaluationPageEventHandler OnEvaluationPageEvent;
 
         private void evaluateButton_Click(object sender, RoutedEventArgs e)
@@ -66,7 +66,7 @@ namespace FeedyWPF.Pages
             
             Evaluation Evaluation = new Evaluation(new ObservableCollection<Event>(SelectedEvents), new ObservableCollection<Question>(SelectedQuestions), db);
 
-            EvaluationPageEventArgs args = new EvaluationPageEventArgs();
+            SetEvaluationPageEventArgs args = new SetEvaluationPageEventArgs();
             args.Evaluation = Evaluation;
             OnEvaluationPageEvent(this, args);
 

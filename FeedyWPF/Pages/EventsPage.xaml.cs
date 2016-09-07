@@ -48,10 +48,15 @@ namespace FeedyWPF
         private FeedyDbContext db { get; set; }
         CollectionViewSource EventViewSource;
         public EventsPageViewModel ViewModel;
-        public delegate void EvaluationPageEventHandler(object sender, EvaluationPageEventArgs e);
+
+
+        public delegate void EvaluationPageEventHandler(object sender, SetEvaluationPageEventArgs e);
         public event EvaluationPageEventHandler OnEvaluationPageEvent;
 
-         private void FilterDatabase(object sender, FilterEventArgs e)
+        public delegate void SetCreateQuestionsPageEventHandler(object sender, SetCreateQuestionsPageEventArgs e);
+        public event SetCreateQuestionsPageEventHandler OnSetCreateQuestionsPageEvent;
+
+        private void FilterDatabase(object sender, FilterEventArgs e)
         {
 
             Event MyEvent = e.Item as Event;
@@ -135,7 +140,7 @@ namespace FeedyWPF
 
                     Evaluation Evaluation = new Evaluation(SelectedEvent, db);
 
-                    var args = new EvaluationPageEventArgs();
+                    var args = new SetEvaluationPageEventArgs();
                     args.Evaluation = Evaluation;
                     OnEvaluationPageEvent(this, args);
 
@@ -158,6 +163,11 @@ namespace FeedyWPF
         private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             EventViewSource.View.Refresh();
+        }
+
+        private void NewQuestionnaireButton_Click(object sender, RoutedEventArgs e)
+        {
+            OnSetCreateQuestionsPageEvent(this, new SetCreateQuestionsPageEventArgs());
         }
     }
 }
