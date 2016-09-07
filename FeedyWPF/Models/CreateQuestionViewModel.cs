@@ -79,6 +79,10 @@ namespace FeedyWPF.Models
 
         private void UpdateAnswerRows()
         {
+            //creates the required number of answers that will be edited in the view. 
+            //It is necessary to map them to the format of the AnswerRow in order to 
+            //be able to lay them out nicely in the UI.
+            #region do nasty work
             if(AnswerRows == null)
             {
                 AnswerRows = new ObservableCollection<AnswerRow>();
@@ -120,6 +124,7 @@ namespace FeedyWPF.Models
                     row.ColumnThree = new VisibleAnswer(Visibility.Hidden);
                 }
             }
+            #endregion
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -147,7 +152,7 @@ namespace FeedyWPF.Models
         {
             IsVisible = isVisible;
         }
-        public Visibility IsVisible { get; set; }
+        public Visibility IsVisible { get;}
     }
 
     public enum CreateQuestionProgress

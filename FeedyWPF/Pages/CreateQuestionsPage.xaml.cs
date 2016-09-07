@@ -35,10 +35,6 @@ namespace FeedyWPF.Pages
 
         
 
-        private void AddCreateQuestionButton_Click(object sender, RoutedEventArgs e)
-        {
-           
-        }
 
         private void AddQuestionButton_Click(object sender, RoutedEventArgs e)
         {
@@ -71,6 +67,11 @@ namespace FeedyWPF.Pages
                 }
               
             }
+        }
+
+        private void CloseTabButton_Click(object sender, RoutedEventArgs e)
+        {
+            OnCloseTabEvent(this, new CloseTabEventArgs());
         }
     }
 }

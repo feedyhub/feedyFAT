@@ -106,7 +106,7 @@
 
         <Label Content="Neue Fragen Fragebogen erstellen" DockPanel.Dock="Top"/>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
-            <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" />
+            <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click" />
             <Button x:Name="FinishedButton" Content="Seite als .CSV Datei speichern" Margin="5,10,10,0" />
             
         </StackPanel>
