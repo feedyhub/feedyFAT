@@ -48,6 +48,7 @@ C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\EvaluationPage.g.c
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\EventsPage.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\SetEvaluationPage.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\TestPage.g.cs
+C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\CopyableMessageBox.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\ImportWindow.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\MainWindow.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\TabView.g.cs
@@ -60,17 +61,16 @@ C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\EvaluationPage.bam
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\EventsPage.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\SetEvaluationPage.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\TestPage.baml
+C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\CopyableMessageBox.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\ImportWindow.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\MainWindow.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\TabView.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\TabWindow.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.g.resources
+C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.Migrations.InitialCreate.resources
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.Properties.Resources.resources
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.csproj.GenerateResource.Cache
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.exe.manifest
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.application
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.exe
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.pdb
-C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\CopyableMessageBox.g.cs
-C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\CopyableMessageBox.baml
-C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.Migrations.InitialCreate.resources

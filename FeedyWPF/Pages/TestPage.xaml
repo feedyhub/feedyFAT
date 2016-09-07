@@ -3,19 +3,40 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:models="clr-namespace:FeedyWPF.Models"
       xmlns:local="clr-namespace:FeedyWPF.Pages"
       mc:Ignorable="d" d:DesignWidth="300"
-      Title="TestPage" Height="67.03">
-    <DockPanel HorizontalAlignment="Left" Height="Auto" LastChildFill="False" VerticalAlignment="Top" Width="Auto">
-        <Label Content="{Binding Question.Text}" Name="labelTitl" DockPanel.Dock="Top"></Label>
-        <DataGrid DockPanel.Dock="Bottom">
-            <DataGrid.Columns>
+      Title="TestPage" Height="120
+      
+      ">
 
-            <DataGridTextColumn x:Name="answerColumn" Binding="{Binding Answer.Text}" Header="Antwort" IsReadOnly="True" Width="Auto" Visibility="Visible"/>
-            <DataGridTextColumn x:Name="resultColumn" Binding="{Binding Result}" Header="Anzahl" IsReadOnly="True" Width="Auto"/>
-            </DataGrid.Columns>
-        </DataGrid>
+    <Page.Resources>
+        <models:EnumBooleanConverter x:Key="enumBooleanConverter" />
+    </Page.Resources>
+    <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <StackPanel DockPanel.Dock="Left">
+                <Label x:Name="label" Content="Fragetyp festlegen" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                <StackPanel Orientation="Vertical" Margin="10,0,0, 0" DockPanel.Dock="Left">
+                    <RadioButton IsChecked="{Binding Path=Questiontype, Converter={StaticResource enumBooleanConverter}, ConverterParameter=MULTIPLE_CHOICE}">Multiple Choice</RadioButton>
+                    <RadioButton IsChecked="{Binding Path=Questiontype, Converter={StaticResource enumBooleanConverter}, ConverterParameter=SINGLECHOICE}">Single Choice</RadioButton>
+                    <RadioButton IsChecked="{Binding Path=Questiontype, Converter={StaticResource enumBooleanConverter}, ConverterParameter=TEXT}">Text</RadioButton>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right">
+                <Label x:Name="label2" Content="Anzahl Antwortmöglichkeiten" Margin="10,5,0,0"  VerticalAlignment="Top" />
+                <ComboBox x:Name="comboBox" Height="23" Width="50"/>
+            </StackPanel  >
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,0,10,10" HorizontalAlignment="Right">
+            <Button x:Name="NextButton" Content="Weiter"  Width="80" />
+        </StackPanel>
+
 
     </DockPanel>
 
 </Page>
+
+       
+       
