@@ -106,7 +106,7 @@ namespace FeedyWPF
             else if (ViewModel.QuestionnaireID != 0)
             {
                 Questionnaire = db.Questionnaires
-                    .Include(t => t.Questions.Select(a => a.Answers.Select(d => d.CountDataSet)))
+                    .Include(t => t.Questions.Select(a => a.Answers.Select(d => d.BoolDataSet)))
                     .Include(t => t.Questions.Select(a => a.Answers.Select(d => d.TextDataSet)))
                     .Single(q => q.QuestionnaireID == ViewModel.QuestionnaireID);
             }
@@ -165,7 +165,8 @@ namespace FeedyWPF
                 if (Event.Questionnaire.Questions != null)
                 {
 
-                    //Check if format of content is valid
+                    #region validate file content
+                    // if not, return.
 
                     //Count number of answers
                     int counter = 0;
@@ -178,24 +179,25 @@ namespace FeedyWPF
                         }
                     }
 
-                    
-
-
                     int CountDB = Event.Questionnaire.Questions.SelectMany(q => q.Answers).Count();
+
+                    //compare number of answers with questionnaire in database
                     if (Event.Questionnaire.Questions.SelectMany(q => q.Answers).Count() != counter)
                     {
                         MessageBox.Show("Falscher Fragebogen ausgewählt. Die Anzahl der Spalten der .CSV Datei stimmt nicht mit der gespeicherten Vorlage überein.");
                         return;
                     }
+                    #endregion
 
-                    else if (AppendDataToQuestionnaire(Event, Data))
-                    {
+                    // if successful, to database
+                    if (AppendDataToQuestionnaire(Event, Data))
+                    { 
                         db.Events.Add(Event);
                     }
                        
                 }
 
-                //Otherwise create model for this new questionnaire
+                //Otherwise create new questionnaire
                 else
                 {
                    
@@ -222,8 +224,14 @@ namespace FeedyWPF
 
         }
 
+        ///Arguments:    data: First row of Data contains the QuestionTexts. Second Row AnswerTexts. Remaining rows contain data, either text or int.
+        ///              myEvent: needs to be an empty object. Results are appended.
+        ///              
+        ///Return values: success
+
         private bool AppendDataToQuestionnaire(Event myEvent, List<List<string> > data)
         {
+           
             bool Success = false;
 
             //first two rows are question and answer texts.
@@ -232,24 +240,23 @@ namespace FeedyWPF
 
             Answer RefAnswer = new Answer();
             TextData TextDataElement;
-            CountData CountDataElement;
+            BoolData CountDataElement;
             Question RefQuestion = new Question();
 
             int DataCounter = 0;
+
             //go through columns and create corresponding objects
-            //First row of Data contains the QuestionTexts. Second Row AnswerTexts. Remaining rows contain data, either text or int.
             for (int column = 0; column < data[0].Count; ++column)
             {
                 DataCounter = 0;
 
-                //find matching question
+                //find matching question, comparing text (!!! Not sensitive to typos!!! )
                 if (!string.IsNullOrEmpty(data[0][column]))
                 {
                     RefQuestion = myEvent.Questionnaire.Questions.Single(q => q.Text == data[0][column]);      
                 }
-                //find corresponding questions and answers in model.
 
-                
+                //find corresponding questions and answers in model. (!!! Again comparing text, not typo-sensitive!!! )
                 RefAnswer = RefQuestion.Answers.Single(a => a.Text == data[1][column]);
 
 
@@ -273,9 +280,9 @@ namespace FeedyWPF
                             ++DataCounter;
                         }
                     }
-                    CountDataElement = new CountData(DataCounter);
+                    CountDataElement = new BoolData(DataCounter);
                     CountDataElement.Event = myEvent;
-                    RefAnswer.CountDataSet.Add(CountDataElement);
+                    RefAnswer.BoolDataSet.Add(CountDataElement);
                 }
 
                
@@ -328,14 +335,14 @@ namespace FeedyWPF
             ObservableCollection<Answer> Answers = new ObservableCollection<Answer>();
 
             TextData TextDataElement;
-            CountData CountDataElement;
+            BoolData BoolDataElement;
 
-            int DataCounter = 0;
+            
             //go through columns and create corresponding objects
             //First row of Data contains the QuestionTexts. Second Row AnswerTexts. Remaining rows contain data, either text or int.
             for (int column = 0; column < data[0].Count; ++column)
             {
-                DataCounter = 0;
+                
 
                 for (int row = 0; row < data.Count; ++row)
                 {
@@ -348,10 +355,6 @@ namespace FeedyWPF
                         if (!string.IsNullOrEmpty(Element))
                         {
                                 var Question = new Question(Element);
-
-                                // Default EvalMode is Absolute Mode
-                                Question.EvalMode = EvaluationMode.ABSOLUTE;
-
                                 Questions.Add(Question);
                                 Questions.Last<Question>().Answers = new ObservableCollection<Answer>();
                         }
@@ -363,7 +366,7 @@ namespace FeedyWPF
                     {
                         Questions.Last<Question>().Answers.Add(new Answer(Element));
                         Questions.Last<Question>().Answers.Last<Answer>().TextDataSet = new ObservableCollection<TextData>();
-                        Questions.Last<Question>().Answers.Last<Answer>().CountDataSet = new ObservableCollection<CountData>();
+                        Questions.Last<Question>().Answers.Last<Answer>().BoolDataSet = new ObservableCollection<BoolData>();
                     }
 
                     else
@@ -371,24 +374,30 @@ namespace FeedyWPF
 
                         if (string.IsNullOrWhiteSpace(Element))
                         {
-                            /*ignore. We don't want to save or count emtpy Elements. */
+                            //Answer has not been checked. return a false booldata
+                            BoolDataElement = new BoolData(false);
+                            Questions.Last().Answers.Last().BoolDataSet.Add(BoolDataElement);
                         }
 
-                        //check if Element is a number, and if it is roughly small enough to fit into an int. Relevant numbers will be much smaller than 10^5. Count them. Don't save.
+                        //check if Element is a number, and if it is roughly small enough to fit into an int. Relevant numbers will be much smaller than 10^5.
+                        // if all this is true, answer has been checked by participant.
                         else if (Element.All(c => char.IsDigit(c)) && Element.Count<char>() <= 5)
                         {
-                            ++DataCounter;
+                            BoolDataElement = new BoolData(true);
+                            Questions.Last().Answers.Last().BoolDataSet.Add(BoolDataElement);
                         }
 
-                        //else its a TextAnswer or contains a useless large number, save it.
+                        //else its a TextAnswer or contains a useless large number.
                         else
                         {
-                            // if its one of the useless large numbers or numbers separated by dots, ignore, else save textanswer
+                            //In that case, answer has not been checked. But might have been answered by a text.
+                           
+
+                            // if its not one of the useless large numbers or numbers separated by dots, save textanswer
                             if (!Element.All(c => char.IsDigit(c) || c.Equals(".") ))
                             {
-                                ++DataCounter;
+                                //text to testdata. Set evaluation mode correctly
                                 TextDataElement = new TextData(Element);
-                                TextDataElement.Event = myEvent;
                                 Questions.Last().Answers.Last().TextDataSet.Add(TextDataElement);
                                 Questions.Last().EvalMode = EvaluationMode.TEXT;
                             }
@@ -396,12 +405,31 @@ namespace FeedyWPF
                     }
                 }
 
-                //pass DataCounter to corresponding Answer.
-                CountDataElement = new CountData(DataCounter);
-                CountDataElement.Event = myEvent;
-                Questions.Last().Answers.Last().CountDataSet.Add(CountDataElement);
+               
+                
             }
 
+            #region relate data with participants
+            List<Participant> Participants = new List<Participant>(myEvent.ParticipantsCount);
+
+            foreach(var question in Questions)
+            {
+                foreach (var answer in question.Answers)
+                {
+                    if (Participants.Count == answer.BoolDataSet.Count)
+                    {
+                       for(int i =0; i<Participants.Count; ++i)
+                        {
+                            Participants[i].CountDatas.Add(answer.BoolDataSet[i]);
+                            Participants[i].Event = myEvent;
+                        }
+                    }
+
+                }
+            }
+
+            #endregion
+            //remove all questions that contain answers that have no text. Usually useless extra questions generated by surveymonkey, like IP-Adress, etc..
             var QuestionsToRemove = new List<Question>();
             foreach( var question in Questions)
             {

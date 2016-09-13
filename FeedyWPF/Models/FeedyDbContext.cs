@@ -20,7 +20,7 @@ namespace FeedyWPF.Models
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<TextData> TextDataSet { get; set; }
-        public DbSet<CountData> CountDataSet { get; set; }
+        public DbSet<BoolData> CountDataSet { get; set; }
 
         public DbSet<Evaluation> Evaluations { get; set; }
 
@@ -54,9 +54,9 @@ namespace FeedyWPF.Models
                  .WillCascadeOnDelete(false);
 
 
-            modelBuilder.Entity<CountData>()
+            modelBuilder.Entity<BoolData>()
                   .HasRequired(m => m.Answer)
-                 .WithMany(t => t.CountDataSet)
+                 .WithMany(t => t.BoolDataSet)
                  .HasForeignKey(m => m.AnswerID)
                  .WillCascadeOnDelete(false);
 

@@ -29,20 +29,13 @@ namespace FeedyWPF.Models
         private string DateString { get { return Date.Value.ToString(); } }
         
 
-        /** TODO: validate File extension **/
-       
-       
-       // public HttpPostedFileBase SourceFile { get; set; }
-
         //Foreign Key
         [Required]
         public int QuestionnaireID { get; set; }
 
         //Navigational Properties
         public virtual Questionnaire Questionnaire { get; set; }
-        public virtual ObservableCollection<CountData> NumericDatas { get; set; }
-        public virtual ObservableCollection<TextData> TextDatas { get; set; }
-        public virtual ObservableCollection<Evaluation> Querys { get; set; }
+        public virtual ObservableCollection<Participant> Participants { get; set; }
 
 
     }
@@ -80,10 +73,12 @@ namespace FeedyWPF.Models
             //Constructors
             public Question()
             {
+                // Default value
                 EvalMode = EvaluationMode.ABSOLUTE;
             }
        
-            public Question(string QuestionText) { this.Text = QuestionText; }
+            public Question(string QuestionText) { this.Text = QuestionText; EvalMode = EvaluationMode.ABSOLUTE; }
+
             //Primary Key
             public int QuestionID { get; set; }
 
@@ -98,8 +93,6 @@ namespace FeedyWPF.Models
             //Navigation Property
             public virtual Questionnaire Questionnaire { get; set; }
             public virtual ObservableCollection<Answer> Answers { get; set; }
-            public virtual ObservableCollection<Evaluation> Evaluations { get; set; }
-
 
         }
 
@@ -120,26 +113,26 @@ namespace FeedyWPF.Models
             //Navigation Property
             public virtual Question Question { get; set; }
             public virtual ObservableCollection<TextData> TextDataSet { get; set; }
-            public virtual ObservableCollection<CountData> CountDataSet { get; set; }
+            public virtual ObservableCollection<BoolData> BoolDataSet { get; set; }
 
         }
 
-    public class CountData
+    public class BoolData
     {
-        public CountData() { }
-        public CountData(int Count) { this.Count = Count; }
+        public BoolData() { }
+        public BoolData(bool value) { this.Value = value; }
         //Primary Key
-        public int CountDataID { get; set; }
+        public int BoolDataID { get; set; }
 
-        public int Count { get; set; }
+        public bool Value { get; set; }
 
         //Foreign Key
         public int AnswerID { get; set; }
-        public int EventID { get; set; }
+        public int ParticipantID { get; set; }
 
         //Navigation Property
         public virtual Answer Answer { get; set; }
-        public virtual Event Event { get; set; }
+        public virtual Participant Participant { get; set; }
     }
 
         
@@ -155,12 +148,25 @@ namespace FeedyWPF.Models
 
         //Foreign Key
         public int AnswerID { get; set; }
-        public int EventID { get; set; }
+        public int ParticipantID { get; set; }
 
         //Navigation Property
         public virtual Answer Answer { get; set; }
-        public virtual Event Event { get; set; }
+        public virtual Participant Participant { get; set; }
 
+    }
+
+    public class Participant
+    {
+        public int ParticipantID { get; set; }
+
+        //Foreign Key
+        public int EventID { get; set; }
+
+        //Navigational Property
+        public virtual Event Event { get; set; }
+        public virtual ObservableCollection<BoolData> CountDatas { get; set; }
+        public virtual ObservableCollection<TextData> TextDatas { get; set; }
     }
 
     public enum QuestionType

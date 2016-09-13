@@ -92,15 +92,15 @@ namespace FeedyWPF.Models
                 foreach (var answer in question.Answers)
                 {
 
-                    if (answer.CountDataSet != null)
+                    if (answer.BoolDataSet != null)
                     {
-                        IEnumerable<CountData> CountDataSet =
-                                               from countdata in answer.CountDataSet
+                        IEnumerable<BoolData> CountDataSet =
+                                               from countdata in answer.BoolDataSet
                                                where Events.Select(e => e.EventID).Contains(countdata.EventID)
                                                select countdata;
 
                         // this deletes all other data, that is not needed right now. Entity is untracked, therefore possible.
-                        question.Answers.Single(a => a.AnswerID == answer.AnswerID).CountDataSet = new ObservableCollection<CountData>(CountDataSet);
+                        question.Answers.Single(a => a.AnswerID == answer.AnswerID).BoolDataSet = new ObservableCollection<BoolData>(CountDataSet);
                     }
 
 
@@ -243,7 +243,7 @@ namespace FeedyWPF.Models
     {
         public AbsoluteEvaluation(Answer answer)
         {
-            Value = answer.CountDataSet.Select(c => c.Count).Sum();
+            Value = answer.BoolDataSet.Select(c => c.Value).Sum();
             AnswerText = answer.Text;
         }
 
@@ -256,7 +256,7 @@ namespace FeedyWPF.Models
 
         public PercentageEvaluation(Answer answer, int participantsCount)
         {
-            Value = (double)answer.CountDataSet.Select(c => c.Count).Sum() / participantsCount;
+            Value = (double)answer.BoolDataSet.Select(c => c.Value).Sum() / participantsCount;
             DisplayValue = (Math.Round(Value, 3) * 100).ToString() + " %";
             AnswerText = answer.Text;
         }
@@ -278,7 +278,7 @@ namespace FeedyWPF.Models
             Value = 0;
             for (int i = 0; i < AnswerCount; ++i)
             {
-                Value += (i + 1) * Answers[i].CountDataSet.Select(c => c.Count).Sum();
+                Value += (i + 1) * Answers[i].BoolDataSet.Select(c => c.Value).Sum();
             }
 
             Value = Math.Round(Value / participantsCount,2);
