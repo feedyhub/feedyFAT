@@ -29,9 +29,6 @@ namespace FeedyWPF
         public Stream fileStream;
         ImportWindowViewModel ViewModel;
 
-        public delegate void ContentUpdateHandler(object sender, EventsContentChangedEventArgs e);
-        public event ContentUpdateHandler OnEventsContentChange;
-
         public ImportWindow()
         {
            
@@ -218,9 +215,9 @@ namespace FeedyWPF
                 return;
             }
 
-            EventsContentChangedEventArgs args = new EventsContentChangedEventArgs();
-            OnEventsContentChange(this, args);
 
+            // if we get to this point, import was sucessfull.
+            this.DialogResult = true;
             this.Close();
 
         }

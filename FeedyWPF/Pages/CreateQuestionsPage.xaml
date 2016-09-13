@@ -171,7 +171,7 @@
         <Label Content="Neue Fragen Fragebogen erstellen" DockPanel.Dock="Top"/>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
             <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click" />
-            <Button  Content="Speichern" x:Name="SaveButton" Margin="5,10,10,0" Click="SaveButton_Click" />
+            <Button  Content="Speichern &amp; Schließen" x:Name="SaveButton" Margin="5,10,10,0" Click="SaveButton_Click" />
             
         </StackPanel>
 

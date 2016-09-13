@@ -17,10 +17,15 @@
     <DockPanel LastChildFill="True" Height="Auto" DataContext="{StaticResource questionnaireViewSource}">
         <Label x:Name="label" Content="Fragebögen" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="51" Width="300" FontSize="24"/>
 
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+            
+            <Button x:Name="NewQuestionnaireButton" Content="Neuen Fragebogen erstellen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158"  Height="23"  
+                    Margin="3,10,10,5" Click="NewQuestionnaireButton_Click"/>
+        </StackPanel>
 
         <DataGrid x:Name="questionnaireDataGrid" DockPanel.Dock="Top" HorizontalAlignment="Stretch"  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" 
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" 
-                  Margin="10,10,0,0" RowDetailsVisibilityMode="VisibleWhenSelected" Width="Auto">
+                  Margin="10,10,0,0" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True" Width="Auto">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="nameColumn" Binding="{Binding Name}" Header="Name" Width="Auto"/>
                 <DataGridTextColumn x:Name="eventsCountColumn" Binding="{Binding EventsCount}" Header="Gespeicherte Umfragen" Width="Auto"/>

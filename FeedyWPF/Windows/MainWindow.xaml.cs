@@ -51,8 +51,7 @@ namespace FeedyWPF
             EventsPage eventsPage = new EventsPage(db);
 
             eventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(setEvaluationTab);
-            eventsPage.OnSetCreateQuestionnairePageEvent += new EventsPage.SetCreateQuestionnairePageEventHandler(setCreateQuestionnaireTab);
-
+            
             eventsFrame.Content = eventsPage;
             tabitem.Content = eventsFrame;
             Tabs.Add(tabitem);
@@ -65,12 +64,20 @@ namespace FeedyWPF
 
 
              var frame = new Frame();
-            var questionnairePage = new QuestionnairesPage();
 
-           
-            frame.Content = questionnairePage;
+            QuestionnairesPage = new QuestionnairesPage();
+
+            QuestionnairesPage.OnSetCreateQuestionnairePageEvent += new QuestionnairesPage.SetCreateQuestionnairePageEventHandler(setCreateQuestionnaireTab);
+
+
+            frame.Content = QuestionnairesPage;
             tabitem.Content = frame;
             Tabs.Add(tabitem);
+
+            //wire up content change events between eventspage and questionnaires page
+            QuestionnairesPage.OnEventsContentChange += new QuestionnairesPage.ContentUpdateHandler(eventsPage.RefreshTable);
+            eventsPage.OnQuestionnairesContentChange += new EventsPage.ContentUpdateHandler(QuestionnairesPage.RefreshTable);
+
 
             //Add + Tab to create new Tab
             PlusTab = new TabItem();
@@ -96,6 +103,9 @@ namespace FeedyWPF
         private ObservableCollection<TabItem> Tabs { get; set; }
         private TabItem AddTab { get; set; }
         private TabItem PlusTab { get; set; }
+
+        private QuestionnairesPage QuestionnairesPage { get; set; }
+
         private int tabsCount { get { return Tabs.Count; } }
 
         private void NewTab()
@@ -141,6 +151,8 @@ namespace FeedyWPF
                     // add new tab
                     NewTab();
                 }
+
+               
 
             }
         }
@@ -231,14 +243,15 @@ namespace FeedyWPF
                 tab = Tabs.Single(t => t.Uid == createQuestionnairePage.TabUid);
 
 
-                var CreateQuestionsPage = new CreateQuestionsPage(tab.Uid,args.Questionnaire);
+                var createQuestionsPage = new CreateQuestionsPage(tab.Uid,args.Questionnaire);
 
                 //Add Controls to Page
-                CreateQuestionsPage.CloseTabEvent += CloseTab;
+                createQuestionsPage.CloseTabEvent += CloseTab;
+                createQuestionsPage.OnQuestionnairesContentChange += new CreateQuestionsPage.ContentUpdateHandler(QuestionnairesPage.RefreshTable);
 
 
                 Frame frame = new Frame();
-                frame.Content = CreateQuestionsPage;
+                frame.Content = createQuestionsPage;
 
 
                 tab.Content = frame;

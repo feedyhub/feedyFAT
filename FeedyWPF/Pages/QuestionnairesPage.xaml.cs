@@ -37,24 +37,52 @@ namespace FeedyWPF.Pages
         private FeedyDbContext db = new FeedyDbContext();
         private CollectionViewSource QuestionnaireViewSource;
 
+        public delegate void SetCreateQuestionnairePageEventHandler(object sender, SetCreateQuestionnairePageEventArgs e);
+        public event SetCreateQuestionnairePageEventHandler OnSetCreateQuestionnairePageEvent;
+
+        public delegate void ContentUpdateHandler(object sender, EventsContentChangedEventArgs e);
+        public event ContentUpdateHandler OnEventsContentChange;
+
+        public void RefreshTable(object sender, QuestionnairesContentChangedEventArgs e)
+        {
+
+
+            
+            QuestionnaireViewSource.Source = db.Questionnaires.ToList();
+            this.questionnaireDataGrid.Items.Refresh();
+            this.questionnaireDataGrid.UpdateLayout();
+
+        }
+
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-           
+            bool EventsDeleted = false;
+
             for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
                 if (vis is DataGridRow)
                 {
                     var row = (DataGridRow)vis;
                     var SelectedQuestionnaire = row.DataContext as Questionnaire;
                     if (SelectedQuestionnaire != null)
+                        if(SelectedQuestionnaire.Events !=null && SelectedQuestionnaire.EventsCount > 0)
+                        {
+                            EventsDeleted = true;
+                        }
                         db.Questionnaires.Remove(SelectedQuestionnaire);
                     break;
                 }
             db.SaveChanges();
             questionnaireDataGrid.Items.Refresh();
-            
-           
 
-           
+            if (EventsDeleted)
+            {
+                OnEventsContentChange(this, new EventsContentChangedEventArgs());
+            }
+        }
+
+        private void NewQuestionnaireButton_Click(object sender, RoutedEventArgs e)
+        {
+            OnSetCreateQuestionnairePageEvent(this, new SetCreateQuestionnairePageEventArgs());
         }
     }
 }

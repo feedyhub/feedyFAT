@@ -12,6 +12,8 @@ namespace FeedyWPF.Models
 
     }
 
+    public class QuestionnairesContentChangedEventArgs : EventArgs { }
+
     public class SetCreateQuestionnairePageEventArgs : EventArgs
     {
        

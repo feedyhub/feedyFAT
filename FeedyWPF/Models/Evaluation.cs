@@ -51,6 +51,7 @@ namespace FeedyWPF.Models
             db.Events.Load();
             this.Events = new ObservableCollection<Event>(db.Events.Local.Where(ev => ev.EventID == Event.EventID));
 
+            
             //Events contains only one event
             this.Questions = Events.FirstOrDefault().Questionnaire.Questions;
             this.QuestionEvaluations = ExecuteQuery();

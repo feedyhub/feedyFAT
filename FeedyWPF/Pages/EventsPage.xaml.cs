@@ -18,6 +18,7 @@ using FeedyWPF.Windows;
 
 using FeedyWPF.Models;
 using System.Collections.ObjectModel;
+using System.Windows.Forms;
 
 namespace FeedyWPF
 {
@@ -53,9 +54,8 @@ namespace FeedyWPF
         public delegate void EvaluationPageEventHandler(object sender, SetEvaluationPageEventArgs e);
         public event EvaluationPageEventHandler OnEvaluationPageEvent;
 
-      
-        public delegate void SetCreateQuestionnairePageEventHandler(object sender, SetCreateQuestionnairePageEventArgs e);
-        public event SetCreateQuestionnairePageEventHandler OnSetCreateQuestionnairePageEvent;
+        public delegate void ContentUpdateHandler(object sender, QuestionnairesContentChangedEventArgs e);
+        public event ContentUpdateHandler OnQuestionnairesContentChange;
 
 
         private void FilterDatabase(object sender, FilterEventArgs e)
@@ -83,12 +83,10 @@ namespace FeedyWPF
             }
         }
 
-        private void RefreshTable(object sender, EventsContentChangedEventArgs e)
+        public void RefreshTable(object sender, EventsContentChangedEventArgs e)
         {
-            
-
-            db.Events.Load();
-            EventViewSource.Source = db.Events.Local;
+           
+            EventViewSource.Source = db.Events.ToList();
             this.eventDataGrid.Items.Refresh();
             this.eventDataGrid.UpdateLayout();
 
@@ -113,8 +111,13 @@ namespace FeedyWPF
         private void importDataButton_Click(object sender, RoutedEventArgs e)
         {
             ImportWindow ImpWindow = new ImportWindow();
-            ImpWindow.OnEventsContentChange += new ImportWindow.ContentUpdateHandler(RefreshTable);
-            ImpWindow.Show();
+           
+            bool? result = ImpWindow.ShowDialog();
+            if ( result == true)
+            {
+                OnQuestionnairesContentChange(this, new QuestionnairesContentChangedEventArgs());
+                RefreshTable(this, new EventsContentChangedEventArgs());
+            }
         }
 
         private void DeleteEvent(object sender, RoutedEventArgs e)
@@ -169,7 +172,7 @@ namespace FeedyWPF
 
         private void NewQuestionnaireButton_Click(object sender, RoutedEventArgs e)
         {
-            OnSetCreateQuestionnairePageEvent(this, new SetCreateQuestionnairePageEventArgs());
+           
         }
     }
 }

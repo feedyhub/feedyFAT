@@ -36,7 +36,9 @@ namespace FeedyWPF.Pages
 
         private CreateQuestionViewModel ViewModel { get; set; }
         private Questionnaire Questionnaire { get; set; }
-        
+
+        public delegate void ContentUpdateHandler(object sender, QuestionnairesContentChangedEventArgs e);
+        public event ContentUpdateHandler OnQuestionnairesContentChange;
 
 
         private void AddQuestionButton_Click(object sender, RoutedEventArgs e)
@@ -121,9 +123,9 @@ namespace FeedyWPF.Pages
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             /// save Questionnaire To Database
-            
             var Questions = new ObservableCollection<Question>();
 
+            //some type conversion
             foreach(var createQuestion in ViewModel.CreateQuestions)
             {
                 Questions.Add(createQuestion.ToQuestion());
@@ -131,11 +133,19 @@ namespace FeedyWPF.Pages
 
             Questionnaire.Questions = Questions;
 
+            //Save to database
             using(var db = new FeedyDbContext())
             {
+                
+
                 db.Questionnaires.Add(Questionnaire);
                 db.SaveChanges();
+
+                OnQuestionnairesContentChange(this, new QuestionnairesContentChangedEventArgs());
             }
+
+            // Close Tab
+            OnCloseTabEvent(this, new CloseTabEventArgs());
         }
     }
 }
