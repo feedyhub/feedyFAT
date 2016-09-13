@@ -54,8 +54,7 @@
                 <DataGridTextColumn x:Name="placeColumn" Binding="{Binding Place}" Header="Ort" IsReadOnly="True" Width="Auto"/>
                 <DataGridTextColumn x:Name="dateColumn" Binding="{Binding DateString}" Header="Datum" IsReadOnly="True" Width="Auto"/>
                 <DataGridTextColumn x:Name="participantsCountColumn" Binding="{Binding ParticipantsCount}" Header="Anzahl Teilnehmende" IsReadOnly="True" Width="*"/>
-                <DataGridTextColumn x:Name="eventIDColumn" Binding="{Binding EventID}" Header="Event ID" Width="Auto" IsReadOnly="True" Visibility="Hidden"/>
-
+               
                 <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

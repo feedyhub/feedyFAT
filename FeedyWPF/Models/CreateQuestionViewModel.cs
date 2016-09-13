@@ -29,6 +29,7 @@ namespace FeedyWPF.Models
         public CreateQuestion()
         {
             
+            // possible numbers of answers: 1-6. Create numbers to fill combobox.
             NumberOfAnswersList = new ObservableCollection<int>();
 
             for (int i = 0; i < 6; ++i)
@@ -37,11 +38,30 @@ namespace FeedyWPF.Models
             }
 
             Progress = CreateQuestionProgress.QUESTION_TYPE;
+
+            BackButtonEnabled = false;
+            NextButtonEnabled = false;
         }
 
         public ObservableCollection<AnswerRow> AnswerRows { get; set; }
 
+
+
         public ObservableCollection<int> NumberOfAnswersList { get; }
+        public Visibility VisibilityAnswers { get; set;}
+
+        private Boolean _nextButtonEnabled { get; set; }
+        public Boolean NextButtonEnabled
+        {
+            get { return _nextButtonEnabled; }
+            set
+            {
+                _nextButtonEnabled = value;
+                OnPropertyChanged("NextButtonEnabled");
+            }
+        }
+
+        public Boolean BackButtonEnabled { get; set; }
 
         private CreateQuestionProgress _progress { get; set; }
         public CreateQuestionProgress Progress
@@ -64,6 +84,16 @@ namespace FeedyWPF.Models
             set
             {
                 base.QuestionType = value;
+
+                if(value == QuestionType.TEXT)
+                {
+                    VisibilityAnswers = Visibility.Collapsed;
+                }
+                else
+                {
+                    VisibilityAnswers = Visibility.Visible;
+                }
+
                 OnPropertyChanged("QuestionType");
             }
         }
@@ -74,8 +104,58 @@ namespace FeedyWPF.Models
         public int NumberOfAnswers { get { return _numberOfAnswers; } set
             {
                 _numberOfAnswers = value;
+
+                if(NextButtonEnabled == false && value != 0)
+                {
+                    NextButtonEnabled = true;
+                }
+                
+
+
                 UpdateAnswerRows();
             } }
+
+        public Question ToQuestion()
+        {
+            Question Question = new Question();
+
+            Question.Text = this.Text;
+            Question.QuestionType = this.QuestionType;
+
+            // Map Answerrows to single Answers List.
+           var Answers = new ObservableCollection<Answer>();
+
+            Answer Answer;
+            foreach( var row in AnswerRows)
+            {
+                if(row.ColumnOne != null)
+                {
+                    Answer = new Answer();
+                    Answer.Text = row.ColumnOne.Text;
+                    Answers.Add(Answer);
+                }
+                
+                if(row.ColumnTwo != null)
+                {
+                    Answer = new Answer();
+                    Answer.Text = row.ColumnTwo.Text;
+                    Answers.Add(Answer);
+                }
+
+                if (row.ColumnThree != null)
+                {
+                    Answer = new Answer();
+                    Answer.Text = row.ColumnThree.Text;
+                    Answers.Add(Answer);
+                }
+            }
+
+            Question.Answers = Answers;
+            
+
+
+            return Question;
+        }
 
         private void UpdateAnswerRows()
         {
@@ -86,6 +166,11 @@ namespace FeedyWPF.Models
             if(AnswerRows == null)
             {
                 AnswerRows = new ObservableCollection<AnswerRow>();
+            }
+
+            else
+            {
+                AnswerRows.Clear();
             }
 
             for(int i=0; i < NumberOfAnswers; ++i)
@@ -157,6 +242,7 @@ namespace FeedyWPF.Models
 
     public enum CreateQuestionProgress
     {
+        // Progress steps have to be ordered according to the process and may not be branched. See NextButton_Click in view!
         QUESTION_TYPE, FILL_OUT, FINISHED
     }
 

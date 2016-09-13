@@ -1,0 +1,42 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FeedyWPF.Pages"
+      xmlns:Models="clr-namespace:FeedyWPF.Models" x:Class="FeedyWPF.Pages.QuestionnairesPage"
+      mc:Ignorable="d" 
+      VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+      
+      Title="QuestionnairesPage">
+
+    <Page.Resources>
+        <CollectionViewSource x:Key="questionnaireViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Questionnaire}, CreateList=True}"/>
+    </Page.Resources>
+
+    <DockPanel LastChildFill="True" Height="Auto" DataContext="{StaticResource questionnaireViewSource}">
+        <Label x:Name="label" Content="Fragebögen" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="51" Width="300" FontSize="24"/>
+
+
+        <DataGrid x:Name="questionnaireDataGrid" DockPanel.Dock="Top" HorizontalAlignment="Stretch"  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" 
+                  Margin="10,10,0,0" RowDetailsVisibilityMode="VisibleWhenSelected" Width="Auto">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="nameColumn" Binding="{Binding Name}" Header="Name" Width="Auto"/>
+                <DataGridTextColumn x:Name="eventsCountColumn" Binding="{Binding EventsCount}" Header="Gespeicherte Umfragen" Width="Auto"/>
+
+                <DataGridTextColumn x:Name="commentsColumn" Binding="{Binding Comments}" Header="Kommentare" Width="*"/>
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="DeleteButton" Content="Löschen" Width="80" Click="DeleteButton_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                 </DataGrid.Columns>
+        </DataGrid>
+
+
+    </DockPanel>
+</Page>

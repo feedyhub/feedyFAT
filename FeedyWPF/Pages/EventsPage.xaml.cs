@@ -53,8 +53,10 @@ namespace FeedyWPF
         public delegate void EvaluationPageEventHandler(object sender, SetEvaluationPageEventArgs e);
         public event EvaluationPageEventHandler OnEvaluationPageEvent;
 
-        public delegate void SetCreateQuestionsPageEventHandler(object sender, SetCreateQuestionsPageEventArgs e);
-        public event SetCreateQuestionsPageEventHandler OnSetCreateQuestionsPageEvent;
+      
+        public delegate void SetCreateQuestionnairePageEventHandler(object sender, SetCreateQuestionnairePageEventArgs e);
+        public event SetCreateQuestionnairePageEventHandler OnSetCreateQuestionnairePageEvent;
+
 
         private void FilterDatabase(object sender, FilterEventArgs e)
         {
@@ -167,7 +169,7 @@ namespace FeedyWPF
 
         private void NewQuestionnaireButton_Click(object sender, RoutedEventArgs e)
         {
-            OnSetCreateQuestionsPageEvent(this, new SetCreateQuestionsPageEventArgs());
+            OnSetCreateQuestionnairePageEvent(this, new SetCreateQuestionnairePageEventArgs());
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FeedyWPF.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +22,12 @@ namespace FeedyWPF.Pages
     /// </summary>
     public partial class CreateQuestionsPage : BasePage
     {
-        public CreateQuestionsPage(string tabUid)
+        public CreateQuestionsPage(string tabUid, Questionnaire questionnaire)
         {
             InitializeComponent();
             this.TabUid = tabUid;
+            Questionnaire = questionnaire;
+
             ViewModel = new CreateQuestionViewModel();
             DataContext = ViewModel;
 
@@ -32,7 +35,7 @@ namespace FeedyWPF.Pages
         }
 
         private CreateQuestionViewModel ViewModel { get; set; }
-
+        private Questionnaire Questionnaire { get; set; }
         
 
 
@@ -53,25 +56,86 @@ namespace FeedyWPF.Pages
             var Sender = sender as Button;
             var SelectedCreateQuestion = Sender.DataContext as CreateQuestion;
 
-            if (SelectedCreateQuestion != null)
-            {
-                if(SelectedCreateQuestion.Progress == CreateQuestionProgress.QUESTION_TYPE)
-                {
-                    SelectedCreateQuestion.Progress = CreateQuestionProgress.FILL_OUT;
-                    
-                }
+            // get all Progress states into List. Then set selectedcreatequestion to the next progress state.
+            var ProgressValues = Enum.GetValues(typeof(CreateQuestionProgress)).Cast<CreateQuestionProgress>().ToList();
 
-                else if(SelectedCreateQuestion.Progress == CreateQuestionProgress.FILL_OUT)
+            foreach(var element in ProgressValues)
+            {
+                if(element == SelectedCreateQuestion.Progress)
                 {
-                    SelectedCreateQuestion.Progress = CreateQuestionProgress.FINISHED;
+                    if(SelectedCreateQuestion.Progress != ProgressValues.Last())
+                    {
+                        SelectedCreateQuestion.Progress = ProgressValues.ElementAt(ProgressValues.IndexOf(element) + 1);
+                    }
+                   
+                    break;
                 }
-              
             }
+
         }
 
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
         {
             OnCloseTabEvent(this, new CloseTabEventArgs());
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            var Sender = sender as Button;
+            var SelectedCreateQuestion = Sender.DataContext as CreateQuestion;
+
+            // get all Progress states into List. Then set selectedcreatequestion to the previous progress state.
+            var ProgressValues = Enum.GetValues(typeof(CreateQuestionProgress)).Cast<CreateQuestionProgress>().ToList();
+
+            foreach (var element in ProgressValues)
+            {
+                if (element == SelectedCreateQuestion.Progress)
+                {
+                    if (SelectedCreateQuestion.Progress != ProgressValues.First())
+                    {
+                        SelectedCreateQuestion.Progress = ProgressValues.ElementAt(ProgressValues.IndexOf(element) - 1);
+                    }
+
+                    break;
+                }
+            }
+
+        }
+
+        private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+         
+        }
+
+        private void RemoveQuestionButton_Click(object sender, RoutedEventArgs e)
+        {
+            var Sender = sender as Button;
+            var SelectedCreateQuestion = Sender.DataContext as CreateQuestion;
+
+            if (SelectedCreateQuestion != null)
+            {   
+                ViewModel.CreateQuestions.Remove(SelectedCreateQuestion);
+            }
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            /// save Questionnaire To Database
+            
+            var Questions = new ObservableCollection<Question>();
+
+            foreach(var createQuestion in ViewModel.CreateQuestions)
+            {
+                Questions.Add(createQuestion.ToQuestion());
+            }
+
+            Questionnaire.Questions = Questions;
+
+            using(var db = new FeedyDbContext())
+            {
+                db.Questionnaires.Add(Questionnaire);
+                db.SaveChanges();
+            }
         }
     }
 }

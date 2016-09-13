@@ -51,10 +51,25 @@ namespace FeedyWPF
             EventsPage eventsPage = new EventsPage(db);
 
             eventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(setEvaluationTab);
-            eventsPage.OnSetCreateQuestionsPageEvent += new EventsPage.SetCreateQuestionsPageEventHandler(setCreateQuestionsTab);
+            eventsPage.OnSetCreateQuestionnairePageEvent += new EventsPage.SetCreateQuestionnairePageEventHandler(setCreateQuestionnaireTab);
 
             eventsFrame.Content = eventsPage;
             tabitem.Content = eventsFrame;
+            Tabs.Add(tabitem);
+
+            // Set QuestionnairesPage as second Tab
+            tabitem = new TabItem();
+            tabitem.Header = "Fragebögen";
+
+            tabitem.Uid = TabIdCounter.ToString();
+
+
+             var frame = new Frame();
+            var questionnairePage = new QuestionnairesPage();
+
+           
+            frame.Content = questionnairePage;
+            tabitem.Content = frame;
             Tabs.Add(tabitem);
 
             //Add + Tab to create new Tab
@@ -179,7 +194,9 @@ namespace FeedyWPF
             } 
         }
 
-        private void setCreateQuestionsTab(object sender, SetCreateQuestionsPageEventArgs e)
+       
+
+        private void setCreateQuestionnaireTab(object sender, SetCreateQuestionnairePageEventArgs e)
         {
             TabItem Tab;
 
@@ -188,20 +205,46 @@ namespace FeedyWPF
             Tab.Header = string.Format("Neuer Fragebogen {0}", tabsCount - 1);
 
 
-            var CreateQuestionsPage = new CreateQuestionsPage(Tab.Uid);
+            var CreateQuestionnairePage = new CreateQuestionnairePage(Tab.Uid);
 
             //Add Controls to Page
-            CreateQuestionsPage.CloseTabEvent += CloseTab;
+            CreateQuestionnairePage.CloseTabEvent += CloseTab;
+            CreateQuestionnairePage.OnSetCreateQuestionsPageEvent += setCreateQuestionsPage;
 
 
             Frame frame = new Frame();
-            frame.Content = CreateQuestionsPage;
+            frame.Content = CreateQuestionnairePage;
 
-            CreateQuestionsPage.TabUid = Tab.Uid;
+            CreateQuestionnairePage.TabUid = Tab.Uid;
             Tab.Content = frame;
             Tabs.Insert(tabsCount - 1, Tab);
             tabControl.SelectedItem = Tab;
         }
+
+        private void setCreateQuestionsPage(object sender, SetCreateQuestionsPageEventArgs args)
+        {
+            var tab = new TabItem();
+            if (sender is CreateQuestionnairePage)
+            {
+
+                var createQuestionnairePage = sender as CreateQuestionnairePage;
+                tab = Tabs.Single(t => t.Uid == createQuestionnairePage.TabUid);
+
+
+                var CreateQuestionsPage = new CreateQuestionsPage(tab.Uid,args.Questionnaire);
+
+                //Add Controls to Page
+                CreateQuestionsPage.CloseTabEvent += CloseTab;
+
+
+                Frame frame = new Frame();
+                frame.Content = CreateQuestionsPage;
+
+
+                tab.Content = frame;
+            }
+        }
+
 
         private void CloseTab(object sender, CloseTabEventArgs e)
         {

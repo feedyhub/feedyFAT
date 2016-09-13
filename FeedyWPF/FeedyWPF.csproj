@@ -113,6 +113,9 @@
     <Compile Include="Models\StaticClasses.cs" />
     <Compile Include="Models\TextExport.cs" />
     <Compile Include="Pages\BasePage.cs" />
+    <Compile Include="Pages\CreateQuestionnairePage.xaml.cs">
+      <DependentUpon>CreateQuestionnairePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\CreateQuestionsPage.xaml.cs">
       <DependentUpon>CreateQuestionsPage.xaml</DependentUpon>
     </Compile>
@@ -123,6 +126,9 @@
       <DependentUpon>EventsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\CSEvents.cs" />
+    <Compile Include="Pages\QuestionnairesPage.xaml.cs">
+      <DependentUpon>QuestionnairesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SetEvaluationPage.xaml.cs">
       <DependentUpon>SetEvaluationPage.xaml</DependentUpon>
     </Compile>
@@ -135,6 +141,10 @@
     <Compile Include="TabWindow.xaml.cs">
       <DependentUpon>TabWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Pages\CreateQuestionnairePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\CreateQuestionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -144,6 +154,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\EventsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\QuestionnairesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

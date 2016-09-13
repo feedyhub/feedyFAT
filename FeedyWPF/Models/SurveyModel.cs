@@ -9,8 +9,8 @@ using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace FeedyWPF.Models
-    {
-       public class Event
+{
+    public class Event
     {
         
         // Primary Key
@@ -48,25 +48,40 @@ namespace FeedyWPF.Models
     }
 
     public class Questionnaire
+    {
+        //Primary key
+        public int QuestionnaireID { get; set; }
+            
+        public string Name { get; set; }
+        public string Comments { get; set; }
+
+        [NotMapped]
+        public int EventsCount
         {
-            //Primary key
-            public int QuestionnaireID { get; set; }
-            
-            public string Name { get; set; }
+            get
+            {
+                if (Events != null)
+                {
+                    return Events.Count;
+                }
 
-            
-            public string Comments { get; set; }
-
-            //Navigation Properties
-            public virtual ObservableCollection<Question> Questions { get; set; }
-            public virtual ObservableCollection<Event> Events { get; set; }
-
+                else return 0;
+            }
         }
 
-        public class Question
-        {
+        //Navigation Properties
+        public virtual ObservableCollection<Question> Questions { get; set; }
+        public virtual ObservableCollection<Event> Events { get; set; }
+
+    }
+
+    public class Question
+    {
             //Constructors
-            public Question() { }
+            public Question()
+            {
+                EvalMode = EvaluationMode.ABSOLUTE;
+            }
        
             public Question(string QuestionText) { this.Text = QuestionText; }
             //Primary Key

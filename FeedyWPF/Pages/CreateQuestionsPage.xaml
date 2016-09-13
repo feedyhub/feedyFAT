@@ -13,13 +13,17 @@
 
         <models:EnumBooleanConverter x:Key="enumBooleanConverter" />
 
+        <Style x:Key="HiddenHeader" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
         <DataTemplate x:Key="Default" DataType="{x:Type models:CreateQuestion}">
             <TextBlock>Fehler: Datatemplate konnte nicht gefunden werden.</TextBlock>
         </DataTemplate>
 
         <!--SET QUESTION TYPE HERE-->
         <DataTemplate x:Key="SetQuestionType" DataType="{x:Type models:CreateQuestion}">
-            <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
+            <DockPanel HorizontalAlignment="Stretch"  LastChildFill="False" VerticalAlignment="Stretch" >
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
 
                     <StackPanel DockPanel.Dock="Left">
@@ -33,13 +37,15 @@
 
                     <StackPanel DockPanel.Dock="Right">
                         <Label x:Name="label2" Content="Anzahl Antwortmöglichkeiten" Margin="10,5,0,0"  VerticalAlignment="Top" />
-                        <ComboBox x:Name="comboBox" Height="23" Width="50" ItemsSource="{Binding NumberOfAnswersList}" SelectedValue="{Binding Path=NumberOfAnswers, Mode=TwoWay}"/>
+                        <ComboBox x:Name="comboBox" Height="23" Width="50" ItemsSource="{Binding NumberOfAnswersList}" SelectedValue="{Binding Path=NumberOfAnswers, Mode=TwoWay}" SelectionChanged="comboBox_SelectionChanged"/>
                     </StackPanel  >
 
                 </StackPanel>
 
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,0,10,10" HorizontalAlignment="Right">
-                    <Button x:Name="NextButton" Content="Weiter"  Width="80" Click="NextButton_Click"   />
+                <!--Buttons to navigate through SetQuestion Progress States-->
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,10,10" HorizontalAlignment="Right">
+                    <Button x:Name="BackButton" Content="Zurück" IsEnabled="False" Margin="0,0,10,0" Width="80" Click="BackButton_Click"   />
+                    <Button x:Name="NextButton" Content="Weiter" IsEnabled="{Binding NextButtonEnabled}"  Width="80" Click="NextButton_Click"   />
                 </StackPanel>
             </DockPanel>
         </DataTemplate>
@@ -47,11 +53,11 @@
         <!--FILL_OUT HERE-->
         <DataTemplate x:Key="FillOut" DataType="{x:Type models:CreateQuestion}">
             <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
-            <TextBox x:Name="QuestionText" Text="Was möchtest du wissen? Hier die Frage eingeben." Margin="10,10,10,0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap"  />
+            <TextBox x:Name="QuestionText" Text="{Binding Text}" Margin="10,10,10,0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap"  />
 
-            <ListView ItemsSource="{Binding AnswerRows}"   DockPanel.Dock="Top" Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
-                <ListView.View>
-                        <GridView>
+            <ListView ItemsSource="{Binding AnswerRows}" Visibility="{Binding VisibilityAnswers}"  DockPanel.Dock="Top" Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                    <ListView.View>
+                        <GridView ColumnHeaderContainerStyle="{StaticResource HiddenHeader}" >
                      
                         <GridViewColumn Width="Auto">
                             <GridViewColumn.CellTemplate>
@@ -92,8 +98,66 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+                <!--Buttons to navigate through SetQuestion Progress States-->
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,10,10" HorizontalAlignment="Right">
+                    <Button x:Name="BackButton" Content="Zurück" Margin="0,0,10,0" Width="80" Click="BackButton_Click"   />
+                    <Button x:Name="NextButton" Content="Weiter"  Width="80" Click="NextButton_Click"   />
+                </StackPanel>
+            </DockPanel>
+        </DataTemplate>
 
-                <Button Content="Weiter" Click="NextButton_Click" DockPanel.Dock="Bottom" Width="80" HorizontalAlignment="Right" Margin="0,10,10,0"/>
+        <!--FINISHED HERE-->
+        <DataTemplate x:Key="Finished" DataType="{x:Type models:CreateQuestion}">
+            <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
+                <TextBlock x:Name="QuestionText" Text="{Binding Text}" Margin="10,10,10,0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap"  />
+
+                <ListView ItemsSource="{Binding AnswerRows}"   DockPanel.Dock="Top" Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                    <ListView.View>
+                        <GridView ColumnHeaderContainerStyle="{StaticResource HiddenHeader}">
+                            <GridViewColumn Width="Auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate >
+                                        <StackPanel Visibility="{Binding ColumnOne.IsVisible}">
+                                            <TextBlock Width="100" TextAlignment="Center" Text="{Binding ColumnOne.Text}"/>
+                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
+                                        </StackPanel>
+
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Width="Auto" >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate >
+                                        <StackPanel Visibility="{Binding ColumnTwo.IsVisible}">
+                                            <TextBlock  Width="100" TextAlignment="Center" Text="{Binding ColumnTwo.Text}"/>
+                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
+                                        </StackPanel>
+
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+
+                            <GridViewColumn Width="Auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Visibility="{Binding ColumnThree.IsVisible}">
+                                            <TextBlock Width="100" TextAlignment="Center" Text="{Binding ColumnThree.Text}"/>
+                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
+                                        </StackPanel>
+
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <!--Buttons to navigate through SetQuestion Progress States-->
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,10,10" HorizontalAlignment="Right">
+                    <Button x:Name="BackButton" Content="Editieren" Margin="0,0,10,0" Width="80" Click="BackButton_Click"   />
+                    
+                </StackPanel>
             </DockPanel>
         </DataTemplate>
 
@@ -107,7 +171,7 @@
         <Label Content="Neue Fragen Fragebogen erstellen" DockPanel.Dock="Top"/>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
             <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click" />
-            <Button x:Name="FinishedButton" Content="Seite als .CSV Datei speichern" Margin="5,10,10,0" />
+            <Button  Content="Speichern" x:Name="SaveButton" Margin="5,10,10,0" Click="SaveButton_Click" />
             
         </StackPanel>
 
@@ -115,7 +179,7 @@
             <ListView.View>
                 <GridView>
                     <!--DataTemplate for Evaluation-->
-                    <GridViewColumn Width="500">
+                    <GridViewColumn Width="400">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:CreateQuestion}">
                                 <ContentControl Content="{Binding }">
@@ -127,11 +191,14 @@
 
                                             <!-- Triggers to change Template -->
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Progress}" Value="Question_TYPE">
+                                                <DataTrigger Binding="{Binding Progress}" Value="QUESTION_TYPE">
                                                     <Setter Property="ContentTemplate" Value="{StaticResource SetQuestionType}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Progress}" Value="FILL_OUT">
                                                     <Setter Property="ContentTemplate" Value="{StaticResource FillOut}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Progress}" Value="FINISHED">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource Finished}" />
                                                 </DataTrigger>
 
                                             </Style.Triggers>
@@ -146,8 +213,9 @@
                     <GridViewColumn Header="Optionen">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel>
-                                    <Button Content="Neue Frage" x:Name="AddQuestionButton" Click="AddQuestionButton_Click"   />
+                                <StackPanel Margin="10,10,10,10">
+                                    <Button Content="Neue Frage" Width="80" x:Name="AddQuestionButton" Margin="0,0,0,10" Click="AddQuestionButton_Click"   />
+                                    <Button Content="Frage löschen" Width="80" Click="RemoveQuestionButton_Click"   />
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

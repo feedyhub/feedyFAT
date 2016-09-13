@@ -1,0 +1,39 @@
+﻿<local:BasePage x:Class="FeedyWPF.Pages.CreateQuestionnairePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FeedyWPF.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="CreateQuestionnairePage">
+
+    <DockPanel  Margin="0,0,10,10"  LastChildFill="False">
+
+        <Label  x:Name="label1" Content="Neuer Fragebogen" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="42" Width="376" FontSize="24"/>
+
+        <Grid Margin="10,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Label"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"  SharedSizeGroup="row"/>
+                <RowDefinition Height="Auto" SharedSizeGroup="row"/>
+            </Grid.RowDefinitions>
+            
+            <Label x:Name="label2" Grid.Column="0" Content="Name" Grid.Row="0" HorizontalAlignment="Left"  Margin="10,0,0,0" VerticalAlignment="Top" Width="45"/>
+            <TextBox x:Name="NameTextBox" Grid.Column="1" Grid.Row="0" Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Left" Height="23" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
+            <Label Grid.Column="0" Grid.Row="1" Content="Kommentar" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+            <TextBox Grid.Column="1" Grid.Row="1" x:Name="CommentaryTextBox"  Text="{Binding Comments, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Left" Height="23" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+            <Button x:Name="CloseTabButton" DockPanel.Dock="Bottom" Width="80" HorizontalAlignment="Right" Content="Tab Schließen" Margin="10,10,0,0" Click="CloseTabButton_Click"/>
+            <Button x:Name="CreateQuestionsButton" DockPanel.Dock="Bottom" Width="80" HorizontalAlignment="Right" Content="Weiter" Margin="10,10,0,0" Click="CreateQuestionsButton_Click"/>
+
+        </StackPanel>        
+    </DockPanel>
+</local:BasePage>
