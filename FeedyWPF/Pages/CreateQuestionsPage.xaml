@@ -21,7 +21,7 @@
             <TextBlock>Fehler: Datatemplate konnte nicht gefunden werden.</TextBlock>
         </DataTemplate>
 
-        <!--SET QUESTION TYPE HERE-->
+        <!-- SetQuestionType Template -->
         <DataTemplate x:Key="SetQuestionType" DataType="{x:Type models:CreateQuestion}">
             <DockPanel HorizontalAlignment="Stretch"  LastChildFill="False" VerticalAlignment="Stretch" >
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
@@ -42,147 +42,65 @@
 
                 </StackPanel>
 
-                <!--Buttons to navigate through SetQuestion Progress States-->
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,10,10" HorizontalAlignment="Right">
-                    <Button x:Name="BackButton" Content="Zurück" IsEnabled="False" Margin="0,0,10,0" Width="80" Click="BackButton_Click"   />
-                    <Button x:Name="NextButton" Content="Weiter" IsEnabled="{Binding NextButtonEnabled}"  Width="80" Click="NextButton_Click"   />
-                </StackPanel>
+               
             </DockPanel>
         </DataTemplate>
 
-        <!--FILL_OUT HERE-->
-        <DataTemplate x:Key="FillOut" DataType="{x:Type models:CreateQuestion}">
+        <DataTemplate x:Key="TextBox"  >
+            <TextBox Width="100" Text="{Binding Text}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="TextBoxQuestion"  >
+            <TextBox Width="300" Text="{Binding Text}" HorizontalAlignment="Left"/>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="TextBlock" >
+            <TextBlock Width="Auto" Text="{Binding Text}" HorizontalAlignment="Left"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="RadioButton" >
+            <RadioButton HorizontalAlignment="Center"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CheckBox" >
+            <CheckBox HorizontalAlignment="Center"/>
+        </DataTemplate>
+
+
+        <!--Finish and Fill out Template -->
+        <DataTemplate x:Key="FillOutFinish" DataType="{x:Type models:CreateQuestion}">
             <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
-            <TextBox x:Name="QuestionText" Text="{Binding Text}" Margin="10,10,10,0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap"  />
 
-            <ListView ItemsSource="{Binding AnswerRows}" Visibility="{Binding VisibilityAnswers}"  DockPanel.Dock="Top" Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
-                    <ListView.View>
-                        <GridView ColumnHeaderContainerStyle="{StaticResource HiddenHeader}" >
-                     
-                        <GridViewColumn Width="Auto">
-                            <GridViewColumn.CellTemplate>
-                                    <DataTemplate >
-                                    <StackPanel Visibility="{Binding ColumnOne.IsVisible}">
-                                        <TextBox Width="100" Text="{Binding ColumnOne.Text}"/>
-                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
-                                    </StackPanel>
-                                 
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                <!--TextBlock or TextBox depending on Progress-->
+                <ContentControl Content="{Binding}" DockPanel.Dock="Top" Margin="10,10,10,10">
+                    <ContentControl.Style>
+                        <Style TargetType="{x:Type ContentControl}">
 
-                            <GridViewColumn Width="Auto" >
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate >
-                                        <StackPanel Visibility="{Binding ColumnTwo.IsVisible}">
-                                            <TextBox  Width="100" Text="{Binding ColumnTwo.Text}"/>
-                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
-                                        </StackPanel>
+                            <!-- Default Template -->
+                            <Setter Property="ContentTemplate" Value="{StaticResource Default}" />
 
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
+                            <!-- Triggers to change Template -->
+                            <Style.Triggers>
+                                <DataTrigger Binding= "{Binding  Progress}" Value="FILL_OUT">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource TextBoxQuestion}" />
+                                </DataTrigger>
+                                <DataTrigger Binding= "{Binding Progress}" Value="FINISHED">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource TextBlock}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
 
+                <!--Answers-->
+                <ListView   ItemsSource="{Binding Answers}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top"
+                          Margin="10,0,10,0" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="10,5,10,5">
 
-                            <GridViewColumn Width="Auto">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                        <StackPanel Visibility="{Binding ColumnThree.IsVisible}">
-                                            <TextBox Width="100" Text="{Binding ColumnThree.Text}"/>
-                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
-                                    </StackPanel>
-                                  
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-                <!--Buttons to navigate through SetQuestion Progress States-->
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,10,10" HorizontalAlignment="Right">
-                    <Button x:Name="BackButton" Content="Zurück" Margin="0,0,10,0" Width="80" Click="BackButton_Click"   />
-                    <Button x:Name="NextButton" Content="Weiter"  Width="80" Click="NextButton_Click"   />
-                </StackPanel>
-            </DockPanel>
-        </DataTemplate>
-
-        <!--FINISHED HERE-->
-        <DataTemplate x:Key="Finished" DataType="{x:Type models:CreateQuestion}">
-            <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
-                <TextBlock x:Name="QuestionText" Text="{Binding Text}" Margin="10,10,10,0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap"  />
-
-                <ListView ItemsSource="{Binding AnswerRows}"   DockPanel.Dock="Top" Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
-                    <ListView.View>
-                        <GridView ColumnHeaderContainerStyle="{StaticResource HiddenHeader}">
-                            <GridViewColumn Width="Auto">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate >
-                                        <StackPanel Visibility="{Binding ColumnOne.IsVisible}">
-                                            <TextBlock Width="100" TextAlignment="Center" Text="{Binding ColumnOne.Text}"/>
-                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
-                                        </StackPanel>
-
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-                            <GridViewColumn Width="Auto" >
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate >
-                                        <StackPanel Visibility="{Binding ColumnTwo.IsVisible}">
-                                            <TextBlock  Width="100" TextAlignment="Center" Text="{Binding ColumnTwo.Text}"/>
-                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
-                                        </StackPanel>
-
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-
-                            <GridViewColumn Width="Auto">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Visibility="{Binding ColumnThree.IsVisible}">
-                                            <TextBlock Width="100" TextAlignment="Center" Text="{Binding ColumnThree.Text}"/>
-                                            <RadioButton HorizontalAlignment="Center"></RadioButton>
-                                        </StackPanel>
-
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-                <!--Buttons to navigate through SetQuestion Progress States-->
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,10,10" HorizontalAlignment="Right">
-                    <Button x:Name="BackButton" Content="Editieren" Margin="0,0,10,0" Width="80" Click="BackButton_Click"   />
-                    
-                </StackPanel>
-            </DockPanel>
-        </DataTemplate>
-
-
-
-    </Page.Resources>
-
-    <!--Definition of View-->
-    <DockPanel x:Name="ViewDockPanel"  ScrollViewer.CanContentScroll="False" LastChildFill="True" Margin="10,10,10,10" >
-
-        <Label Content="Neue Fragen Fragebogen erstellen" DockPanel.Dock="Top"/>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
-            <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click" />
-            <Button  Content="Speichern &amp; Schließen" x:Name="SaveButton" Margin="5,10,10,0" Click="SaveButton_Click" />
-            
-        </StackPanel>
-
-        <ListView ItemsSource="{Binding CreateQuestions}"   Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
-            <ListView.View>
-                <GridView>
-                    <!--DataTemplate for Evaluation-->
-                    <GridViewColumn Width="400">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate DataType="{x:Type models:CreateQuestion}">
-                                <ContentControl Content="{Binding }">
+                                <!--TextBlock or TextBox depending on Progress-->
+                                <ContentControl Content="{Binding}">
                                     <ContentControl.Style>
                                         <Style TargetType="{x:Type ContentControl}">
 
@@ -191,37 +109,142 @@
 
                                             <!-- Triggers to change Template -->
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Progress}" Value="QUESTION_TYPE">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource SetQuestionType}" />
+                                                <DataTrigger Binding= "{Binding RelativeSource= {RelativeSource FindAncestor,AncestorLevel=2, 
+                                                        AncestorType={x:Type ListViewItem}}, Path=DataContext.Progress}" Value="FILL_OUT">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource TextBox}" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Progress}" Value="FILL_OUT">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource FillOut}" />
+                                                <DataTrigger Binding= "{Binding RelativeSource= {RelativeSource FindAncestor,AncestorLevel=2, 
+                                                        AncestorType={x:Type ListViewItem}}, Path=DataContext.Progress}" Value="FINISHED">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource TextBlock}" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Progress}" Value="FINISHED">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource Finished}" />
-                                                </DataTrigger>
-
                                             </Style.Triggers>
                                         </Style>
                                     </ContentControl.Style>
                                 </ContentControl>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
 
-                    <!--Buttons for Adding and deleting questions-->
-                    <GridViewColumn Header="Optionen">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Margin="10,10,10,10">
-                                    <Button Content="Neue Frage" Width="80" x:Name="AddQuestionButton" Margin="0,0,0,10" Click="AddQuestionButton_Click"   />
-                                    <Button Content="Frage löschen" Width="80" Click="RemoveQuestionButton_Click"   />
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
+                                <!--Radiobutton or Checkbox depending on QuestionType-->
+                                <ContentControl Content="{Binding}">
+                                    <ContentControl.Style>
+                                        <Style TargetType="{x:Type ContentControl}">
+
+                                            <!-- Default Template -->
+                                            <Setter Property="ContentTemplate" Value="{StaticResource Default}" />
+
+                                            <!-- Triggers to change Template -->
+                                            <Style.Triggers>
+                                                <DataTrigger Binding= "{Binding RelativeSource= {RelativeSource FindAncestor,AncestorLevel=2, 
+                                                        AncestorType={x:Type ListViewItem}}, 
+                                                        Path=DataContext.QuestionType}" Value="MULTIPLE_CHOICE">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource CheckBox}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding= "{Binding RelativeSource= {RelativeSource FindAncestor,AncestorLevel=2, 
+                                                        AncestorType={x:Type ListViewItem}}, 
+                                                        Path=DataContext.QuestionType}" Value="SINGLE_CHOICE">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource RadioButton}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="false"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <!--Wrappanel as ItemsPaneltemplate-->
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+
+                            <WrapPanel Width="{Binding (FrameworkElement.ActualWidth), 
+                                
+                            RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"
+                            ItemWidth="{Binding (ListView.View).ItemWidth, 
+                            RelativeSource={RelativeSource AncestorType=ListView}}"
+                            MinWidth="{Binding ItemWidth, RelativeSource={RelativeSource Self}}"
+                            ItemHeight="{Binding (ListView.View).ItemHeight, 
+                            RelativeSource={RelativeSource AncestorType=ListView}}" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+
+            </DockPanel>
+        </DataTemplate>
+
+        <!--QuestionTemplate-->
+        <DataTemplate x:Key="QuestionTemplate" DataType="{x:Type models:CreateQuestion}">
+            <ContentControl Content="{Binding }">
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}">
+
+                        <!-- Default Template -->
+                        <Setter Property="ContentTemplate" Value="{StaticResource Default}" />
+
+                        <!-- Triggers to change Template -->
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Progress}" Value="QUESTION_TYPE">
+                                <Setter Property="ContentTemplate" Value="{StaticResource SetQuestionType}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Progress}" Value="FILL_OUT">
+                                <Setter Property="ContentTemplate" Value="{StaticResource FillOutFinish}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Progress}" Value="FINISHED">
+                                <Setter Property="ContentTemplate" Value="{StaticResource FillOutFinish}" />
+                            </DataTrigger>
+
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </DataTemplate>
+
+        <!--BaseTemplate-->
+        <DataTemplate x:Key="BaseTemplate">
+            <DockPanel LastChildFill="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+               <!--Buttons to Add and Remove Questions-->
+                <StackPanel Margin="10,10,10,10" DockPanel.Dock="Right">
+                    <Button Content="Neue Frage" Width="80" x:Name="AddQuestionButton" Margin="0,0,0,10" Click="AddQuestionButton_Click"   />
+                    <Button Content="Frage löschen" Width="80" Click="RemoveQuestionButton_Click"   />
+                </StackPanel>
+                
+                <!--Buttons to navigate through SetQuestion Progress States-->
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,10,10" HorizontalAlignment="Right">
+                    <Button x:Name="BackButton" Content="Zurück" IsEnabled="{Binding BackButtonEnabled}" Margin="0,0,10,0" Width="80" Click="BackButton_Click"   />
+                    <Button x:Name="NextButton" Content="{Binding NextButtonString}" IsEnabled="{Binding NextButtonEnabled}"  Width="80" Click="NextButton_Click"   />
+                </StackPanel>
+
+                <ContentPresenter DockPanel.Dock="Top" ContentTemplate="{StaticResource QuestionTemplate}" Width="400"/>
+                
+               
+            </DockPanel>
+           
+
+        </DataTemplate>
+    </Page.Resources>
+
+    <!--Definition of View-->
+    <DockPanel x:Name="ViewDockPanel"  ScrollViewer.CanContentScroll="False" LastChildFill="True" Margin="10,10,10,10" >
+
+        <Label Content="Neue Fragen erstellen" DockPanel.Dock="Top"/>
+        
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
+            <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click" />
+            <Button  Content="Speichern &amp; Schließen" x:Name="SaveButton" Margin="5,10,10,0" Click="SaveButton_Click" />
+        </StackPanel>
+
+        <ListView x:Name="QuestionListView" ItemsSource="{Binding CreateQuestions}" Margin="10,10,10,0" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                  ItemTemplate="{StaticResource BaseTemplate}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Focusable" Value="false"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            
+            
         </ListView>
 
 

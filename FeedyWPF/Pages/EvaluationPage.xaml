@@ -33,7 +33,7 @@
                 <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" DockPanel.Dock="Bottom" CanUserDeleteRows="False" ItemsSource="{Binding Path=AnswerEvaluations}">
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="answerColumn" Binding="{Binding PercentageEvaluation.AnswerText}" Header="Antwort" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn x:Name="resultColumn" Binding="{Binding PercentageEvaluation.DisplayValue}" Header="Anzahl" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn x:Name="resultColumn" Binding="{Binding PercentageEvaluation.DisplayValue}" Header="Anteil" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

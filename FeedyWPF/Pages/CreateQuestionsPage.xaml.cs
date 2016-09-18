@@ -122,30 +122,37 @@ namespace FeedyWPF.Pages
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            /// save Questionnaire To Database
-            var Questions = new ObservableCollection<Question>();
-
-            //some type conversion
-            foreach(var createQuestion in ViewModel.CreateQuestions)
+            if(ViewModel.CreateQuestions.All(cq => cq.Progress == CreateQuestionProgress.FINISHED))
             {
-                Questions.Add(createQuestion.ToQuestion());
+                /// save Questionnaire To Database
+                var Questions = new ObservableCollection<Question>();
+
+                //some type conversion
+                foreach (var createQuestion in ViewModel.CreateQuestions)
+                {
+                    Questions.Add(createQuestion.ToQuestion());
+                }
+
+                Questionnaire.Questions = Questions;
+
+                //Save to database
+                using (var db = new FeedyDbContext())
+                {
+
+                    db.Questionnaires.Add(Questionnaire);
+                    db.SaveChanges();
+
+                    OnQuestionnairesContentChange(this, new QuestionnairesContentChangedEventArgs());
+                }
+
+                // Close Tab
+                OnCloseTabEvent(this, new CloseTabEventArgs());
             }
 
-            Questionnaire.Questions = Questions;
-
-            //Save to database
-            using(var db = new FeedyDbContext())
+            else
             {
-                
-
-                db.Questionnaires.Add(Questionnaire);
-                db.SaveChanges();
-
-                OnQuestionnairesContentChange(this, new QuestionnairesContentChangedEventArgs());
+                MessageBox.Show("Bitte bei allen Fragen auf Fertig klicken oder ungewünschte Fragen löschen.");
             }
-
-            // Close Tab
-            OnCloseTabEvent(this, new CloseTabEventArgs());
         }
     }
 }

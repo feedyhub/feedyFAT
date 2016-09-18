@@ -28,11 +28,12 @@ namespace FeedyWPF.Models
     {
         public CreateQuestion()
         {
-            
-            // possible numbers of answers: 1-6. Create numbers to fill combobox.
+            int MaxNumberOfAnswers = 9;
+            Text = "Wie lautet die Frage?";
+            // possible numbers of answers: 1-9. Create numbers to fill combobox.
             NumberOfAnswersList = new ObservableCollection<int>();
 
-            for (int i = 0; i < 6; ++i)
+            for (int i = 0; i < MaxNumberOfAnswers; ++i)
             {
                 NumberOfAnswersList.Add(i + 1);
             }
@@ -43,25 +44,52 @@ namespace FeedyWPF.Models
             NextButtonEnabled = false;
         }
 
-        public ObservableCollection<AnswerRow> AnswerRows { get; set; }
-
 
 
         public ObservableCollection<int> NumberOfAnswersList { get; }
-        public Visibility VisibilityAnswers { get; set;}
+        public Visibility VisibilityAnswers { get; set; }
 
-        private Boolean _nextButtonEnabled { get; set; }
-        public Boolean NextButtonEnabled
+
+        private string _nextButtonString;
+
+        public string NextButtonString
+        {
+            get
+            {
+                return _nextButtonString;
+            }
+
+            set
+            {
+                _nextButtonString = value;
+                OnPropertyChanged("NextButtonString");
+            }
+        }
+
+
+        private bool _nextButtonEnabled;
+        public bool NextButtonEnabled
         {
             get { return _nextButtonEnabled; }
             set
             {
                 _nextButtonEnabled = value;
                 OnPropertyChanged("NextButtonEnabled");
+
             }
         }
 
-        public Boolean BackButtonEnabled { get; set; }
+        private bool _backButtonEnabled {get;set;}
+        public bool BackButtonEnabled
+        {
+            get { return _backButtonEnabled; }
+            set
+            {
+                _backButtonEnabled = value;
+
+                OnPropertyChanged("BackButtonEnabled");
+            }
+        }
 
         private CreateQuestionProgress _progress { get; set; }
         public CreateQuestionProgress Progress
@@ -71,6 +99,24 @@ namespace FeedyWPF.Models
             {
                 _progress = value;
                 OnPropertyChanged("Progress");
+
+                if(value == CreateQuestionProgress.QUESTION_TYPE)
+                {
+                    NextButtonString = "Weiter";
+                    BackButtonEnabled = false;
+                }
+
+                else if(value == CreateQuestionProgress.FINISHED)
+                {
+                    NextButtonEnabled = false;
+                }
+
+                else
+                {
+                    NextButtonString = "Fertig";
+                    BackButtonEnabled = true;
+                    NextButtonEnabled = true;
+                }
             }
         }
 
@@ -107,13 +153,18 @@ namespace FeedyWPF.Models
 
                 if(NextButtonEnabled == false && value != 0)
                 {
-                    NextButtonEnabled = true;
+                    NextButtonEnabled = true; 
                 }
-                
 
-
-                UpdateAnswerRows();
+                Answers = new ObservableCollection<Answer>();
+                for(int i=0; i<value; ++i)
+                {
+                    Answers.Add(new Answer() { Text="Antwort "+ i});
+                }
+              
             } }
+
+        
 
         public Question ToQuestion()
         {
@@ -121,95 +172,9 @@ namespace FeedyWPF.Models
 
             Question.Text = this.Text;
             Question.QuestionType = this.QuestionType;
-
-            // Map Answerrows to single Answers List.
-           var Answers = new ObservableCollection<Answer>();
-
-            Answer Answer;
-            foreach( var row in AnswerRows)
-            {
-                if(row.ColumnOne != null)
-                {
-                    Answer = new Answer();
-                    Answer.Text = row.ColumnOne.Text;
-                    Answers.Add(Answer);
-                }
-                
-                if(row.ColumnTwo != null)
-                {
-                    Answer = new Answer();
-                    Answer.Text = row.ColumnTwo.Text;
-                    Answers.Add(Answer);
-                }
-
-                if (row.ColumnThree != null)
-                {
-                    Answer = new Answer();
-                    Answer.Text = row.ColumnThree.Text;
-                    Answers.Add(Answer);
-                }
-            }
-
             Question.Answers = Answers;
             
-
-
             return Question;
-        }
-
-        private void UpdateAnswerRows()
-        {
-            //creates the required number of answers that will be edited in the view. 
-            //It is necessary to map them to the format of the AnswerRow in order to 
-            //be able to lay them out nicely in the UI.
-            #region do nasty work
-            if(AnswerRows == null)
-            {
-                AnswerRows = new ObservableCollection<AnswerRow>();
-            }
-
-            else
-            {
-                AnswerRows.Clear();
-            }
-
-            for(int i=0; i < NumberOfAnswers; ++i)
-            {
-                if(i%3 == 0)
-                {
-                    AnswerRows.Add(new AnswerRow());
-
-                    AnswerRows.Last().ColumnOne = new VisibleAnswer(Visibility.Visible);
-
-                }
-
-                if(i%3 == 1)
-                {
-                    AnswerRows.Last().ColumnTwo = new VisibleAnswer(Visibility.Visible);
-                }
-
-                if (i % 3 == 2)
-                {
-                    AnswerRows.Last().ColumnThree = new VisibleAnswer(Visibility.Visible);
-                }    
-            }
-
-            foreach(var row in AnswerRows)
-            {
-                if(row.ColumnOne == null)
-                {
-                    row.ColumnOne = new VisibleAnswer(Visibility.Hidden);
-                }
-                if (row.ColumnTwo == null)
-                {
-                    row.ColumnTwo = new VisibleAnswer(Visibility.Hidden);
-                }
-                if (row.ColumnThree == null)
-                {
-                    row.ColumnThree = new VisibleAnswer(Visibility.Hidden);
-                }
-            }
-            #endregion
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -221,23 +186,6 @@ namespace FeedyWPF.Models
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-    }
-
-    public class AnswerRow
-    {
-       public VisibleAnswer ColumnOne { get; set; }
-       public Answer ColumnTwo { get; set; }
-       public Answer ColumnThree { get; set; }
-    }
-
-    [NotMapped]
-    public class VisibleAnswer : Answer
-    {
-        public VisibleAnswer(Visibility isVisible)
-        {
-            IsVisible = isVisible;
-        }
-        public Visibility IsVisible { get;}
     }
 
     public enum CreateQuestionProgress

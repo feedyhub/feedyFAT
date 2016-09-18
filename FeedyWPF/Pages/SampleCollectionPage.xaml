@@ -125,7 +125,8 @@
             <Button x:Name="SaveLeaveButton" Margin="10,0,0,0" Content ="Speichern &amp; Fertig" Click="SaveLeaveButton_Click" />
         </StackPanel>
 
-        <ListView x:Name="QuestionListView" ItemsSource="{Binding ViewQuestions}"  ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemTemplate="{StaticResource QuestionTemplate}">
+        <ListView x:Name="QuestionListView" ItemsSource="{Binding ViewQuestions}"  ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                  ItemTemplate="{StaticResource QuestionTemplate}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Focusable" Value="false"/>

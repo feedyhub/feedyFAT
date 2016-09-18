@@ -79,8 +79,8 @@ C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\CreateQuestionnair
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\CreateQuestionnairePage.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\QuestionnairesPage.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\QuestionnairesPage.baml
-C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.csprojResolveAssemblyReference.cache
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\SampleCollectionPage.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\CreateEventWindow.g.cs
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Pages\SampleCollectionPage.baml
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\Windows\CreateEventWindow.baml
+C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.csprojResolveAssemblyReference.cache
