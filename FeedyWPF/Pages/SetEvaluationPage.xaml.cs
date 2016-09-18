@@ -15,11 +15,10 @@ namespace FeedyWPF.Pages
     /// </summary>
     public partial class SetEvaluationPage : BasePage
     {
-        public SetEvaluationPage(FeedyDbContext database, string tabName)
+        public SetEvaluationPage(FeedyDbContext database, string tabUid) : base(tabUid)
         {
 
             InitializeComponent();
-            TabUid = tabName;
             db = database;
             
             ViewModel = new SetEvaluationPageModel();

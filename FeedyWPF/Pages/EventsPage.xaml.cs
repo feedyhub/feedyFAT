@@ -57,6 +57,10 @@ namespace FeedyWPF
         public delegate void ContentUpdateHandler(object sender, QuestionnairesContentChangedEventArgs e);
         public event ContentUpdateHandler OnQuestionnairesContentChange;
 
+        public delegate void OnSetSampleCollectionPageHandler(object sender, SetSampleCollectionPageEventArgs e);
+        public event OnSetSampleCollectionPageHandler OnNewSampleCollectionEvent;
+
+
 
         private void FilterDatabase(object sender, FilterEventArgs e)
         {
@@ -92,21 +96,6 @@ namespace FeedyWPF
 
         }
 
-        
-
-        private void eventDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-
-            
-            
-        }
-
-        
 
         private void importDataButton_Click(object sender, RoutedEventArgs e)
         {
@@ -156,9 +145,21 @@ namespace FeedyWPF
 
         }
 
-        
+        private void AddDataToEvent(object sender, RoutedEventArgs e)
+        {
+            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+                if (vis is DataGridRow)
+                {
+                    var row = (DataGridRow)vis;
+                    Event SelectedEvent = row.DataContext as Event;
 
-       
+                    var args = new SetSampleCollectionPageEventArgs(SelectedEvent.EventID);
+
+                    OnNewSampleCollectionEvent(this, args);
+
+                    break;
+                }
+        }
 
         private void FilterComoBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -170,9 +171,10 @@ namespace FeedyWPF
             EventViewSource.View.Refresh();
         }
 
-        private void NewQuestionnaireButton_Click(object sender, RoutedEventArgs e)
+        private void CollectDataButton_Click(object sender, RoutedEventArgs e)
         {
-           
+
+            OnNewSampleCollectionEvent(this, new SetSampleCollectionPageEventArgs(null));
         }
     }
 }

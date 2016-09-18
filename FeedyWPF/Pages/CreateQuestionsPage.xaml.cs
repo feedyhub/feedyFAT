@@ -22,10 +22,10 @@ namespace FeedyWPF.Pages
     /// </summary>
     public partial class CreateQuestionsPage : BasePage
     {
-        public CreateQuestionsPage(string tabUid, Questionnaire questionnaire)
+        public CreateQuestionsPage(string tabUid, Questionnaire questionnaire) : base(tabUid)
         {
             InitializeComponent();
-            this.TabUid = tabUid;
+
             Questionnaire = questionnaire;
 
             ViewModel = new CreateQuestionViewModel();

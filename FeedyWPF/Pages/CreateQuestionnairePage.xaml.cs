@@ -21,11 +21,9 @@ namespace FeedyWPF.Pages
     /// </summary>
     public partial class CreateQuestionnairePage : BasePage
     {
-        public CreateQuestionnairePage(string tabUid)
+        public CreateQuestionnairePage(string tabUid) : base(tabUid)
         {
             InitializeComponent();
-            this.TabUid = tabUid;
-
             ViewModel = new Questionnaire();
 
             DataContext = ViewModel;

@@ -10,7 +10,12 @@ namespace FeedyWPF.Pages
 {
     public partial class BasePage : Page
     {
-        public string TabUid { get; set; }
+        public BasePage() { }
+        public BasePage(string tabUid)
+        {
+            TabUid = tabUid;
+        }
+        public string TabUid { get; }
 
         public delegate void CloseTabEventHandler(object sender, CloseTabEventArgs e);
         

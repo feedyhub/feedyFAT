@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:FeedyWPF"
       xmlns:Models="clr-namespace:FeedyWPF.Models"
       mc:Ignorable="d"
-      Title="EventsView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Loaded="Page_Loaded">
+      Title="EventsView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
 
     <Page.Resources>
         <CollectionViewSource x:Key="eventViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Event}, CreateList=True}"/>
@@ -18,6 +18,8 @@
         <Label x:Name="label" Content="Datenbank der Umfragen" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="300" FontSize="24"/>
 
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+            <Button x:Name="CollectDataButton" Content="Neue Dateneingabe" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="CollectDataButton_Click" Height="23"  
+                    Margin="3,10,10,5"/>
             <Button x:Name="importDataButton" Content="Neue Umfrage importieren" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23"  
                     Margin="3,10,10,5"/>
 
@@ -74,6 +76,14 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Click="DeleteEvent" Content="Löschen" Width="80"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="AddDataToEvent" Content="Daten eingeben" Width="100"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

@@ -28,19 +28,15 @@ namespace FeedyWPF.Pages
     {
 
       
-        public EvaluationPage(Evaluation evaluation, string tabId)
+        public EvaluationPage(Evaluation evaluation, string tabUid) :base(tabUid)
         {
 
             InitializeComponent();
-
-            TabUid = tabId;
 
             Evaluation = evaluation;
             DataContext = Evaluation;
         }
 
-        
-        private FeedyDbContext db { get; set; }
         public Evaluation Evaluation { get; set; }
 
         private void endButton_Click(object sender, RoutedEventArgs e)

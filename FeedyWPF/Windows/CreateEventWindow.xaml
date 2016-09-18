@@ -1,0 +1,39 @@
+﻿<Window x:Class="FeedyWPF.Windows.CreateEventWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FeedyWPF.Windows"
+        mc:Ignorable="d"
+        Title="CreateEventWindow" Height="300" Width="300">
+    <DockPanel>
+        <Label x:Name="pageTitle" Content="Eine neue Umfrage eingeben" DockPanel.Dock="Top"  HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="35" Width="250" FontSize="18"/>
+
+        <StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,15,0,0">
+            <Label x:Name="label2" Content="Ort" HorizontalAlignment="Left"  Margin="10,0,0,0" VerticalAlignment="Top" Width="45"/>
+
+            <TextBox x:Name="placeTextBox"  Text="{Binding Path=Event.Place, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Left" Height="23" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
+        </StackPanel>
+
+        <StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,15,0,0">
+            <Label x:Name="label3" Content="Datum" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+            <DatePicker x:Name="datePicker" SelectedDate="{Binding Path=Event.Date}" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" FirstDayOfWeek="Monday" Width="120"/>
+
+        </StackPanel>
+
+        <StackPanel Margin="0,15,0,0" DockPanel.Dock="Top" >
+            <Label x:Name="label4" Content="Fragebogen" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="120" Height="26"/>
+
+            <ComboBox x:Name="questionnaireComboBox" 
+                  
+                  ItemsSource="{Binding Path=QuestionnaireEntries}"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="QuestionnaireID"
+                  SelectedValue="{Binding Path=QuestionnaireID}"
+                  HorizontalAlignment="Left" Margin="10,0,0,0"
+                   VerticalAlignment="Top" Width="120" />
+        </StackPanel>
+        <Button Content="Los!" Width="80" DockPanel.Dock="Bottom" Margin="10,10,10,10" Height="25" HorizontalAlignment="Right" VerticalAlignment="Bottom" x:Name="CreateEventButton" Click="CreateEventButton_Click" />
+    </DockPanel>
+</Window>

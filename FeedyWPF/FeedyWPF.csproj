@@ -104,10 +104,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\CreateEventWindowViewModel.cs" />
     <Compile Include="Models\CreateQuestionViewModel.cs" />
     <Compile Include="Models\CsvExport.cs" />
-    <Compile Include="Models\EnumBooleanConverter.cs" />
+    <Compile Include="Models\IValueConverters.cs" />
     <Compile Include="Models\EvaluationTemplateSelector.cs" />
+    <Compile Include="Models\EventDataCollectionViewModel.cs" />
     <Compile Include="Models\EventsPageViewModel.cs" />
     <Compile Include="Models\SetEvaluationPageModel.cs" />
     <Compile Include="Models\StaticClasses.cs" />
@@ -122,10 +124,13 @@
     <Compile Include="Pages\EvaluationPage.xaml.cs">
       <DependentUpon>EvaluationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SampleCollectionPage.xaml.cs">
+      <DependentUpon>SampleCollectionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\EventsPage.xaml.cs">
       <DependentUpon>EventsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\CSEvents.cs" />
+    <Compile Include="Models\EventArgs.cs" />
     <Compile Include="Pages\QuestionnairesPage.xaml.cs">
       <DependentUpon>QuestionnairesPage.xaml</DependentUpon>
     </Compile>
@@ -153,6 +158,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\SampleCollectionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\EventsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -173,6 +182,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\CreateEventWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\ImportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -187,6 +200,9 @@
     </Compile>
     <Compile Include="Windows\CopyableMessageBox.xaml.cs">
       <DependentUpon>CopyableMessageBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\CreateEventWindow.xaml.cs">
+      <DependentUpon>CreateEventWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ImportWindow.xaml.cs">
       <DependentUpon>ImportWindow.xaml</DependentUpon>

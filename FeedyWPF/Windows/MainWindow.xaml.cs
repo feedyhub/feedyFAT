@@ -7,6 +7,7 @@ using System.Data.Entity;
 using FeedyWPF.Pages;
 
 using System.Collections.ObjectModel;
+using FeedyWPF.Windows;
 
 namespace FeedyWPF
 {
@@ -18,6 +19,7 @@ namespace FeedyWPF
         public MainWindow()
         {
 
+            /// !!!!! TURN OFF FOR DEPLOYMENT !!!!!
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
 
             try{
@@ -35,11 +37,10 @@ namespace FeedyWPF
 
             //Set TabView DataContext
             Tabs = new ObservableCollection<TabItem>();
-            // Every time a new tab is created, counter goes ++1.
            
-
             tabControl.DataContext = Tabs;
 
+            #region Eventspage es first Tab
             // Set EventsPage as first Tab
             TabItem tabitem = new TabItem();
             tabitem.Header = "Umfragen";
@@ -50,12 +51,15 @@ namespace FeedyWPF
             Frame eventsFrame = new Frame();
             EventsPage eventsPage = new EventsPage(db);
 
-            eventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(setEvaluationTab);
-            
+            eventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(SetEvaluationPage);
+            eventsPage.OnNewSampleCollectionEvent += new EventsPage.OnSetSampleCollectionPageHandler(SetSampleCollectionPage);
+
             eventsFrame.Content = eventsPage;
             tabitem.Content = eventsFrame;
             Tabs.Add(tabitem);
+            #endregion
 
+            #region QuestionnairesPage as second Tab
             // Set QuestionnairesPage as second Tab
             tabitem = new TabItem();
             tabitem.Header = "Fragebögen";
@@ -67,24 +71,25 @@ namespace FeedyWPF
 
             QuestionnairesPage = new QuestionnairesPage();
 
-            QuestionnairesPage.OnSetCreateQuestionnairePageEvent += new QuestionnairesPage.SetCreateQuestionnairePageEventHandler(setCreateQuestionnaireTab);
+            QuestionnairesPage.OnSetCreateQuestionnairePageEvent += new QuestionnairesPage.SetCreateQuestionnairePageEventHandler(AddCreateQuestionnaireTab);
 
 
             frame.Content = QuestionnairesPage;
             tabitem.Content = frame;
             Tabs.Add(tabitem);
-
+            #endregion
+            
             //wire up content change events between eventspage and questionnaires page
             QuestionnairesPage.OnEventsContentChange += new QuestionnairesPage.ContentUpdateHandler(eventsPage.RefreshTable);
             eventsPage.OnQuestionnairesContentChange += new EventsPage.ContentUpdateHandler(QuestionnairesPage.RefreshTable);
 
-
+            #region Add "+" Tab
             //Add + Tab to create new Tab
             PlusTab = new TabItem();
             PlusTab.Header = "+";
 
             Tabs.Add(PlusTab);
-
+            #endregion
             tabControl.SelectedIndex = 0;
         }
 
@@ -108,10 +113,9 @@ namespace FeedyWPF
 
         private int tabsCount { get { return Tabs.Count; } }
 
-        private void NewTab()
+        private void AddSetEvaluationTab()
         {
           
-
             // create new tab item
             TabItem tab = new TabItem();
             tab.Header = string.Format("Neue Auswertung {0}", tabsCount - 1);
@@ -125,7 +129,7 @@ namespace FeedyWPF
             
 
             //to get from setevaluationpage to evaluationpage
-            page.OnEvaluationPageEvent += new SetEvaluationPage.EvaluationPageEventHandler(setEvaluationTab);
+            page.OnEvaluationPageEvent += new SetEvaluationPage.EvaluationPageEventHandler(SetEvaluationPage);
             page.CloseTabEvent += CloseTab;
             
            
@@ -148,20 +152,18 @@ namespace FeedyWPF
             {
                 if (tab.Equals(PlusTab))
                 {
-                    // add new tab
-                    NewTab();
+                    // add new tab setevaluation Tab
+                    AddSetEvaluationTab();
                 }
-
-               
-
             }
         }
 
-        private void setEvaluationTab(object sender, SetEvaluationPageEventArgs e)
+        private void SetEvaluationPage(object sender, SetEvaluationPageEventArgs e)
         {
             TabItem tab;
 
-            //create replace setevaluationpage with evaluationpage
+            #region from SetEvaluationPage to EvaluationPage
+            //replace setevaluationpage with evaluationpage
             if (sender is SetEvaluationPage)
             {
 
@@ -181,7 +183,9 @@ namespace FeedyWPF
 
                 tab.Content = frame;
             }
+            #endregion
 
+            #region from EventsPage to EvaluationPage
             // create and insert new tab, set evaluationpage as tabcontent
             if (sender is EventsPage)
             {
@@ -199,16 +203,18 @@ namespace FeedyWPF
                 Frame frame = new Frame();
                 frame.Content = evaluationPage;
 
-                evaluationPage.TabUid = tab.Uid;
+
                 tab.Content = frame;
                 Tabs.Insert(tabsCount - 1, tab);
                 tabControl.SelectedItem = tab;
-            } 
+            }
+
+            #endregion
         }
 
-       
 
-        private void setCreateQuestionnaireTab(object sender, SetCreateQuestionnairePageEventArgs e)
+
+        private void AddCreateQuestionnaireTab(object sender, SetCreateQuestionnairePageEventArgs e)
         {
             TabItem Tab;
 
@@ -221,29 +227,29 @@ namespace FeedyWPF
 
             //Add Controls to Page
             CreateQuestionnairePage.CloseTabEvent += CloseTab;
-            CreateQuestionnairePage.OnSetCreateQuestionsPageEvent += setCreateQuestionsPage;
+            CreateQuestionnairePage.OnSetCreateQuestionsPageEvent += SetCreateQuestionsPage;
 
 
             Frame frame = new Frame();
             frame.Content = CreateQuestionnairePage;
 
-            CreateQuestionnairePage.TabUid = Tab.Uid;
+
             Tab.Content = frame;
             Tabs.Insert(tabsCount - 1, Tab);
             tabControl.SelectedItem = Tab;
         }
 
-        private void setCreateQuestionsPage(object sender, SetCreateQuestionsPageEventArgs args)
+        private void SetCreateQuestionsPage(object sender, SetCreateQuestionsPageEventArgs args)
         {
-            var tab = new TabItem();
+            var Tab = new TabItem();
             if (sender is CreateQuestionnairePage)
             {
 
                 var createQuestionnairePage = sender as CreateQuestionnairePage;
-                tab = Tabs.Single(t => t.Uid == createQuestionnairePage.TabUid);
+                Tab = Tabs.Single(t => t.Uid == createQuestionnairePage.TabUid);
 
 
-                var createQuestionsPage = new CreateQuestionsPage(tab.Uid,args.Questionnaire);
+                var createQuestionsPage = new CreateQuestionsPage(Tab.Uid,args.Questionnaire);
 
                 //Add Controls to Page
                 createQuestionsPage.CloseTabEvent += CloseTab;
@@ -254,14 +260,71 @@ namespace FeedyWPF
                 frame.Content = createQuestionsPage;
 
 
-                tab.Content = frame;
+                Tab.Content = frame;
             }
         }
 
+        private void SetSampleCollectionPage(object sender, SetSampleCollectionPageEventArgs args)
+        {
+            int EventID;
+
+            if (args.CreateNewEvent)
+            {
+                var window = new CreateEventWindow();
+
+                if (window.ShowDialog() == true)
+                {
+
+                    using (var db = new FeedyDbContext())
+                    {
+                        db.Events.Add(window.Event);
+                        db.SaveChanges();
+                    }
+                }
+
+                else
+                {
+                    return;
+                }
+
+                EventID = window.Event.EventID;
+            }
+
+            else
+            {
+                EventID = (int)args.EventID;
+            } 
+               
+            //Get Event from Database in order to get all the navigational properties filled out.
+            db.Events.Load();
+            Event Event = db.Events.Local.Single(ev => ev.EventID == EventID);
+
+            TabItem Tab;
+
+            Tab = new TabItem();
+            Tab.Uid = TabIdCounter.ToString();
+            Tab.Header = string.Format("Neue Dateneingabe {0}", tabsCount - 1);
+
+            var EventDataCollectionPage = new SampleCollectionPage(Event, db ,Tab.Uid);
+
+            //Add Controls to Page
+            EventDataCollectionPage.CloseTabEvent += CloseTab;
+
+
+
+            Frame frame = new Frame();
+            frame.Content = EventDataCollectionPage;
+
+            Tab.Content = frame;
+            Tabs.Insert(tabsCount - 1, Tab);
+            tabControl.SelectedItem = Tab;
+
+        }
+        
 
         private void CloseTab(object sender, CloseTabEventArgs e)
         {
-
+            // closes the tab that has the tabUid specified by the page of the sender
             BasePage page = sender as BasePage;
 
             TabItem Tab = Tabs.Single(t => t.Uid == page.TabUid);

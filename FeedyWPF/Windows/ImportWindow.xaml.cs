@@ -38,8 +38,6 @@ namespace FeedyWPF
           
         }
 
-     
-
         private void directoryButton_Click(object sender, RoutedEventArgs e)
         {
             // Create an instance of the open file dialog box.
@@ -177,9 +175,6 @@ namespace FeedyWPF
                             ++counter;
                         }
                     }
-
-                    
-
 
                     int CountDB = Event.Questionnaire.Questions.SelectMany(q => q.Answers).Count();
                     if (Event.Questionnaire.Questions.SelectMany(q => q.Answers).Count() != counter)
