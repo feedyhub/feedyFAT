@@ -37,6 +37,9 @@ namespace FeedyWPF.Pages
         private CreateQuestionViewModel ViewModel { get; set; }
         private Questionnaire Questionnaire { get; set; }
 
+        public delegate void EventContentUpdateHandler(object sender, EventsContentChangedEventArgs e);
+        public event EventContentUpdateHandler OnEventsContentChange;
+
         public delegate void ContentUpdateHandler(object sender, QuestionnairesContentChangedEventArgs e);
         public event ContentUpdateHandler OnQuestionnairesContentChange;
 
@@ -143,6 +146,7 @@ namespace FeedyWPF.Pages
                     db.SaveChanges();
 
                     OnQuestionnairesContentChange(this, new QuestionnairesContentChangedEventArgs());
+                    OnEventsContentChange(this, new EventsContentChangedEventArgs());
                 }
 
                 // Close Tab

@@ -25,8 +25,7 @@ namespace FeedyWPF.Models
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? Date { get; set; }
         
-        [NotMapped]
-        private string DateString { get { return Date.Value.ToString(); } }
+     
         
 
         /** TODO: validate File extension **/

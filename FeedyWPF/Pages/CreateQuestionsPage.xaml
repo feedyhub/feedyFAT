@@ -37,7 +37,7 @@
 
                     <StackPanel DockPanel.Dock="Right">
                         <Label x:Name="label2" Content="Anzahl Antwortmöglichkeiten" Margin="10,5,0,0"  VerticalAlignment="Top" />
-                        <ComboBox x:Name="comboBox" Height="23" Width="50" ItemsSource="{Binding NumberOfAnswersList}" SelectedValue="{Binding Path=NumberOfAnswers, Mode=TwoWay}" SelectionChanged="comboBox_SelectionChanged"/>
+                        <ComboBox x:Name="comboBox" Height="23" Width="50" IsEnabled="{Binding ComboIsEnabled}" ItemsSource="{Binding NumberOfAnswersList}" SelectedValue="{Binding Path=NumberOfAnswers, Mode=TwoWay}" SelectionChanged="comboBox_SelectionChanged"/>
                     </StackPanel  >
 
                 </StackPanel>
@@ -47,30 +47,41 @@
         </DataTemplate>
 
         <DataTemplate x:Key="TextBox"  >
-            <TextBox Width="100" Text="{Binding Text}" />
+            <TextBox Width="100"   Visibility="{Binding RelativeSource= {RelativeSource FindAncestor,AncestorLevel=2, 
+                                                        AncestorType={x:Type ListViewItem}}, Path=DataContext.VisibilityAnswers}" Text="{Binding Text}" />
         </DataTemplate>
 
+        
         <DataTemplate x:Key="TextBoxQuestion"  >
             <TextBox Width="300" Text="{Binding Text}" HorizontalAlignment="Left"/>
         </DataTemplate>
-        
+        <DataTemplate x:Key="TextBlockQuestion" >
+            <TextBlock Width="Auto" Text="{Binding Text}" HorizontalAlignment="Left" />
+        </DataTemplate>
+
         <DataTemplate x:Key="TextBlock" >
-            <TextBlock Width="Auto" Text="{Binding Text}" HorizontalAlignment="Left"/>
+            <TextBlock Width="Auto" Text="{Binding Text}" Visibility="{Binding RelativeSource= {RelativeSource FindAncestor,AncestorLevel=2, 
+                                                        AncestorType={x:Type ListViewItem}}, Path=DataContext.VisibilityAnswers}" HorizontalAlignment="Left" />
         </DataTemplate>
 
         <DataTemplate x:Key="RadioButton" >
-            <RadioButton HorizontalAlignment="Center"/>
+            <RadioButton HorizontalAlignment="Center" IsEnabled="False"/>
         </DataTemplate>
 
         <DataTemplate x:Key="CheckBox" >
-            <CheckBox HorizontalAlignment="Center"/>
+            <CheckBox HorizontalAlignment="Center" IsEnabled="False"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TextBoxEmpty"  >
+            <TextBox Width="300" IsEnabled="False"  />
         </DataTemplate>
 
 
         <!--Finish and Fill out Template -->
         <DataTemplate x:Key="FillOutFinish" DataType="{x:Type models:CreateQuestion}">
             <DockPanel HorizontalAlignment="Stretch" Height="Auto" LastChildFill="False" VerticalAlignment="Stretch" Width="Auto">
-
+                
+                <!--Questions-->
                 <!--TextBlock or TextBox depending on Progress-->
                 <ContentControl Content="{Binding}" DockPanel.Dock="Top" Margin="10,10,10,10">
                     <ContentControl.Style>
@@ -85,7 +96,7 @@
                                     <Setter Property="ContentTemplate" Value="{StaticResource TextBoxQuestion}" />
                                 </DataTrigger>
                                 <DataTrigger Binding= "{Binding Progress}" Value="FINISHED">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource TextBlock}" />
+                                    <Setter Property="ContentTemplate" Value="{StaticResource TextBlockQuestion}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -122,7 +133,7 @@
                                     </ContentControl.Style>
                                 </ContentControl>
 
-                                <!--Radiobutton or Checkbox depending on QuestionType-->
+                                <!--Radiobutton, Checkbox, or textbox depending on QuestionType-->
                                 <ContentControl Content="{Binding}">
                                     <ContentControl.Style>
                                         <Style TargetType="{x:Type ContentControl}">
@@ -142,6 +153,11 @@
                                                         Path=DataContext.QuestionType}" Value="SINGLE_CHOICE">
                                                     <Setter Property="ContentTemplate" Value="{StaticResource RadioButton}" />
                                                 </DataTrigger>
+                                                <DataTrigger Binding= "{Binding RelativeSource= {RelativeSource FindAncestor,AncestorLevel=2, 
+                                                        AncestorType={x:Type ListViewItem}}, 
+                                                        Path=DataContext.QuestionType}" Value="TEXT">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource TextBoxEmpty}" />
+                                                    </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </ContentControl.Style>
@@ -229,7 +245,7 @@
     <!--Definition of View-->
     <DockPanel x:Name="ViewDockPanel"  ScrollViewer.CanContentScroll="False" LastChildFill="True" Margin="10,10,10,10" >
 
-        <Label Content="Neue Fragen erstellen" DockPanel.Dock="Top"/>
+        <Label Content="Neue Fragen erstellen" DockPanel.Dock="Top" FontSize="24"/>
         
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
             <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click" />

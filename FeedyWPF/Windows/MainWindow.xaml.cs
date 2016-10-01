@@ -49,12 +49,12 @@ namespace FeedyWPF
             
 
             Frame eventsFrame = new Frame();
-            EventsPage eventsPage = new EventsPage(db);
+            EventsPage = new EventsPage(db);
 
-            eventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(SetEvaluationPage);
-            eventsPage.OnNewSampleCollectionEvent += new EventsPage.OnSetSampleCollectionPageHandler(SetSampleCollectionPage);
+            EventsPage.OnEvaluationPageEvent += new EventsPage.EvaluationPageEventHandler(SetEvaluationPage);
+            EventsPage.OnNewSampleCollectionEvent += new EventsPage.OnSetSampleCollectionPageHandler(SetSampleCollectionPage);
 
-            eventsFrame.Content = eventsPage;
+            eventsFrame.Content = EventsPage;
             tabitem.Content = eventsFrame;
             Tabs.Add(tabitem);
             #endregion
@@ -71,8 +71,9 @@ namespace FeedyWPF
 
             QuestionnairesPage = new QuestionnairesPage();
 
-            QuestionnairesPage.OnSetCreateQuestionnairePageEvent += new QuestionnairesPage.SetCreateQuestionnairePageEventHandler(AddCreateQuestionnaireTab);
+            QuestionnairesPage.OnNewCreateQuestionsPage += new QuestionnairesPage.SetCreateQuestionsPageHandler(SetCreateQuestionsPage);
 
+         
 
             frame.Content = QuestionnairesPage;
             tabitem.Content = frame;
@@ -80,8 +81,8 @@ namespace FeedyWPF
             #endregion
             
             //wire up content change events between eventspage and questionnaires page
-            QuestionnairesPage.OnEventsContentChange += new QuestionnairesPage.ContentUpdateHandler(eventsPage.RefreshTable);
-            eventsPage.OnQuestionnairesContentChange += new EventsPage.ContentUpdateHandler(QuestionnairesPage.RefreshTable);
+            QuestionnairesPage.OnEventsContentChange += new QuestionnairesPage.ContentUpdateHandler(EventsPage.RefreshTable);
+            EventsPage.OnQuestionnairesContentChange += new EventsPage.ContentUpdateHandler(QuestionnairesPage.RefreshTable);
 
             #region Add "+" Tab
             //Add + Tab to create new Tab
@@ -110,6 +111,7 @@ namespace FeedyWPF
         private TabItem PlusTab { get; set; }
 
         private QuestionnairesPage QuestionnairesPage { get; set; }
+        private EventsPage EventsPage { get; set; }
 
         private int tabsCount { get { return Tabs.Count; } }
 
@@ -214,46 +216,29 @@ namespace FeedyWPF
 
 
 
-        private void AddCreateQuestionnaireTab(object sender, SetCreateQuestionnairePageEventArgs e)
-        {
-            TabItem Tab;
-
-            Tab = new TabItem();
-            Tab.Uid = TabIdCounter.ToString();
-            Tab.Header = string.Format("Neuer Fragebogen {0}", tabsCount - 1);
-
-
-            var CreateQuestionnairePage = new CreateQuestionnairePage(Tab.Uid);
-
-            //Add Controls to Page
-            CreateQuestionnairePage.CloseTabEvent += CloseTab;
-            CreateQuestionnairePage.OnSetCreateQuestionsPageEvent += SetCreateQuestionsPage;
-
-
-            Frame frame = new Frame();
-            frame.Content = CreateQuestionnairePage;
-
-
-            Tab.Content = frame;
-            Tabs.Insert(tabsCount - 1, Tab);
-            tabControl.SelectedItem = Tab;
-        }
+        
 
         private void SetCreateQuestionsPage(object sender, SetCreateQuestionsPageEventArgs args)
         {
             var Tab = new TabItem();
-            if (sender is CreateQuestionnairePage)
+            if (sender is QuestionnairesPage)
             {
 
-                var createQuestionnairePage = sender as CreateQuestionnairePage;
-                Tab = Tabs.Single(t => t.Uid == createQuestionnairePage.TabUid);
+                var createQuestionnaireWindow = sender as CreateQuestionnaireWindow;
+
+
+               
+                Tab.Uid = TabIdCounter.ToString();
+                Tab.Header = string.Format("Fragebogen erstellen {0}", tabsCount - 1);
 
 
                 var createQuestionsPage = new CreateQuestionsPage(Tab.Uid,args.Questionnaire);
+             
 
                 //Add Controls to Page
                 createQuestionsPage.CloseTabEvent += CloseTab;
                 createQuestionsPage.OnQuestionnairesContentChange += new CreateQuestionsPage.ContentUpdateHandler(QuestionnairesPage.RefreshTable);
+                createQuestionsPage.OnEventsContentChange += new CreateQuestionsPage.EventContentUpdateHandler(EventsPage.RefreshTable);
 
 
                 Frame frame = new Frame();
@@ -261,6 +246,10 @@ namespace FeedyWPF
 
 
                 Tab.Content = frame;
+
+
+                Tabs.Insert(tabsCount - 1, Tab);
+                tabControl.SelectedItem = Tab;
             }
         }
 

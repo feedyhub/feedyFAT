@@ -18,9 +18,9 @@
         <Label x:Name="label" Content="Datenbank der Umfragen" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="300" FontSize="24"/>
 
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-            <Button x:Name="CollectDataButton" Content="Neue Dateneingabe" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="CollectDataButton_Click" Height="23"  
+            <Button x:Name="CollectDataButton" Content="Neuer Umfrageort" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="CollectDataButton_Click" Height="23"  
                     Margin="3,10,10,5"/>
-            <Button x:Name="importDataButton" Content="Neue Umfrage importieren" HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Click="importDataButton_Click" Height="23"  
+            <Button x:Name="importDataButton" Content="Neuer Umfrageort importieren" HorizontalAlignment="Left" VerticalAlignment="Top" Width="180" Click="importDataButton_Click" Height="23"  
                     Margin="3,10,10,5"/>
 
         </StackPanel>
@@ -61,7 +61,9 @@
 
                         <DataGridTextColumn x:Name="questionnaireColumn" Binding="{Binding Questionnaire.Name}" Header="Fragebogen" IsReadOnly="True" Width="Auto" Visibility="Visible"/>
                         <DataGridTextColumn x:Name="placeColumn" Binding="{Binding Place}" Header="Ort" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn x:Name="dateColumn" Binding="{Binding DateString}" Header="Datum" IsReadOnly="True" Width="Auto"/>
+
+
+                        <DataGridTextColumn x:Name="dateColumn" Binding="{Binding Date,  StringFormat=\{0:dd.MM.yy\}}" Header="Datum" IsReadOnly="True" Width="Auto"/>
                         <DataGridTextColumn x:Name="participantsCountColumn" Binding="{Binding ParticipantsCount}" Header="Anzahl Teilnehmende" IsReadOnly="True" Width="*"/>
 
                         <DataGridTemplateColumn Width="Auto">

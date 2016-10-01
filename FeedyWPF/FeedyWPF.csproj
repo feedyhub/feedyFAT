@@ -115,9 +115,6 @@
     <Compile Include="Models\StaticClasses.cs" />
     <Compile Include="Models\TextExport.cs" />
     <Compile Include="Pages\BasePage.cs" />
-    <Compile Include="Pages\CreateQuestionnairePage.xaml.cs">
-      <DependentUpon>CreateQuestionnairePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\CreateQuestionsPage.xaml.cs">
       <DependentUpon>CreateQuestionsPage.xaml</DependentUpon>
     </Compile>
@@ -146,10 +143,6 @@
     <Compile Include="TabWindow.xaml.cs">
       <DependentUpon>TabWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Pages\CreateQuestionnairePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\CreateQuestionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -182,6 +175,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\CreateQuestionnaireWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Windows\CreateEventWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,6 +197,9 @@
     </Compile>
     <Compile Include="Windows\CopyableMessageBox.xaml.cs">
       <DependentUpon>CopyableMessageBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\CreateQuestionnaireWindow.xaml.cs">
+      <DependentUpon>CreateQuestionnaireWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\CreateEventWindow.xaml.cs">
       <DependentUpon>CreateEventWindow.xaml</DependentUpon>

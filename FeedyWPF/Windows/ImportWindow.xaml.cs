@@ -386,6 +386,7 @@ namespace FeedyWPF
                                 TextDataElement.Event = myEvent;
                                 Questions.Last().Answers.Last().TextDataSet.Add(TextDataElement);
                                 Questions.Last().EvalMode = EvaluationMode.TEXT;
+                                Questions.Last().QuestionType = QuestionType.TEXT;
                             }
                         }
                     }

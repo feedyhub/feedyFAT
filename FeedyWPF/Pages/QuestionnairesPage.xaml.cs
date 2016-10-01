@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FeedyWPF.Models;
 using System.Data.Entity;
+using FeedyWPF.Windows;
 
 namespace FeedyWPF.Pages
 {
@@ -37,8 +38,9 @@ namespace FeedyWPF.Pages
         private FeedyDbContext db = new FeedyDbContext();
         private CollectionViewSource QuestionnaireViewSource;
 
-        public delegate void SetCreateQuestionnairePageEventHandler(object sender, SetCreateQuestionnairePageEventArgs e);
-        public event SetCreateQuestionnairePageEventHandler OnSetCreateQuestionnairePageEvent;
+        public delegate void SetCreateQuestionsPageHandler(object sender, SetCreateQuestionsPageEventArgs e);
+        public event SetCreateQuestionsPageHandler OnNewCreateQuestionsPage;
+
 
         public delegate void ContentUpdateHandler(object sender, EventsContentChangedEventArgs e);
         public event ContentUpdateHandler OnEventsContentChange;
@@ -82,7 +84,18 @@ namespace FeedyWPF.Pages
 
         private void NewQuestionnaireButton_Click(object sender, RoutedEventArgs e)
         {
-            OnSetCreateQuestionnairePageEvent(this, new SetCreateQuestionnairePageEventArgs());
+            var Window = new CreateQuestionnaireWindow();
+
+            if(Window.ShowDialog() == true)
+            {
+                OnEventsContentChange(this, new EventsContentChangedEventArgs());
+
+                var args = new SetCreateQuestionsPageEventArgs();
+                args.Questionnaire = Window.Questionnaire;
+                OnNewCreateQuestionsPage(this, args);
+            }
+            
+           
         }
     }
 }

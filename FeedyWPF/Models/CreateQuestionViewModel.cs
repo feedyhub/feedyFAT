@@ -42,6 +42,7 @@ namespace FeedyWPF.Models
 
             BackButtonEnabled = false;
             NextButtonEnabled = false;
+            ComboIsEnabled = true;
         }
 
 
@@ -134,17 +135,26 @@ namespace FeedyWPF.Models
                 if(value == QuestionType.TEXT)
                 {
                     VisibilityAnswers = Visibility.Collapsed;
+                    NumberOfAnswers = 1;
+                    ComboIsEnabled = false;
+
                 }
                 else
                 {
                     VisibilityAnswers = Visibility.Visible;
+                    ComboIsEnabled = true;
                 }
+
+                
 
                 OnPropertyChanged("QuestionType");
             }
         }
             
            
+        private bool _comboIsEnabled { get; set; }
+        public bool ComboIsEnabled { get { return _comboIsEnabled; } set { _comboIsEnabled = value; OnPropertyChanged("ComboIsEnabled"); } }
+
 
         private int _numberOfAnswers { get; set; }
         public int NumberOfAnswers { get { return _numberOfAnswers; } set
@@ -161,6 +171,8 @@ namespace FeedyWPF.Models
                 {
                     Answers.Add(new Answer() { Text="Antwort "+ i});
                 }
+
+                OnPropertyChanged("NumberOfAnswers");
               
             } }
 
