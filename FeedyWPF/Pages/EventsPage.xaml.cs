@@ -121,7 +121,7 @@ namespace FeedyWPF
                     break;
                 }
             db.SaveChanges();
-            eventDataGrid.Items.Refresh();
+            RefreshTable(this, new EventsContentChangedEventArgs());
         }
 
         private void EvaluateEvent(object sender, RoutedEventArgs e)

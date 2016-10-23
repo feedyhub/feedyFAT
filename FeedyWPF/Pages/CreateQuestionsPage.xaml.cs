@@ -26,14 +26,29 @@ namespace FeedyWPF.Pages
         {
             InitializeComponent();
 
-            Questionnaire = questionnaire;
+           
 
-            ViewModel = new CreateQuestionViewModel();
+            if(questionnaire.Questions == null || questionnaire.Questions.Count == 0)
+            {
+                FromDatabase = false;
+                Questionnaire = questionnaire;
+                ViewModel = new CreateQuestionViewModel();
+            }
+
+            else
+            {
+                FromDatabase = true;
+                Questionnaire = db.Questionnaires.Single(q => q.QuestionnaireID == questionnaire.QuestionnaireID);
+                ViewModel = new CreateQuestionViewModel(Questionnaire.Questions);
+            }
+           
             DataContext = ViewModel;
 
 
         }
 
+        private FeedyDbContext db = new FeedyDbContext();
+        private bool FromDatabase { get; set; }
         private CreateQuestionViewModel ViewModel { get; set; }
         private Questionnaire Questionnaire { get; set; }
 
@@ -120,6 +135,11 @@ namespace FeedyWPF.Pages
             if (SelectedCreateQuestion != null)
             {   
                 ViewModel.CreateQuestions.Remove(SelectedCreateQuestion);
+
+                if (FromDatabase)
+                {
+                    db.Questions.Remove(db.Questions.Single(q => q.QuestionID == SelectedCreateQuestion.QuestionID));
+                }
             }
         }
 
@@ -127,27 +147,36 @@ namespace FeedyWPF.Pages
         {
             if(ViewModel.CreateQuestions.All(cq => cq.Progress == CreateQuestionProgress.FINISHED))
             {
+
                 /// save Questionnaire To Database
-                var Questions = new ObservableCollection<Question>();
-
-                //some type conversion
-                foreach (var createQuestion in ViewModel.CreateQuestions)
+                /// 
+                if (!FromDatabase)
                 {
-                    Questions.Add(createQuestion.ToQuestion());
-                }
+                    var Questions = new ObservableCollection<Question>();
 
-                Questionnaire.Questions = Questions;
+                    //some type conversion
+                    foreach (var createQuestion in ViewModel.CreateQuestions)
+                    {
+                        Questions.Add(createQuestion.ToQuestion());
+                    }
 
-                //Save to database
-                using (var db = new FeedyDbContext())
-                {
+                    foreach (var question in Questions)
+                    {
+                        if (question.QuestionType == QuestionType.TEXT)
+                        {
+                            question.EvalMode = EvaluationMode.TEXT;
+                        }
+                    }
 
+                    Questionnaire.Questions = Questions;
                     db.Questionnaires.Add(Questionnaire);
-                    db.SaveChanges();
-
-                    OnQuestionnairesContentChange(this, new QuestionnairesContentChangedEventArgs());
-                    OnEventsContentChange(this, new EventsContentChangedEventArgs());
-                }
+                } 
+                       
+                    
+                db.SaveChanges();
+                OnQuestionnairesContentChange(this, new QuestionnairesContentChangedEventArgs());
+                OnEventsContentChange(this, new EventsContentChangedEventArgs());
+                
 
                 // Close Tab
                 OnCloseTabEvent(this, new CloseTabEventArgs());

@@ -74,7 +74,7 @@ namespace FeedyWPF.Pages
                     break;
                 }
             db.SaveChanges();
-            questionnaireDataGrid.Items.Refresh();
+            RefreshTable(this, new QuestionnairesContentChangedEventArgs());
 
             if (EventsDeleted)
             {
@@ -96,6 +96,31 @@ namespace FeedyWPF.Pages
             }
             
            
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+           
+
+            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+                if (vis is DataGridRow)
+                {
+                    var row = (DataGridRow)vis;
+                    var SelectedQuestionnaire = row.DataContext as Questionnaire;
+                    if (SelectedQuestionnaire != null)
+                    {
+                        var args = new SetCreateQuestionsPageEventArgs();
+                        args.Questionnaire = SelectedQuestionnaire;
+                        OnNewCreateQuestionsPage(this, args);
+                    }
+
+                    break;
+                }
+
+           
+
+          
+          
         }
     }
 }

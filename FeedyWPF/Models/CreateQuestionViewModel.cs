@@ -16,7 +16,19 @@ namespace FeedyWPF.Models
         {
             CreateQuestions = new ObservableCollection<CreateQuestion>();
             CreateQuestions.Add(new CreateQuestion());
-   
+     
+        }
+
+        public CreateQuestionViewModel(ObservableCollection<Question> Questions)
+        {
+            CreateQuestions = new ObservableCollection<CreateQuestion>();
+
+            foreach (var question in Questions)
+            {
+                CreateQuestions.Add(new CreateQuestion(question));
+                
+            }
+
         }
         public ObservableCollection<CreateQuestion> CreateQuestions { get; set; }
         
@@ -43,16 +55,45 @@ namespace FeedyWPF.Models
             BackButtonEnabled = false;
             NextButtonEnabled = false;
             ComboIsEnabled = true;
+            DeleteQuestionButtonVisible = Visibility.Visible;
+        }
+
+        public CreateQuestion(Question Question)
+        {
+          
+
+            int MaxNumberOfAnswers = 9;
+            // possible numbers of answers: 1-9. Create numbers to fill combobox.
+            NumberOfAnswersList = new ObservableCollection<int>();
+
+            for (int i = 0; i < MaxNumberOfAnswers; ++i)
+            {
+                NumberOfAnswersList.Add(i + 1);
+            }
+
+            Progress = CreateQuestionProgress.FINISHED;
+
+            BackButtonEnabled = true;
+            NextButtonEnabled = false;
+            ComboIsEnabled = true;
+            DeleteQuestionButtonVisible = Visibility.Collapsed;
+
+            Text = Question.Text;
+            EvalMode = Question.EvalMode;
+            QuestionType = Question.QuestionType;
+            Answers = Question.Answers;
+            QuestionID = Question.QuestionID;
+            Questionnaire = Question.Questionnaire;
+
         }
 
 
 
         public ObservableCollection<int> NumberOfAnswersList { get; }
         public Visibility VisibilityAnswers { get; set; }
-
+        public Visibility DeleteQuestionButtonVisible { get; set; }
 
         private string _nextButtonString;
-
         public string NextButtonString
         {
             get
@@ -66,7 +107,6 @@ namespace FeedyWPF.Models
                 OnPropertyChanged("NextButtonString");
             }
         }
-
 
         private bool _nextButtonEnabled;
         public bool NextButtonEnabled
@@ -138,6 +178,7 @@ namespace FeedyWPF.Models
                     NumberOfAnswers = 1;
                     ComboIsEnabled = false;
 
+                    
                 }
                 else
                 {
@@ -149,12 +190,10 @@ namespace FeedyWPF.Models
 
                 OnPropertyChanged("QuestionType");
             }
-        }
-            
+        }            
            
         private bool _comboIsEnabled { get; set; }
         public bool ComboIsEnabled { get { return _comboIsEnabled; } set { _comboIsEnabled = value; OnPropertyChanged("ComboIsEnabled"); } }
-
 
         private int _numberOfAnswers { get; set; }
         public int NumberOfAnswers { get { return _numberOfAnswers; } set

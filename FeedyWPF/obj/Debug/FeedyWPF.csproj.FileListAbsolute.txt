@@ -83,3 +83,4 @@ C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.exe.manifest
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.application
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.exe
 C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.pdb
+C:\Users\Sebastian Ratz\GIT\feedyFAT\FeedyWPF\obj\Debug\FeedyWPF.csprojResolveAssemblyReference.cache

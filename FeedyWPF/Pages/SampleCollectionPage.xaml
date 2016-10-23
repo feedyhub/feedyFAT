@@ -115,7 +115,7 @@
 
     <!--Definition of View-->
     <DockPanel LastChildFill="True">
-        <Label x:Name="label" Content="Neue Dateneingabe"  DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="300" FontSize="24"/>
+        <Label x:Name="label" Content="{Binding PageHeaderText}"  DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="Auto" FontSize="24"/>
 
      
 

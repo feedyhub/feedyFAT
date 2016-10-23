@@ -320,7 +320,6 @@ namespace FeedyWPF
             myEvent.ParticipantsCount = data.Count - 2;
 
             ObservableCollection<Question> Questions = new ObservableCollection<Question>();
-            ObservableCollection<Answer> Answers = new ObservableCollection<Answer>();
 
             TextData TextDataElement;
             CountData CountDataElement;
@@ -339,10 +338,18 @@ namespace FeedyWPF
                     //First row is where the Question Texts are.
                     if (row == 0)
                     {
-                       
+                    
                         if (!string.IsNullOrEmpty(Element))
                         {
-                                var Question = new Question(Element);
+                            //detect if last Question is a Textquestion
+                            if (Questions.Count != 0 && Questions.Last().Answers.Count == 1 && Questions.Last().Answers.First().TextDataSet.Count >= 0)
+                            {
+                                Questions.Last().EvalMode = EvaluationMode.TEXT;
+                                Questions.Last().QuestionType = QuestionType.TEXT;
+                            }
+
+                            //create new one
+                            var Question = new Question(Element);
 
                                 // Default EvalMode is Absolute Mode
                                 Question.EvalMode = EvaluationMode.ABSOLUTE;
@@ -385,13 +392,15 @@ namespace FeedyWPF
                                 TextDataElement = new TextData(Element);
                                 TextDataElement.Event = myEvent;
                                 Questions.Last().Answers.Last().TextDataSet.Add(TextDataElement);
-                                Questions.Last().EvalMode = EvaluationMode.TEXT;
-                                Questions.Last().QuestionType = QuestionType.TEXT;
+
+                                
                             }
                         }
                     }
                 }
 
+                
+                    
                 //pass DataCounter to corresponding Answer.
                 CountDataElement = new CountData(DataCounter);
                 CountDataElement.Event = myEvent;

@@ -224,7 +224,7 @@
                <!--Buttons to Add and Remove Questions-->
                 <StackPanel Margin="10,10,10,10" DockPanel.Dock="Right">
                     <Button Content="Neue Frage" Width="80" x:Name="AddQuestionButton" Margin="0,0,0,10" Click="AddQuestionButton_Click"   />
-                    <Button Content="Frage löschen" Width="80" Click="RemoveQuestionButton_Click"   />
+                    <Button Content="Frage löschen" Width="80" Visibility="{Binding DeleteQuestionButtonVisible}"  Click="RemoveQuestionButton_Click"   />
                 </StackPanel>
                 
                 <!--Buttons to navigate through SetQuestion Progress States-->

@@ -36,6 +36,9 @@ namespace FeedyWPF.Pages
         private FeedyDbContext Db { get; set; }
         private Event Event { get; set; }
 
+        public delegate void ContentUpdateHandler(object sender, EventsContentChangedEventArgs e);
+        public event ContentUpdateHandler OnEventsContentChange;
+
         private SampleCollectionPageViewModel ViewModel { get; set; }
 
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
@@ -61,6 +64,7 @@ namespace FeedyWPF.Pages
             SampleToModel();
             Db.SaveChanges();
 
+            OnEventsContentChange(this, new EventsContentChangedEventArgs());
             OnCloseTabEvent(this, new CloseTabEventArgs());
             
         }
@@ -77,12 +81,29 @@ namespace FeedyWPF.Pages
                 foreach(var viewAnswer in viewQuestion.ViewAnswers)
                 {
 
-                    if (viewAnswer.IsChecked)
+                    Answer Answer = Question.Answers.Single(a => a.AnswerID == viewAnswer.AnswerID);
+
+
+
+
+
+                    if (viewAnswer.IsChecked || viewAnswer.TextAnswer != string.Empty)
                     {
-                        Answer Answer = Question.Answers.Single(a => a.AnswerID == viewAnswer.AnswerID);
+
+                        if(Answer.TextDataSet == null)
+                        {
+                            Answer.TextDataSet = new ObservableCollection<TextData>();
+                        }
+
+                        if(viewAnswer.TextAnswer != string.Empty)
+                        {
+                            var TextData = new TextData(viewAnswer.TextAnswer);
+                            TextData.EventID = Event.EventID;
+                            Answer.TextDataSet.Add(TextData);
+                        }
 
                         CountData Data = Answer.CountDataSet.SingleOrDefault(d => d.EventID == Event.EventID);
-
+                        
                         if(Data == null)
                         {
                             Data = new CountData();

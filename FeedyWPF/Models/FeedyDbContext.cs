@@ -47,12 +47,6 @@ namespace FeedyWPF.Models
                  .HasForeignKey(m => m.AnswerID)
                  .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<TextData>()
-                 .HasRequired(m => m.Answer)
-                 .WithMany(t => t.TextDataSet)
-                 .HasForeignKey(m => m.AnswerID)
-                 .WillCascadeOnDelete(false);
-
 
             modelBuilder.Entity<CountData>()
                   .HasRequired(m => m.Answer)

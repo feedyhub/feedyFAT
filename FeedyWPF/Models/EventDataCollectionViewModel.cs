@@ -19,10 +19,15 @@ namespace FeedyWPF.Models
                 ViewQuestions.Add(new ViewQuestion(q));
             }
 
+            PageHeaderText = "Dateneingabe: " + Event.Questionnaire.Name + " in " + Event.Place;
+
         }
 
+        public string PageHeaderText { get; set; }
         public ObservableCollection<ViewQuestion> ViewQuestions { get; set; }
     }
+
+
 
     public class ViewQuestion
     {

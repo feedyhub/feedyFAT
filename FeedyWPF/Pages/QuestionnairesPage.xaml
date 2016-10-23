@@ -34,6 +34,13 @@
                 <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
+                            <Button x:Name="EditButton" Content="Bearbeiten" Width="80" Click="EditButton_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
                             <Button x:Name="DeleteButton" Content="Löschen" Width="80" Click="DeleteButton_Click" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

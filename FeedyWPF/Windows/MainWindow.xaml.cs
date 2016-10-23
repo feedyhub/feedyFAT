@@ -19,7 +19,7 @@ namespace FeedyWPF
         public MainWindow()
         {
 
-            /// !!!!! TURN OFF FOR DEPLOYMENT !!!!!
+            /// !!!!! TURN OFF FOR DEPLOYMENT !!!!!IfModelChanges
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
 
             try{
@@ -229,7 +229,7 @@ namespace FeedyWPF
 
                
                 Tab.Uid = TabIdCounter.ToString();
-                Tab.Header = string.Format("Fragebogen erstellen {0}", tabsCount - 1);
+                Tab.Header = string.Format("Fragebogen erstellen {0}", tabsCount - 2);
 
 
                 var createQuestionsPage = new CreateQuestionsPage(Tab.Uid,args.Questionnaire);
@@ -292,12 +292,13 @@ namespace FeedyWPF
 
             Tab = new TabItem();
             Tab.Uid = TabIdCounter.ToString();
-            Tab.Header = string.Format("Neue Dateneingabe {0}", tabsCount - 1);
+            Tab.Header = string.Format("Neue Dateneingabe {0}", tabsCount - 2);
 
             var EventDataCollectionPage = new SampleCollectionPage(Event, db ,Tab.Uid);
 
             //Add Controls to Page
             EventDataCollectionPage.CloseTabEvent += CloseTab;
+            EventDataCollectionPage.OnEventsContentChange += EventsPage.RefreshTable;
 
 
 
