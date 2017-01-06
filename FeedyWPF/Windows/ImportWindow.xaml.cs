@@ -147,7 +147,7 @@ namespace FeedyWPF
 
                 for(int column =ColumnCount-1; column>=0; --column)
                 {
-                    if(Data[1][column] == "\0")
+                    if(Data[1][column] == "\0" || Data[1][column] == string.Empty || Data[1][column] == null)
                     {
                         for(int row=0; row<RowCount; ++row)
                         {
@@ -392,33 +392,17 @@ namespace FeedyWPF
                                 TextDataElement = new TextData(Element);
                                 TextDataElement.Event = myEvent;
                                 Questions.Last().Answers.Last().TextDataSet.Add(TextDataElement);
-
                                 
                             }
                         }
                     }
                 }
 
-                
-                    
+ 
                 //pass DataCounter to corresponding Answer.
                 CountDataElement = new CountData(DataCounter);
                 CountDataElement.Event = myEvent;
                 Questions.Last().Answers.Last().CountDataSet.Add(CountDataElement);
-            }
-
-            var QuestionsToRemove = new List<Question>();
-            foreach( var question in Questions)
-            {
-                if (question.Answers.Select(a => a.Text).All(t => t==string.Empty || t == "\0" || t== null))
-                {
-                    QuestionsToRemove.Add(question);
-                }
-            }
-
-            foreach(var question in QuestionsToRemove)
-            {
-                Questions.Remove(question);
             }
             
             return Questions;
