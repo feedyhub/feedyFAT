@@ -31,11 +31,11 @@ namespace FeedyWPF
 
         public ImportWindow()
         {
-           
+
             InitializeComponent();
             ViewModel = new ImportWindowViewModel();
             DataContext = ViewModel;
-          
+
         }
 
         private void directoryButton_Click(object sender, RoutedEventArgs e)
@@ -61,7 +61,7 @@ namespace FeedyWPF
                     fileStream = openFileDialog1.OpenFile();
                     filenameLabel.Content = openFileDialog1.FileName;
                 }
-               catch(IOException ex)
+                catch (IOException ex)
                 {
                     MessageBox.Show("Datei konnte nicht geöffnet werden. Ist die .CSV / Excel bereits Datei geöffnet?");
                     return;
@@ -69,7 +69,7 @@ namespace FeedyWPF
             }
         }
 
-   
+
 
         private void importButton_Click(object sender, RoutedEventArgs e)
         {
@@ -77,17 +77,17 @@ namespace FeedyWPF
 
             Event Event = ViewModel.Event;
             Questionnaire Questionnaire;
-            var Data = new List<List<string> >();
+            var Data = new List<List<string>>();
 
             #region Set Questionnaire variable
-            
+
             //New Questionnaire
-            if(!string.IsNullOrEmpty(ViewModel.NewQuestionnaire.Name))
-            { 
+            if (!string.IsNullOrEmpty(ViewModel.NewQuestionnaire.Name))
+            {
                 Questionnaire = ViewModel.NewQuestionnaire;
 
                 // make sure no Questionnaire with same name is existing already
-                if(!db.Questionnaires.Any(q => q.Name == Questionnaire.Name))
+                if (!db.Questionnaires.Any(q => q.Name == Questionnaire.Name))
                 {
                     db.Questionnaires.Add(Questionnaire);
                     db.SaveChanges();
@@ -97,15 +97,15 @@ namespace FeedyWPF
                 {
                     MessageBox.Show("Ein Fragebogen mit diesem Namen existiert bereits!");
                     return;
-                } 
+                }
             }
 
             // Existing Questionnaire, only if ViewModel.NewQuestionnaire.Name field is empty.
             else if (ViewModel.QuestionnaireID != 0)
             {
                 Questionnaire = db.Questionnaires
-                    .Include(t => t.Questions.Select(a => a.Answers.Select(d => d.CountDataSet)))
-                    .Include(t => t.Questions.Select(a => a.Answers.Select(d => d.TextDataSet)))
+                    //.Include(t => t.Questions.Select(a => a.Answers.Select(d => d.CountDataSet)))
+                    //.Include(t => t.Questions.Select(a => a.Answers.Select(d => d.TextDataSet)))
                     .Single(q => q.QuestionnaireID == ViewModel.QuestionnaireID);
             }
 
@@ -128,13 +128,13 @@ namespace FeedyWPF
                 {
                     userInputIsValid = false;
                 }
-                
+
             }
             #endregion
 
             if (userInputIsValid)
             {
-                
+
                 Event.Questionnaire = Questionnaire;
 
                 //read data from .csv file
@@ -145,16 +145,16 @@ namespace FeedyWPF
                 int ColumnCount = Data[0].Count;
                 int RowCount = Data.Count;
 
-                for(int column =ColumnCount-1; column>=0; --column)
+                for (int column = ColumnCount - 1; column >= 0; --column)
                 {
-                    if(Data[1][column] == "\0")
+                    if (Data[1][column] == "\0" || Data[1][column] == string.Empty || Data[1][column] == null)
                     {
-                        for(int row=0; row<RowCount; ++row)
+                        for (int row = 0; row < RowCount; ++row)
                         {
                             Data[row].Remove(Data[row][column]);
                         }
                     }
-                   
+
                 }
 
                 #endregion
@@ -187,19 +187,19 @@ namespace FeedyWPF
                     {
                         db.Events.Add(Event);
                     }
-                       
+
                 }
 
                 //Otherwise create model for this new questionnaire
                 else
                 {
-                   
+
                     Event.Questionnaire.Questions = ConvertFileToModel(Event, Data);
-                    db.Entry(Event.Questionnaire).State = EntityState.Modified;
+                    //db.Entry(Event.Questionnaire).State = EntityState.Modified;
                     db.Events.Add(Event);
                 }
 
-                
+
                 db.SaveChanges();
 
             }
@@ -217,7 +217,7 @@ namespace FeedyWPF
 
         }
 
-        private bool AppendDataToQuestionnaire(Event myEvent, List<List<string> > data)
+        private bool AppendDataToQuestionnaire(Event myEvent, List<List<string>> data)
         {
             bool Success = false;
 
@@ -240,46 +240,55 @@ namespace FeedyWPF
                 //find matching question
                 if (!string.IsNullOrEmpty(data[0][column]))
                 {
-                    RefQuestion = myEvent.Questionnaire.Questions.Single(q => q.Text == data[0][column]);      
+                    try
+                    {
+                        RefQuestion = myEvent.Questionnaire.Questions.Single(q => q.Text == data[0][column]);
+
+                        RefAnswer = RefQuestion.Answers.Single(a => a.Text == data[1][column]);
+
+
+                        if (RefAnswer != null)
+                        {
+                            for (int row = 2; row < data.Count; ++row)
+                            {
+                                string Element = data[row][column];
+
+                                // ignore if empty
+                                if (!string.IsNullOrWhiteSpace(data[row][column]))
+                                {
+                                    //store if textanswer and count not null elements
+                                    if (!Element.All(c => char.IsDigit(c)))
+                                    {
+                                        TextDataElement = new TextData(data[row][column]);
+                                        TextDataElement.Event = myEvent;
+                                        RefAnswer.TextDataSet.Add(TextDataElement);
+
+                                    }
+                                    ++DataCounter;
+                                }
+                            }
+                            CountDataElement = new CountData(DataCounter);
+                            CountDataElement.Event = myEvent;
+                            RefAnswer.CountDataSet.Add(CountDataElement);
+                        }
+                        Success = true;
+                    }
+      
+                    catch (InvalidOperationException e)
+                    {
+                        MessageBox.Show("Problem: Es scheint als wären die Texte der Fragen und der Antwortmöglichkeiten geändert worden. Lösung: Es muss dafür ein neuer Fragebogen erstellt werden. Hinweis: Die unpassende Frage/Antwort ist: " + data[0][column]);
+                    }
                 }
+                    
+
+            }
                 //find corresponding questions and answers in model.
 
-                
-                RefAnswer = RefQuestion.Answers.Single(a => a.Text == data[1][column]);
-
-
-                if (RefAnswer != null)
-                {
-                    for (int row = 2; row < data.Count; ++row)
-                    {
-                        string Element = data[row][column];
-
-                        // ignore if empty
-                        if (!string.IsNullOrWhiteSpace(data[row][column]))
-                        {
-                            //store if textanswer and count not null elements
-                            if (!Element.All(c => char.IsDigit(c)))
-                            {
-                                TextDataElement = new TextData(data[row][column]);
-                                TextDataElement.Event = myEvent;
-                                RefAnswer.TextDataSet.Add(TextDataElement);
-
-                            }
-                            ++DataCounter;
-                        }
-                    }
-                    CountDataElement = new CountData(DataCounter);
-                    CountDataElement.Event = myEvent;
-                    RefAnswer.CountDataSet.Add(CountDataElement);
-                }
-
-               
-            }
-            Success = true;
-            return Success;
+                return Success;
         }
+        
 
-        public List<List<string> > ParseFileContent(Stream fileStream)
+        public List<List<string>> ParseFileContent(Stream fileStream)
         {
             // fileStream to MemoryStream
             BinaryReader b = new BinaryReader(fileStream, Encoding.Default);
@@ -334,11 +343,11 @@ namespace FeedyWPF
                 for (int row = 0; row < data.Count; ++row)
                 {
                     string Element = data[row][column];
-                   
+
                     //First row is where the Question Texts are.
                     if (row == 0)
                     {
-                    
+
                         if (!string.IsNullOrEmpty(Element))
                         {
                             //detect if last Question is a Textquestion
@@ -351,11 +360,11 @@ namespace FeedyWPF
                             //create new one
                             var Question = new Question(Element);
 
-                                // Default EvalMode is Absolute Mode
-                                Question.EvalMode = EvaluationMode.ABSOLUTE;
+                            // Default EvalMode is Absolute Mode
+                            Question.EvalMode = EvaluationMode.ABSOLUTE;
 
-                                Questions.Add(Question);
-                                Questions.Last<Question>().Answers = new ObservableCollection<Answer>();
+                            Questions.Add(Question);
+                            Questions.Last<Question>().Answers = new ObservableCollection<Answer>();
                         }
 
                     }
@@ -386,41 +395,25 @@ namespace FeedyWPF
                         else
                         {
                             // if its one of the useless large numbers or numbers separated by dots, ignore, else save textanswer
-                            if (!Element.All(c => char.IsDigit(c) || c.Equals(".") ))
+                            if (!Element.All(c => char.IsDigit(c) || c.Equals(".")))
                             {
                                 ++DataCounter;
                                 TextDataElement = new TextData(Element);
                                 TextDataElement.Event = myEvent;
                                 Questions.Last().Answers.Last().TextDataSet.Add(TextDataElement);
 
-                                
                             }
                         }
                     }
                 }
 
-                
-                    
+
                 //pass DataCounter to corresponding Answer.
                 CountDataElement = new CountData(DataCounter);
                 CountDataElement.Event = myEvent;
                 Questions.Last().Answers.Last().CountDataSet.Add(CountDataElement);
             }
 
-            var QuestionsToRemove = new List<Question>();
-            foreach( var question in Questions)
-            {
-                if (question.Answers.Select(a => a.Text).All(t => t==string.Empty || t == "\0" || t== null))
-                {
-                    QuestionsToRemove.Add(question);
-                }
-            }
-
-            foreach(var question in QuestionsToRemove)
-            {
-                Questions.Remove(question);
-            }
-            
             return Questions;
 
         }
@@ -431,5 +424,5 @@ namespace FeedyWPF
         }
     }
 
-   
+
 }

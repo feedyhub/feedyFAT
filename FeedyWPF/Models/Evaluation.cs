@@ -22,7 +22,7 @@ using System.Data.Entity;
 namespace FeedyWPF.Models
 {
  
-    public class Evaluation
+    public class Evaluation : INotifyPropertyChanged
     {
         //Constructors
         public Evaluation() { }
@@ -41,7 +41,7 @@ namespace FeedyWPF.Models
             
             this.QuestionEvaluations = ExecuteQuery();
 
-           
+            PageHeaderText = "Auswertung: " + questionSelection.First().Questionnaire.Name + " in mehreren Orten";
         }
         public Evaluation(Event Event, FeedyDbContext database)
         {
@@ -55,10 +55,11 @@ namespace FeedyWPF.Models
             //Events contains only one event
             this.Questions = Events.FirstOrDefault().Questionnaire.Questions;
             this.QuestionEvaluations = ExecuteQuery();
+
+            PageHeaderText = "Auswertung: " + Event.Questionnaire.Name + " in " + Event.Place;
         }
 
-
-
+       
         //Primary Key
         public int EvaluationID { get; set; }
 
@@ -125,6 +126,29 @@ namespace FeedyWPF.Models
             return Evaluations;
         }
 
+        [NotMapped]
+        private string _pageHeaderText;
+        
+        [NotMapped]
+        public string PageHeaderText
+        {
+            get { return _pageHeaderText; }
+            set
+            {
+                _pageHeaderText = value;
+                OnPropertyChanged("PageHeaderText");
+            }
+        }
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
 

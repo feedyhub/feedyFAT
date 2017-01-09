@@ -61,7 +61,6 @@ namespace FeedyWPF.Models
             {
                 var selectedAnswer = ViewAnswers.SingleOrDefault(a => a.IsChecked == true);
 
-
                 if(selectedAnswer!= null)
                 {
                     selectedAnswer.IsCheckedQuiet = false;

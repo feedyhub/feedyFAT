@@ -168,6 +168,11 @@ namespace FeedyWPF.Pages
                         }
                     }
 
+                    foreach( var q in Questionnaire.Questions)
+                    {
+                        db.Entry(q).State = System.Data.Entity.EntityState.Modified;
+                    }
+
                     Questionnaire.Questions = Questions;
                     db.Questionnaires.Add(Questionnaire);
                 } 

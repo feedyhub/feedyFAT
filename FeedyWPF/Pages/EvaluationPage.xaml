@@ -82,8 +82,9 @@
     
     <!--Definition of View-->
     <DockPanel x:Name="ViewDockPanel"  ScrollViewer.CanContentScroll="False" LastChildFill="True" Margin="10,10,10,10" >
-        
-        <Label Content="Auswertung" DockPanel.Dock="Top"/>
+
+        <Label x:Name="label" Content="{Binding PageHeaderText}"  DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="1,10,0,0" VerticalAlignment="Top" Height="51" Width="Auto" FontSize="24"/>
+
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"  DockPanel.Dock="Bottom">
             <Button x:Name="CloseTabButton" Content="Tab Schließen" Margin="10,10,5,0" Click="CloseTabButton_Click"/>
             <Button x:Name="CsvExportButton" Content="Seite als .CSV Datei speichern" Margin="5,10,10,0" Click="CsvExportButton_Click" />

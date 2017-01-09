@@ -41,7 +41,7 @@ namespace FeedyWPF.Models
         public virtual Questionnaire Questionnaire { get; set; }
         public virtual ObservableCollection<CountData> NumericDatas { get; set; }
         public virtual ObservableCollection<TextData> TextDatas { get; set; }
-        public virtual ObservableCollection<Evaluation> Querys { get; set; }
+       
 
 
     }
@@ -97,7 +97,7 @@ namespace FeedyWPF.Models
             //Navigation Property
             public virtual Questionnaire Questionnaire { get; set; }
             public virtual ObservableCollection<Answer> Answers { get; set; }
-            public virtual ObservableCollection<Evaluation> Evaluations { get; set; }
+ 
 
 
         }

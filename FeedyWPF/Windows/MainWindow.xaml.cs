@@ -19,8 +19,7 @@ namespace FeedyWPF
         public MainWindow()
         {
 
-            /// !!!!! TURN OFF FOR DEPLOYMENT !!!!!IfModelChanges
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Models.FeedyDbContext>());
+           
 
             try{
                 db = new FeedyDbContext();

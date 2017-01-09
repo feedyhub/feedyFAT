@@ -77,8 +77,8 @@
       <HintPath>..\packages\MySql.ConnectorNET.Data.6.8.3.2\lib\net45\MySql.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MySql.Data.Entity.EF6, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.ConnectorNET.Entity.6.8.3.2\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
+    <Reference Include="mysql.data.entity.EF6, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.Entities.6.8.3.0\lib\net45\mysql.data.entity.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -105,12 +105,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Migrations\201701061845422_Initial.cs" />
+    <Compile Include="Migrations\201701061845422_Initial.Designer.cs">
+      <DependentUpon>201701061845422_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CreateEventWindowViewModel.cs" />
     <Compile Include="Models\CreateQuestionViewModel.cs" />
     <Compile Include="Models\CsvExport.cs" />
     <Compile Include="Models\IValueConverters.cs" />
-    <Compile Include="Models\EvaluationTemplateSelector.cs" />
-    <Compile Include="Models\EventDataCollectionViewModel.cs" />
+    <Compile Include="Models\SampleCollegtionPageViewModel.cs" />
     <Compile Include="Models\EventsPageViewModel.cs" />
     <Compile Include="Models\SetEvaluationPageModel.cs" />
     <Compile Include="Models\StaticClasses.cs" />
@@ -239,6 +243,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\201701061845422_Initial.resx">
+      <DependentUpon>201701061845422_Initial.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -10,9 +10,8 @@ namespace FeedyWPF.Models
 {
     public class FeedyDbContext : DbContext
     {
-        public FeedyDbContext() : base("FeedyDbContext")
+        public FeedyDbContext() : base("server=*******;port=3306;database=feedy;uid=feedy;password=*******")
         {
-         
         }
 
         public DbSet<Event> Events { get; set; }
@@ -29,17 +28,14 @@ namespace FeedyWPF.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Many to Many relationship
-            modelBuilder.Entity<Question>()
-            .HasMany(c => c.Evaluations).WithMany(i => i.Questions)
-            .Map(t => t.MapLeftKey("QuestionID")
-            .MapRightKey("QueryID")
-            .ToTable("QuestionQuery"));
+          
+  
 
-            modelBuilder.Entity<Event>()
-            .HasMany(c => c.Querys).WithMany(i => i.Events)
-            .Map(t => t.MapLeftKey("EventID")
-            .MapRightKey("QueryID")
-            .ToTable("EventQuery"));
+            modelBuilder.Entity<TextData>()
+                 .HasRequired(m => m.Answer)
+                 .WithMany(t => t.TextDataSet)
+                 .HasForeignKey(m => m.AnswerID)
+                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<TextData>()
                  .HasRequired(m => m.Answer)

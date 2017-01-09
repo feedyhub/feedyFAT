@@ -32,7 +32,6 @@ namespace FeedyWPF.Pages
             db.Questionnaires.Load();
             QuestionnaireViewSource.Source = db.Questionnaires.Local;
            
-
         }
 
         private FeedyDbContext db = new FeedyDbContext();

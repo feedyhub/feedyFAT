@@ -15,14 +15,21 @@ namespace FeedyWPF.Models
     {
         public EventsPageViewModel()
         {
-            
+            try
+            {
                 IList<Questionnaire> list = db.Questionnaires.ToList();
                 Questionnaire NullQuest = new Questionnaire();
                 NullQuest.Name = string.Empty;
                 list.Add(NullQuest);
                 _questionnaireEntries = new CollectionView(list);
-            
-           
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Es gibt ein Problem mit der Serververbindung. Bitte überprüfe, ob der AFZ Server über den Windows Explorer erreichbar ist.");
+                throw e;
+            }
+                
+
         }
         FeedyDbContext db = new FeedyDbContext();
 
